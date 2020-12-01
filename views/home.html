@@ -1,0 +1,58 @@
+<div class="content">
+<div class="row">
+    <div class="col-lg-3" >
+        <div  class="infoBox" ng-show="showInfoBox">
+            <h5>Info Title</h5>
+            {{infoContent}}
+        </div>
+    </div>
+    <div class="col-lg-6">
+    
+    	<div class="peerP1">Client</div> 
+    	<div class="peerP2">Server</div>
+        <div class="lignP1">  
+	    <div class="lignP2">
+        </div>
+        </div>  
+<!--------------- CLIENT ------------------>
+        	<div class="circleClient">{{step}}</div>
+            <div class="stepClient">
+                <h5>ClientHello</h5>
+                <div class="field">ProtocolVersion legacy_version = 0x0303;</div> <div class="info" ng-click="showInfo(myParam)">i</div><br/> 
+                Random random; <br/>
+                opaque legacy_session_id<0..32>; <br/>
+                CipherSuite cipher_suites<2..2^16-2>; <br/>
+                opaque legacy_compression_methods<1..2^8-1>; <br/>
+                Extension extensions<8..2^16-1>; <br/>
+            </div>
+			<div class="circleServer">{{step}}</div>
+			<div class="circleClient">{{step}}</div>
+			<div class="circleClient">{{step}}</div>
+		
+	<!--------------- SERVER ------------------>		
+		
+    	
+	    	<div class="circleServer">{{step}} </div>
+			<div class="circleServer">{{step}}</div>
+			<div class="circleServer">{{step}}</div>
+			<div class="circleServer">{{step}}</div>
+		
+       
+    </div>
+    <div class="col-lg-3">
+    	<div class="threadAlert">
+    		<h2>Title</h2>
+    		Click to expand
+    	</div>
+    	<div class="alert">
+    		<h2>Title</h2>
+    		Click to expand
+    	</div>
+    	
+    </div>
+</div>
+
+	
+	<!-- <random-ninja ninjas="ninjas" title="'Random Ninja'"> is our chosen random ninja -->
+	<!-- </random-ninja> -->
+</div>
