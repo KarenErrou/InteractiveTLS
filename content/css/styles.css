@@ -9,13 +9,13 @@ h1,h2,h3{
 }
 
 #menu-bar{
-  background: crimson;
+  background-color: #2471A3;
   color: #fff;
   padding: 10px;
 }
 
 #menu-bar h1{
-  font-size: 24px;
+  font-size: 35px;
   font-weight: normal;
   display: inline-block;
 }
@@ -24,16 +24,18 @@ h1,h2,h3{
   float: right;
   list-style-type: none;
   padding: 0;
-  margin: 6px 0;
+  margin: 9px 0;
 }
 
-#menu-bar li{
+menu-bar li{
   float: right;
-  margin-left: 20px;
+  margin-left: 10px;
 }
 
 #menu-bar a{
-  color: #fff
+  color: #fff;
+  font-size: 28px;
+  padding-right:30px;
 }
 
 main{
@@ -45,38 +47,41 @@ main{
 
 .peerP1{
   display: inline-block;
-  padding: 5px;
-  border: 2px solid;
+  padding: 10px;
+  border: 4px solid;
   text-align: center;
-  font-size:30px;
+  font-size:35px;
   position: absolute;
   left:0;
-  border-color: #889EB7; 
+  border-color: #2471A3; 
   text-align: center;
   background-color: #ffffff;
   z-index: 15;
+  border-radius: 10%;
 }
 
 .peerP2{
   display: inline-block;
-  padding: 5px;
-  border: 2px solid;
+  padding: 10px;
+  border: 4px solid;
   text-align: center;
-  font-size:30px;
+  font-size:35px;
   position: absolute;
   right:0;
-  border-color: #889EB7; 
+  border-color: #2471A3; 
   text-align: center;
   background-color: #ffffff;
   z-index: 15;
+  border-radius: 10%;
 }
 
 
 .lignP1 {
   position: sticky;
-  border: 1px solid;
-  border-width: 0 1px 0 1px;
+  border: 3px solid;
+  border-width: 0 3px 0 3px;
   height: 100%;
+  border-color: #2471A3;
   padding-top: 100px;
   
 }
@@ -91,36 +96,36 @@ main{
 }
 
 .infoButton{
-  height: 25px;
-  width: 25px;
+  height: 30px;
+  width: 30px;
   border-radius: 50%;
-  border: 2px solid;
   text-align: center;
-  font-size:14px;
+  font-size:20px;
+  margin:0px;
   color:white;
   background-color: #889EB7;
   display: inline-block;
 }
-
 .adjustButton{
-  height: 25px;
-  width: 25px;
+  height: 30px;
+  width: 30px;
   border-radius: 50%;
-  border: 2px solid;
   text-align: center;
-  font-size:14px;
+  font-size:20px;
+  margin:0px;
   color:white;
   background-color: green;
   display: inline-block;
 }
 
 .deleteButton{
-  height: 25px;
-  width: 25px;
-  border-radius: 50%;
-  border: 2px solid;
+  height: 30px;
+  width: 30px;
+  border-radius: 50%; 
   text-align: center;
-  font-size:12px;
+  font-size:20px;
+  margin:0px;
+  padding:0px;
   color:white;
   display: inline-block;
   background-color: red;
@@ -128,72 +133,83 @@ main{
 
 .alert{
   position:relative;
-  background-color: #ea3c53;
-  position: relative;
+  background-color: #EC7063;
   margin:10%;
-  border-radius: 10%;
+  border-radius: 40%;
+  color:#fff;
   padding:20px;
   text-align: center;
 }
 
 .threadAlert{
   position:relative;
-  background-color: #ffffe0;
-  position: relative;
-  border-radius: 15%;
+  background-color: #F7DC6F;
   margin:10%;  
+  color: #fff;
+  border-radius: 20%;
   padding:20px;
   text-align: center;
 }
 
 .stepClient{
   position:relative;
-  border-style: solid;
-  border-color: coral;
-  margin-top:15px;
-  border-radius: 5%;
   /*top:15%;*/
-  padding: 20px;
-  padding-left:50px;
   font-size: 20px;
   text-align: left;
 }
 
+.stepClientContent{
+  border: 4px solid;
+  border-color: coral;
+  margin-top: 15px;
+  border-radius: 5%;
+  margin-left: 10px; 
+  padding: 20px;
+  padding-left:40px;
+  font-size:25px;
+  display: inline-block;
+}
+
 .stepServer{
   position:relative;
-  border-style: solid;
-  border-color: coral;
-  margin-top:15px;
-  border-radius: 5%;
-  /*top:15%;*/
-  right:0;
-  padding: 20px;
-  padding-right:50px;
+  font-size: 20px;
   text-align: right;
 }
 
+.stepServerContent{
+  border: 4px solid;
+  border-color: coral;
+  margin-top:15px;
+  border-radius: 5%;
+  padding: 20px;
+  font-size:25px;
+  padding-right:40px;
+  display: inline-block;
+  margin-right: 10px;
+}
+
 .circleClient {
-  height: 60px;
-  width: 60px;
+  height: 70px;
+  width: 70px;
   border-radius: 50%;
-  border: 2px solid;
+  border: 4px solid;
   text-align: center;
-  font-size:30px;
+  font-size:35px;
   position: absolute;
-  left:-30px;
+  left:-37px;
   border-color: #889EB7;
   background-color: #ffffff;
 }
 
 .circleServer {
-  height: 60px;
-  width: 60px;
+  height: 70px;
+  width: 70px;
   border-radius: 50%;
-  border: 2px solid;
+  border: 4px solid;
   text-align: center;
-  font-size:30px;
+  font-size: 35px;
   position: absolute;
-  right:-30px;
+  right:-37px;
   border-color: #889EB7;
   background-color: #ffffff;
 }

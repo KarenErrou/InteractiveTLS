@@ -17,73 +17,78 @@
 
     <!--------------- KEY EXCHANGE ------------------>
         <!--------------- CLIENT REQUEST ------------------>    
-            <div class="stepClient">    
-                <div class="circleClient" ng-model="step"> 1 </div> 
-                <h4>ClientHello</h4>
-                <div ng-repeat="n in clientHello">
-                    <div style="display: inline-block;">
-                        <div class="deleteButton"  ng-click="showInfo(n, 'delete')">x</div>
-                        <div class="adjustButton" ng-click="showInfo(n, 'adjust')">+</div>
-                        <div class="infoButton" ng-click="showInfo(n, 'info')">i</div>
-                        {{n.eltType}} {{n.eltName}} {{n.eltValue}} 
-                    </div>
-                    </br>
-                </div>         
+            <div class="stepClient">
+                <div class="stepClientContent">    
+                    <div class="circleClient" ng-model="step"> 1 </div> 
+                    <h3>ClientHello</h3>
+                    <div ng-repeat="n in clientHello">
+                        <div style="display: inline-block;">
+                            <div class="deleteButton"  ng-click="showInfo(n, 'delete')">x</div>
+                            <div class="adjustButton" ng-click="showInfo(n, 'adjust')">+</div>
+                            <div class="infoButton" ng-click="showInfo(n, 'info')">i</div>
+                            {{n.eltType}} {{n.eltName}} {{n.eltValue}} 
+                        </div>
+                        </br>
+                    </div>         
+                </div>
             </div>    
         <!--------------- SERVER RESPONSE ------------------>   
             <!--------------- SERVERHELLO ------------------>
             <div class="stepServer"> 
-                <div class="circleServer" ng-model="step"> 2</div> <h4>{{keyExchange[0].name}}</h4>
-                <div ng-if="keyExchange[0].name == 'ServerHello'" ng-repeat="n in serverHello">
-                    <div style="display: inline-block;">
-                        {{n.eltType}}  {{n.eltName}} {{n.eltValue}}
-                        <div class="deleteButton" ng-click="showInfo(n, 'delete')">x</div>
-                        <div class="adjustButton" ng-click="showInfo(n, 'adjust')">+</div>
-                        <div class="infoButton" ng-click="showInfo(n, 'info')">i</div>
+                <div class="stepServerContent">
+                    <div class="circleServer" ng-model="step"> 2</div> <h3>{{keyExchange[0].name}}</h3>
+                    <div ng-if="keyExchange[0].name == 'ServerHello'" ng-repeat="n in serverHello">
+                        <div style="display: inline-block;">
+                            {{n.eltType}}  {{n.eltName}} {{n.eltValue}}
+                            <div class="deleteButton" ng-click="showInfo(n, 'delete')">x</div>
+                            <div class="adjustButton" ng-click="showInfo(n, 'adjust')">+</div>
+                            <div class="infoButton" ng-click="showInfo(n, 'info')">i</div>
+                        </div>
+                        </br>        
                     </div>
-                    </br>        
-                </div>
-                <div ng-if="keyExchange[0].name == 'HelloRetryRequest'" ng-repeat="n in helloRetryRequest">
-                    <div style="display: inline-block;">
-                        {{n.eltType}}  {{n.eltName}} {{n.eltValue}}
-                        <div class="deleteButton" ng-click="showInfo(n, 'delete')">x</div>
-                        <div class="adjustButton" ng-click="showInfo(n, 'adjust')">+</div>
-                        <div class="infoButton" ng-click="showInfo(n, 'info')">i</div>
+                    <div ng-if="keyExchange[0].name == 'HelloRetryRequest'" ng-repeat="n in helloRetryRequest">
+                        <div style="display: inline-block;">
+                            {{n.eltType}}  {{n.eltName}} {{n.eltValue}}
+                            <div class="deleteButton" ng-click="showInfo(n, 'delete')">x</div>
+                            <div class="adjustButton" ng-click="showInfo(n, 'adjust')">+</div>
+                            <div class="infoButton" ng-click="showInfo(n, 'info')">i</div>
+                        </div>
+                        </br>        
                     </div>
-                    </br>        
                 </div>
             </div> 
 
 
             <!---------- HELLORETRYREQUEST + ClientHello ----------->
             <div ng-if="keyExchange[0].name == 'HelloRetryRequest'" class="stepClient"> 
-                <div class="circleClient" ng-model="step"> 3</div>    <h5>ClientHello</h5>        
-                <span ng-repeat="rr in rrClientHello">
-                    <span ng-if="o.id == rr.stepID">
-                        <div style="display: inline-block;">
-                            <div class="deleteButton" ng-click="showInfo(n, 'delete')">x</div>
-                            <div class="adjustButton" ng-click="showInfo(n, 'adjust')">+</div>
-                            <div class="infoButton" ng-click="showInfo(n, 'info')">i</div>
-                            {{rr.eltType}}  {{rr.eltName}} {{rr.eltValue}}
-                        </div>
-                        </br>       
-                    </span> 
-                </span>
+                <div class="stepClientContent">
+                    <div class="circleClient" ng-model="step"> 3</div>    <h3>ClientHello</h3>        
+                    <span ng-repeat="rr in rrClientHello">
+                        <span ng-if="o.id == rr.stepID">
+                            <div style="display: inline-block;">
+                                <div class="deleteButton" ng-click="showInfo(n, 'delete')">x</div>
+                                <div class="adjustButton" ng-click="showInfo(n, 'adjust')">+</div>
+                                <div class="infoButton" ng-click="showInfo(n, 'info')">i</div>
+                                {{rr.eltType}}  {{rr.eltName}} {{rr.eltValue}}
+                            </div>
+                            </br>       
+                        </span> 
+                    </span>
+                </div>
             </div>
         </div>
     </div>
             
    <!-------------------------------------------->   
     <div class="col-lg-3 col-lg-3 col-lg-3">
-        <div class="threadAlert">
-            <h3>Thread Alert</h3>
-            Click to expand
-        </div>
         <div class="alert">
-            <h3>Property Alert</h3>
+            <h2>Property Alert</h2>
             Click to expand
         </div>
-        
+        <div class="threadAlert">
+            <h2>Thread Alert</h2>
+            Click to expand
+        </div>
     </div>
 </div>
 

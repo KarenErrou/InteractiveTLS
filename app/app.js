@@ -106,10 +106,10 @@ myTLSApp.controller('NinjaController', ['$scope', '$http', function($scope, $htt
  	$scope.helloRetryRequest = [
  		{eltType: 'ProtocolVersion', eltName: 'legacy_version', eltValue: '= 0x0303;'}, 
  		{eltType: 'Random', eltName: 'random', eltValue: ';'},
- 		{eltType: 'opaque', eltName: 'legacy_session_id', eltValue: '<0..32>;'},
- 		{eltType: 'CipherSuite', eltName: 'cipher_suites', eltValue: '<2..2^16-2>;'},
- 		{eltType: 'opaque', eltName: 'legacy_compression_methods', eltValue: '<1..2^8-1>;'},
-		{eltType: 'Extension', eltName: 'extensions', eltValue: '<8..2^16-1>;'},
+ 	// 	{eltType: 'opaque', eltName: 'legacy_session_id', eltValue: '<0..32>;'},
+ 	// 	{eltType: 'CipherSuite', eltName: 'cipher_suites', eltValue: '<2..2^16-2>;'},
+ 	// 	{eltType: 'opaque', eltName: 'legacy_compression_methods', eltValue: '<1..2^8-1>;'},
+		// {eltType: 'Extension', eltName: 'extensions', eltValue: '<8..2^16-1>;'},
  	];
 
  	$scope.rrClientHello = [
