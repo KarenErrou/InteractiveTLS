@@ -36,10 +36,6 @@ h1,h2,h3{
   color: #fff
 }
 
-.peer{
-position: relative;
-}
-
 main{
   /*background: #eee;*/
   /*width: 80%;*/
@@ -57,6 +53,8 @@ main{
   left:0;
   border-color: #889EB7; 
   text-align: center;
+  background-color: #ffffff;
+  z-index: 15;
 }
 
 .peerP2{
@@ -69,6 +67,8 @@ main{
   right:0;
   border-color: #889EB7; 
   text-align: center;
+  background-color: #ffffff;
+  z-index: 15;
 }
 
 
@@ -77,6 +77,8 @@ main{
   border: 1px solid;
   border-width: 0 1px 0 1px;
   height: 100%;
+  padding-top: 100px;
+  
 }
 
 .leftBox{
@@ -98,7 +100,6 @@ main{
   color:white;
   background-color: #889EB7;
   display: inline-block;
-  float:right;
 }
 
 .adjustButton{
@@ -111,7 +112,6 @@ main{
   color:white;
   background-color: green;
   display: inline-block;
-  float:right;
 }
 
 .deleteButton{
@@ -124,7 +124,6 @@ main{
   color:white;
   display: inline-block;
   background-color: red;
-  float: right;
 }
 
 .alert{
@@ -153,7 +152,7 @@ main{
   border-color: coral;
   margin-top:15px;
   border-radius: 5%;
-  top:10%;
+  /*top:15%;*/
   padding: 20px;
   padding-left:50px;
   font-size: 20px;
@@ -166,7 +165,7 @@ main{
   border-color: coral;
   margin-top:15px;
   border-radius: 5%;
-  top:10%;
+  /*top:15%;*/
   right:0;
   padding: 20px;
   padding-right:50px;

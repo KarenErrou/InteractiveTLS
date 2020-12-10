@@ -10,10 +10,11 @@
 
     <div class="col-lg-6 col-lg-6 col-lg-6">
         <div class="peers">
-            <div class="peerP1">Client</div>
-            <div class="peerP2">Server</div>
+                <div class="peerP1">Client</div>
+                <div class="peerP2">Server</div>
         </div>
         <div class="lignP1">
+
     <!--------------- KEY EXCHANGE ------------------>
         <!--------------- CLIENT REQUEST ------------------>    
             <div class="stepClient">    
@@ -21,10 +22,10 @@
                 <h4>ClientHello</h4>
                 <div ng-repeat="n in clientHello">
                     <div style="display: inline-block;">
-                        {{n.eltType}} {{n.eltName}} {{n.eltValue}} 
-                        <div class="deleteButton" ng-click="showInfo(n, 'delete')">x</div>
+                        <div class="deleteButton"  ng-click="showInfo(n, 'delete')">x</div>
                         <div class="adjustButton" ng-click="showInfo(n, 'adjust')">+</div>
                         <div class="infoButton" ng-click="showInfo(n, 'info')">i</div>
+                        {{n.eltType}} {{n.eltName}} {{n.eltValue}} 
                     </div>
                     </br>
                 </div>         
@@ -32,10 +33,9 @@
         <!--------------- SERVER RESPONSE ------------------>   
             <!--------------- SERVERHELLO ------------------>
             <div class="stepServer"> 
-                <div class="circleServer" ng-model="step"> 2</div> <h5>{{keyExchange[0].name}}</h5>
+                <div class="circleServer" ng-model="step"> 2</div> <h4>{{keyExchange[0].name}}</h4>
                 <div ng-if="keyExchange[0].name == 'ServerHello'" ng-repeat="n in serverHello">
                     <div style="display: inline-block;">
-                
                         {{n.eltType}}  {{n.eltName}} {{n.eltValue}}
                         <div class="deleteButton" ng-click="showInfo(n, 'delete')">x</div>
                         <div class="adjustButton" ng-click="showInfo(n, 'adjust')">+</div>
@@ -61,10 +61,10 @@
                 <span ng-repeat="rr in rrClientHello">
                     <span ng-if="o.id == rr.stepID">
                         <div style="display: inline-block;">
-                            {{rr.eltType}}  {{rr.eltName}} {{rr.eltValue}}
                             <div class="deleteButton" ng-click="showInfo(n, 'delete')">x</div>
                             <div class="adjustButton" ng-click="showInfo(n, 'adjust')">+</div>
                             <div class="infoButton" ng-click="showInfo(n, 'info')">i</div>
+                            {{rr.eltType}}  {{rr.eltName}} {{rr.eltValue}}
                         </div>
                         </br>       
                     </span> 
