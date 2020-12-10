@@ -1,3 +1,4 @@
+
 body{
   font-family: Helvetica;
   margin: 0;
@@ -5,15 +6,6 @@ body{
 
 h1,h2,h3{
   margin: 0;
-}
-
-.belt{
-  padding: 5px 10px;
-  border-radius: 10px;
-  margin-left: 5px;
-  color: #fff;
-  font-size: 15px;
-  text-transform: uppercase;
 }
 
 #menu-bar{
@@ -44,6 +36,10 @@ h1,h2,h3{
   color: #fff
 }
 
+.peer{
+position: relative;
+}
+
 main{
   /*background: #eee;*/
   /*width: 80%;*/
@@ -52,63 +48,102 @@ main{
 }
 
 .peerP1{
-  height: 60px;
-  width: 100px;
+  display: inline-block;
+  padding: 5px;
   border: 2px solid;
   text-align: center;
   font-size:30px;
-  position: relative;
+  position: absolute;
+  left:0;
   border-color: #889EB7; 
   text-align: center;
 }
 
+.peerP2{
+  display: inline-block;
+  padding: 5px;
+  border: 2px solid;
+  text-align: center;
+  font-size:30px;
+  position: absolute;
+  right:0;
+  border-color: #889EB7; 
+  text-align: center;
+}
+
+
 .lignP1 {
-  position: relative;
-  left:50px;
+  position: sticky;
   border: 1px solid;
-  border-width: 0 0 0 1px;
+  border-width: 0 1px 0 1px;
   height: 100%;
 }
 
-.infoBox{
+.leftBox{
   position:relative;
-  background-color: #889EB7;
-  position: relative;
-  width:50%;
-  margin:10%;
-  margin-left:30%;
-  padding:0px;
-  text-align: center;
   padding:25px;
+  display: inline-block;
+  margin:10%;
+  border-radius: 10%;
+  text-align: center;
 }
 
-.field{
-  display: inline;
-  position: relative;
-}
-
-.info{
+.infoButton{
   height: 25px;
   width: 25px;
   border-radius: 50%;
-  margin-left:18px;
+  border: 2px solid;
+  text-align: center;
+  font-size:14px;
+  color:white;
+  background-color: #889EB7;
+  display: inline-block;
+  float:right;
+}
+
+.adjustButton{
+  height: 25px;
+  width: 25px;
+  border-radius: 50%;
+  border: 2px solid;
+  text-align: center;
+  font-size:14px;
+  color:white;
+  background-color: green;
+  display: inline-block;
+  float:right;
+}
+
+.deleteButton{
+  height: 25px;
+  width: 25px;
+  border-radius: 50%;
   border: 2px solid;
   text-align: center;
   font-size:12px;
-  display: inline;
-  position: absolute;
   color:white;
-  background-color: #889EB7;
+  display: inline-block;
+  background-color: red;
+  float: right;
 }
 
 .alert{
   position:relative;
-  background-color: red;
+  background-color: #ea3c53;
   position: relative;
-  width:50%;
   margin:10%;
-  margin-left:30%;
-  padding:0px;
+  border-radius: 10%;
+  padding:20px;
+  text-align: center;
+}
+
+.threadAlert{
+  position:relative;
+  background-color: #ffffe0;
+  position: relative;
+  border-radius: 15%;
+  margin:10%;  
+  padding:20px;
   text-align: center;
 }
 
@@ -116,36 +151,37 @@ main{
   position:relative;
   border-style: solid;
   border-color: coral;
-  position: relative;
-  width:50%;
-  top:-103%;
-  left:60px;
-  padding:.75rem 1.25rem;
+  margin-top:15px;
+  border-radius: 5%;
+  top:10%;
+  padding: 20px;
+  padding-left:50px;
+  font-size: 20px;
   text-align: left;
 }
 
-.threadAlert{
+.stepServer{
   position:relative;
-  /*border-radius: 10%;*/
-  background-color: yellow;
-  position: relative;
-  width:50%;
-  margin:10%;
-  margin-left:30%;
-  padding:.75rem 1.25rem;
-  text-align: center;
+  border-style: solid;
+  border-color: coral;
+  margin-top:15px;
+  border-radius: 5%;
+  top:10%;
+  right:0;
+  padding: 20px;
+  padding-right:50px;
+  text-align: right;
 }
 
 .circleClient {
   height: 60px;
   width: 60px;
   border-radius: 50%;
-  margin:18px;
   border: 2px solid;
   text-align: center;
   font-size:30px;
-  position: relative;
-  top:-100%;
+  position: absolute;
+  left:-30px;
   border-color: #889EB7;
   background-color: #ffffff;
 }
@@ -154,152 +190,15 @@ main{
   height: 60px;
   width: 60px;
   border-radius: 50%;
-  margin:18px;
   border: 2px solid;
   text-align: center;
   font-size:30px;
-  position: relative;
-  top:-100%;
-  left:97%;
+  position: absolute;
+  right:-30px;
   border-color: #889EB7;
   background-color: #ffffff;
 }
 
-.peerP2{
-  height: 60px;
-  width: 100px;
-  border: 2px solid;
-  text-align: center;
-  font-size:30px;
-  position: absolute;
-  left:95%;
-  top:0%;
-  border-color: #889EB7; 
-  text-align: center;
-}
-
-.lignP2 {
-  position: absolute;
-  left:97%;
-  border: 1px solid;
-  border-width: 0 0 0 1px;
-  height: 100%;
-}
-
-
 .content{
   padding: 20px;
 }
-
-.content button,
-.content input[type="submit"]{
-  background: #fff;
-  padding: 10px;
-  border-radius: 10px;
-  cursor: pointer;
-  color: #777;
-  border: 0;
-  box-shadow: 2px 2px 2px rgba(20,20,20,0.1);
-  font-size: 16px;
-}
-
-.content button:nth-child(2){
-  float: right;
-}
-
-.content ul{
-  padding: 0;
-  list-style-type: none;
-  margin: 30px 0;
-}
-
-.content li{
-  padding: 15px 0;
-  border-top: 1px solid #e2e2e2;
-  color: #444;
-}
-
-.content li span{
-  float: right;
-}
-
-.content li h3{
-  display: inline-block;
-  font-weight: normal;
-  font-size: 22px;
-}
-
-.content input{
-  width: 90%;
-  padding: 10px 5%;
-  border-radius: 10px;
-  border: 2px solid #ddd;
-  margin: 10px 0;
-}
-
-.content input[type="submit"]:last-child{
-  width: 150px;
-  display: block;
-  margin: 15px auto;
-}
-
-.remove{
-  float: right;
-  padding: 5px;
-  background: #fff;
-  width: 18px;
-  text-align: center;
-  border-radius: 20px;
-  color: crimson;
-  cursor: pointer;
-  margin-left: 10px;
-}
-
-/*ANIMATION
-
-/* The starting CSS styles for the enter animation */
-main.ng-enter {
-  transition:0.5s linear all;
-  opacity:0;
-}
-
-/* The finishing CSS styles for the enter animation */
-main.ng-enter.ng-enter-active {
-  opacity:1;
-}
-
-#ninja-list li.ng-enter {
-  transition: 0.2s linear all;
-  opacity: 0;
-  transform: translateY(30px);
-}
-
-#ninja-list li.ng-enter.ng-enter-active {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-#ninja-list li.ng-leave {
-  transition: 0.2s linear all;
-  opacity: 1;
-  transform: translateX(0);
-}
-
-#ninja-list li.ng-leave.ng-leave-active {
-  opacity: 0;
-  transform: translateX(-100%);
-}
-
-#ninja-list li.ng-leave-stagger {
-  transition-delay: 0.2s;
-  transition-duration: 0;
-}
-
-input.ng-invalid.ng-touched, textarea.ng-invalid.ng-touched{
-  border: 2px solid red;
-}
-
-input[disabled="disabled"]{
-  opacity: 0.4;
-  cursor: not-allowed !important;
-}*/
