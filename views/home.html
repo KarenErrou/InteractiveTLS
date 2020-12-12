@@ -3,9 +3,27 @@
 
     <div class="col-lg-3 col-lg-3 col-lg-3" >
         <div class="leftBox" > 
-            <h5>{{leftBoxTitle}}</h5> 
-            {{leftBoxContent}}  
+            <h3>{{leftBoxTitle}}</h3> </br>
+            <div ng-bind-html="leftBoxContent" >
+                 
+            </div>
+            <div ng-if="adjusting == true" >
+                <u>Choose one of the following:</u>
+                <p ng-bind-html="adjustMessage" >
+                 
+                 </p>
+                <form>
+                    <span ng-repeat="n in splitted">
+                        <label>
+                            <input type="radio" ng-model="data.adjust" value="{{n}}" ng-change='nowAdjust()'>
+                            {{n}}
+                        </label>
+                    <br/>
+                    </span>
+                </form>
+            </div>
         </div>
+        
     </div>
 
     <div class="col-lg-6 col-lg-6 col-lg-6">
@@ -21,15 +39,25 @@
                 <div class="stepClientContent">    
                     <div class="circleClient" ng-model="step"> 1 </div> 
                     <h3>ClientHello</h3>
-                    <div ng-repeat="n in clientHello">
+                    <span ng-repeat="n in clientHello">
                         <div style="display: inline-block;">
-                            <div class="deleteButton"  ng-click="showInfo(n, 'delete')">x</div>
-                            <div class="adjustButton" ng-click="showInfo(n, 'adjust')">+</div>
-                            <div class="infoButton" ng-click="showInfo(n, 'info')">i</div>
+                            <div ng-if="n.delete == 'yes'" class="deleteButton"  ng-click="showInfo('clientHello', n, 'delete')">x</div>
+                            <div ng-if="n.adjustment == 'yes'" class="adjustButton" ng-click="showInfo('clientHello', n, 'adjust')">+</div>
+                            <div class="infoButton" ng-click="showInfo('clientHello', n, 'info')">i</div>
                             {{n.eltType}} {{n.eltName}} {{n.eltValue}} 
                         </div>
                         </br>
-                    </div>         
+                    </span></br>
+                    <div> Extension: </div>
+                    <span ng-repeat="n in chExtensions">
+                        <div style="display: inline-block;">
+                            <div ng-if="n.delete == 'yes'" class="deleteButton"  ng-click="showInfo('chExtensions', n, 'delete')">x</div>
+                    <!--         <div ng-if="n.adjustment == 'yes'" class="adjustButton" ng-click="showInfo('clientHello', n, 'adjust')">+</div> -->
+                            <div class="infoButton" ng-click="showInfo('chExtensions', n, 'info')">i</div>
+                            {{n.eltType}} {{n.eltName}} {{n.eltValue}} 
+                        </div>
+                        </br>
+                    </span>    
                 </div>
             </div>    
         <!--------------- SERVER RESPONSE ------------------>   
@@ -37,21 +65,33 @@
             <div class="stepServer"> 
                 <div class="stepServerContent">
                     <div class="circleServer" ng-model="step"> 2</div> <h3>{{keyExchange[0].name}}</h3>
-                    <div ng-if="keyExchange[0].name == 'ServerHello'" ng-repeat="n in serverHello">
-                        <div style="display: inline-block;">
-                            {{n.eltType}}  {{n.eltName}} {{n.eltValue}}
-                            <div class="deleteButton" ng-click="showInfo(n, 'delete')">x</div>
-                            <div class="adjustButton" ng-click="showInfo(n, 'adjust')">+</div>
-                            <div class="infoButton" ng-click="showInfo(n, 'info')">i</div>
-                        </div>
-                        </br>        
+                    <div ng-if="keyExchange[0].name == 'ServerHello'" >
+                        <span ng-repeat="n in serverHello">
+                            <div style="display: inline-block;">
+                                {{n.eltType}}  {{n.eltName}} {{n.eltValue}}
+                                <div ng-if="n.delete == 'yes'" class="deleteButton" ng-click="showInfo('serverHello', n, 'delete')">x</div>
+                                <div ng-if="n.adjustment == 'yes'" class="adjustButton" ng-click="showInfo('serverHello', n, 'adjust')">+</div>
+                                <div class="infoButton" ng-click="showInfo('serverHello', n, 'info')">i</div>
+                            </div>
+                            </br>        
+                        </span></br>
+                        <div> Extension: </div>
+                        <span ng-repeat="n in shExtensions">
+                            <div style="display: inline-block;">
+                                <div ng-if="n.delete == 'yes'" class="deleteButton"  ng-click="showInfo('shExtensions', n, 'delete')">x</div>
+                        <!--         <div ng-if="n.adjustment == 'yes'" class="adjustButton" ng-click="showInfo('clientHello', n, 'adjust')">+</div> -->
+                                <div class="infoButton" ng-click="showInfo('shExtensions', n, 'info')">i</div>
+                                {{n.eltType}} {{n.eltName}} {{n.eltValue}} 
+                            </div>
+                            </br>
+                        </span>
                     </div>
                     <div ng-if="keyExchange[0].name == 'HelloRetryRequest'" ng-repeat="n in helloRetryRequest">
                         <div style="display: inline-block;">
                             {{n.eltType}}  {{n.eltName}} {{n.eltValue}}
-                            <div class="deleteButton" ng-click="showInfo(n, 'delete')">x</div>
-                            <div class="adjustButton" ng-click="showInfo(n, 'adjust')">+</div>
-                            <div class="infoButton" ng-click="showInfo(n, 'info')">i</div>
+                            <div ng-if="n.delete == 'yes'" class="deleteButton" ng-click="showInfo('helloRetryRequest', n, 'delete')">x</div>
+                            <div ng-if="n.adjustment == 'yes'" class="adjustButton" ng-click="showInfo('helloRetryRequest', n, 'adjust')">+</div>
+                            <div class="infoButton" ng-click="showInfo('helloRetryRequest', n, 'info')">i</div>
                         </div>
                         </br>        
                     </div>
@@ -66,9 +106,9 @@
                     <span ng-repeat="rr in rrClientHello">
                         <span ng-if="o.id == rr.stepID">
                             <div style="display: inline-block;">
-                                <div class="deleteButton" ng-click="showInfo(n, 'delete')">x</div>
-                                <div class="adjustButton" ng-click="showInfo(n, 'adjust')">+</div>
-                                <div class="infoButton" ng-click="showInfo(n, 'info')">i</div>
+                                <div ng-if="n.delete == 'yes'" class="deleteButton" ng-click="showInfo('rrClientHello', n, 'delete')">x</div>
+                                <div ng-if="n.adjustment == 'yes'" class="adjustButton" ng-click="showInfo('rrClientHello', n, 'adjust')">+</div>
+                                <div class="infoButton" ng-click="showInfo('rrClientHello', n, 'info')">i</div>
                                 {{rr.eltType}}  {{rr.eltName}} {{rr.eltValue}}
                             </div>
                             </br>       
@@ -81,18 +121,17 @@
             
    <!-------------------------------------------->   
     <div class="col-lg-3 col-lg-3 col-lg-3">
-        <div class="alert">
+        <div class="alert" ng-if="error == true">
+
+        </div>
+       <!--  <div class="alert">
             <h2>Property Alert</h2>
             Click to expand
         </div>
         <div class="threadAlert">
             <h2>Thread Alert</h2>
             Click to expand
-        </div>
+        </div> -->
     </div>
 </div>
-
-    
-    <!-- <random-ninja ninjas="ninjas" title="'Random Ninja'"> is our chosen random ninja -->
-    <!-- </random-ninja> -->
 </div>
