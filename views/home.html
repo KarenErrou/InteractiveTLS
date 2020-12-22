@@ -8,7 +8,7 @@
                  
             </div>
             <div ng-if="adjusting == true" >
-                <u>Choose one of the following:</u>
+                
                 <p ng-bind-html="adjustMessage" >
                  
                  </p>
@@ -32,7 +32,6 @@
                 <div class="peerP2">Server</div>
         </div>
         <div class="lignP1">
-
     <!--------------- KEY EXCHANGE ------------------>
         <!--------------- CLIENT REQUEST ------------------>    
             <div class="stepClient">
@@ -78,10 +77,10 @@
                         <div> Extension: </div>
                         <span ng-repeat="n in shExtensions">
                             <div style="display: inline-block;">
-                                <div ng-if="n.delete == 'yes'" class="deleteButton"  ng-click="showInfo('shExtensions', n, 'delete')">x</div>
+                                {{n.eltType}} {{n.eltName}} {{n.eltValue}} 
+                                 <div ng-if="n.delete == 'yes'" class="deleteButton"  ng-click="showInfo('shExtensions', n, 'delete')">x</div>
                         <!--         <div ng-if="n.adjustment == 'yes'" class="adjustButton" ng-click="showInfo('clientHello', n, 'adjust')">+</div> -->
                                 <div class="infoButton" ng-click="showInfo('shExtensions', n, 'info')">i</div>
-                                {{n.eltType}} {{n.eltName}} {{n.eltValue}} 
                             </div>
                             </br>
                         </span>

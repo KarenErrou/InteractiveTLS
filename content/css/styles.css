@@ -87,6 +87,17 @@ main{
   
 }
 
+.keyExchange{
+  width:100%;
+  margin:20px;
+  position: relative;
+  /*margin:120px;*/
+  /*display: inline-block;*/
+  border-color:#0000;
+  border: 3px solid;
+
+}
+
 .leftBox{
   position:relative;
   padding:25px;
