@@ -12,13 +12,19 @@
                 <p ng-bind-html="adjustMessage" >
                  
                  </p>
+            
                 <form>
                     <span ng-repeat="n in splitted">
-                        <label>
-                            <input type="radio" ng-model="data.adjust" value="{{n}}" ng-change='nowAdjust()'>
+                        <label ng-hide='checkbox'>
+                            <input  type="radio"  ng-model="data.adjust" value="{{n}}" ng-change='nowAdjust()'>
                             {{n}}
+                            <br/>
                         </label>
-                    <br/>
+                        <label ng-if='storeidStep == "clientHello"' ng-show='checkbox'>
+                            <input type="checkbox"  ng-model="cipherSuitesClient[n]" ng-change='nowAdjust()'>
+                            {{n}}
+                            <br/>                                
+                        </label>
                     </span>
                 </form>
             </div>
@@ -63,8 +69,8 @@
             <!--------------- SERVERHELLO ------------------>
             <div class="stepServer"> 
                 <div class="stepServerContent">
-                    <div class="circleServer" ng-model="step"> 2</div> <h3>{{keyExchange[0].name}}</h3>
-                    <div ng-if="keyExchange[0].name == 'ServerHello'" >
+                    <div class="circleServer" ng-model="step"> 2</div> <h3>{{keyExchange[0]}}</h3>
+                    <div ng-if="keyExchange[0] == 'serverHello'" >
                         <span ng-repeat="n in serverHello">
                             <div style="display: inline-block;">
                                 {{n.eltType}}  {{n.eltName}} {{n.eltValue}}
@@ -85,7 +91,7 @@
                             </br>
                         </span>
                     </div>
-                    <div ng-if="keyExchange[0].name == 'HelloRetryRequest'" ng-repeat="n in helloRetryRequest">
+                    <div ng-if="keyExchange[0] == 'HelloRetryRequest'" ng-repeat="n in helloRetryRequest">
                         <div style="display: inline-block;">
                             {{n.eltType}}  {{n.eltName}} {{n.eltValue}}
                             <div ng-if="n.delete == 'yes'" class="deleteButton" ng-click="showInfo('helloRetryRequest', n, 'delete')">x</div>
@@ -99,7 +105,7 @@
 
 
             <!---------- HELLORETRYREQUEST + ClientHello ----------->
-            <div ng-if="keyExchange[0].name == 'HelloRetryRequest'" class="stepClient"> 
+            <div ng-if="keyExchange[0] == 'helloRetryRequest'" class="stepClient"> 
                 <div class="stepClientContent">
                     <div class="circleClient" ng-model="step"> 3</div>    <h3>ClientHello</h3>        
                     <span ng-repeat="rr in rrClientHello">
