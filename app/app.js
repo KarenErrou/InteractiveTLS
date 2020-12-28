@@ -44,6 +44,8 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 	// Key Exchange 
 	$scope.tlsVersion = [1.3, 1.3];
 	$scope.random;
+	$scope.supportedgroupsKeyshare = [true,true,true,true];
+	$scope.pre_shared_keys = true;
 	// Extensions
 	$scope.supported_version = [true, true];	
 
@@ -126,14 +128,12 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 	};
 	
 
-	$scope.nowAdjust = function(){
-		
-		
+	$scope.nowAdjust = function(){		
 		switch ($scope.storeidStep) {
             case 'clientHello':
            	    for (var elt1 in $scope.clientHello){
 	        		if($scope.storeidField.eltName == $scope.clientHello[elt1].eltName){
-		            	switch ($scope.storeidField.eltName){
+	        			switch ($scope.storeidField.eltName){
 		            		case 'legacy_version':
 		            			$scope.adjustVersion('clientHello', elt1, elt);
 								$scope.updateNextSteps('clientHello','legacy_version', 'adjusted');
@@ -143,11 +143,31 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 										alert($scope.cipherSuitesServer + " is selected in the server and wasn't offered by the client!! ABORT HANDSHAKE!");
 								}			
 							break;		            		
-		            		default:
+							default:
 		            	}
 		            }
 	          	}
             break;
+            case 'chExtensions':
+				for (var elt1 in $scope.chExtensions){
+	        		if($scope.storeidField.eltName == $scope.chExtensions[elt1].eltName){
+	        			switch ($scope.storeidField.eltName){
+		        			case 'key_share':
+								if($scope.data.adjust == 'empty'){
+									$scope.keyExchange[0]='helloRetryRequest';
+									$scope.chExtensions[elt1].eltValue="= empty"
+								}
+								else{
+									$scope.keyExchange[0]='serverHello';
+									//TODO: Check ther stuff for HELLORETRYREQUEST
+									$scope.chExtensions[elt1].eltValue="= ECDHE shares for some or all the groups";
+								}
+							break;
+		            		default:
+		            	}
+		            }
+		        }
+		    break;
             case 'serverHello':
             	for (var elt1 in $scope.serverHello){
             		if($scope.storeidField.eltName == $scope.serverHello[elt1].eltName){
@@ -244,7 +264,34 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 						$scope.newItem= {eltName: 'supported_versions', delete: 'yes', 
 						info: 'Indicates which versions of TLS it supports.'}
 						$scope.chExtensions.splice(0, 0, $scope.newItem);
+					break;
+
+					case 'supported_groups':
+						$scope.supportedgroupsKeyshare[0]=false;
+						if($scope.supportedgroupsKeyshare[1]==true){
+							alert("ECDHE is not supported since supported groups is not available. Key share shouldn't be available and PSK must be supported.");
+							alert("missing extension");
+						}
+						if($scope.pre_shared_keys[0]==false){
+							alert("ECDHE is not supported since supported groups is not available. PSK must be supported.");
+							alert("missing extension");
+						}
 					break;			
+
+					case 'key_share':
+						if(type == 'deleted'){
+							$scope.supportedgroupsKeyshare[1]=false;
+							if($scope.supportedgroupsKeyshare[0]==true){
+								alert("key_share should be available when supported groups is available");
+								alert("missing extension");
+							}
+							else{
+								if($scope.pre_shared_keys[0]==false){
+									alert("ECDHE is not supported since supported groups is not available. PSK must be supported.");
+									alert("missing extension");
+								}
+							}
+						}
 					default:
 				}
 				
@@ -374,8 +421,16 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
  	];
 
  	$scope.chExtensions = [
- 		{eltName: 'supported_versions', delete: 'yes', adjust:'no',
+ 		{eltName: 'supported_versions', delete: 'yes', adjustment:'no',
  			info: 'Indicates which versions of TLS the client supports. It is a list of of supported versions ordered in preference with the most preferred first. <br/>For TLS1.3, 0x0304 (the number of TLS1.3) should be at the top of the list. </br></br> This extension should only be available when the peer supports TLS1.3.'
+ 		},
+ 		{eltType: '', delete: 'yes', adjustment:'no', eltName: 'supported_groups', eltValue: '= ECDHE groups', 
+ 		info: 'If available, the client supports elliptic curves (ECDHE) cryptography. This field contains the supported groups that the client supports for key exchange. It is ordered from most to least preferred. <br/> In previous versions it was called <i> elleptic curves</i> and only supported elleptic curves groups. In TLS1.3, signature algorithms are negotiated in another extension. <br/> It contains values for Elliptic curve groups (ECDHE), Finite Field Groups (DHE) and other reserved coodes for private use.',
+ 		},
+ 		{eltType: '', delete: 'yes', adjustment:'yes', eltName: 'key_share', eltValue: '= ECDHE shares for some or all the groups', 
+ 		info: 'This field contains the endpoints cryptographic parameters. It is a list of offered key share values in descending order of client preference. This allows the encryption of messages after the clientHello and serverHello. <p> In previous versions the messages were sent unencrypted </p>',
+ 		adjustM: '<p>The client can send this field empty to request group selection from the server. This will yield to a helloRetryRequest, therefore, an additional round-trip.</p> <p> Or, the client can send one or more public keys with an algorithm that he thinks the server supports. Each key share value must correspond to a group offered in the supported_groups and must appear in its same order.',
+ 		adjust: 'empty;keys'
  		}
  	];
 
@@ -400,19 +455,25 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
  		},
 		{eltType: 'opaque', delete: 'no', adjustment:'no', eltName: 'legacy_compression_methods', eltValue: '<1..2^8-1>;', 
 		info: 'Note that TLS 1.3 servers might receive TLS 1.2 or prior ClientHellos which contain other compression methods and (if negotiating such a prior version) must follow the procedures for the appropriate prior version of TLS. </br></br> This field\'s value in the serverHello must be a single byte which must have the value 0.'
- 		}
+		}	 		
  	];
 
  	$scope.shExtensions = [
  		{eltName: 'supported_versions', delete: 'yes', adjustment:'no',
  			info: 'Indicates which versions of TLS the server uses. It is a list of of supported versions ordered in preference with the most preferred first. <br/><br/>This extension should only be available when the peer supports TLS1.3.'
+ 		},
+ 		{eltType: '', delete: 'yes', adjustment:'no', eltName: 'supported_groups', eltValue: '= ECDHE groups', 
+ 		info: 'In TLS1.3, servers can send this extension to the client in case there is a more preferred group to the one in the key_share extension but for now e is still willing to accept this clientHello. This field is therefore sent just to update the client’s view on the server’s preferences. But, before a successful completion of the handshake, the client shouldn\'t act upon any information gained from this field. After the successful completion of the handshake the client can use the information gained to change the groups used in its “key_share” extension in following connections.',
+ 		},
+ 		{eltType: '', delete: 'yes', adjustment:'no', eltName: 'key_share', eltValue: '= ECDHE share' 
+ 		info: '<p>This field contains a single public key that is in the same group as one of the group selected in the <i>ClientHello.supported_groups</i>.</p> <p> When using ECDHE then the server offer one key in the serverHello. IF psk_ke is used, no key share must be sent.</p>',
  		}
  	];
 
  	$scope.helloRetryRequest = [
- 	 		{eltType: 'ProtocolVersion',  eltName: 'legacy_version', eltValue: '= 0x0303;', delete: 'no', adjustment: 'yes' ,
+	 	 {eltType: 'ProtocolVersion',  eltName: 'legacy_version', eltValue: '= 0x0303;', delete: 'no', adjustment: 'yes' ,
  			info: 'When this field is equal to 0x0303, it means the server wants to negotiate a version TLS1.3. In this case, <i>supported_version</i> extension must be available representing the highest version number supported by the server.', 
- 			adjustM: '"Either =0x0304 (indicating TLS1.3), = 0x0303 (indicating TLS1.2) or <0x0303 indictating prior versions of TLS1.2',
+ 			adjustM: '"Either = 0x0303 (indicating TLS1.2) or <0x0303 indictating prior versions of TLS1.2',
  			adjust: '= 0x0303;< 0x303'
  		},
  		{eltType: 'Random', delete: 'no', adjustment:'yes', eltName: 'random', eltValue: ';', 
@@ -436,8 +497,14 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
  	$scope.hrrExtensions = [
  		{eltName: 'supported_versions', delete: 'yes', adjustment:'yes',
  			info: 'Indicates which versions of TLS the server uses. It is a list of of supported versions ordered in preference with the most preferred first. <br/><br/>This extension should only be available when the peer supports TLS1.3.'
- 		}
- 	];
+ 		},
+ 		{eltType: '', delete: 'yes', adjustment:'no', eltName: 'supported_groups', eltValue: '= ECDHE groups', 
+ 		info: 'In TLS1.3, servers can send this extension to the client in case there is a more preferred group to the one in the key_share extension but for now e is still willing to accept this clientHello. This field is therefore sent just to update the client’s view on the server’s preferences. But, before a successful completion of the handshake, the client shouldn\'t act upon any information gained from this field. After the successful completion of the handshake the client can use the information gained to change the groups used in its “key_share” extension in following connections.'
+ 		},
+ 		{eltType: '', delete: 'yes', adjustment:'no', eltName: 'key_share', eltValue: '= ECDHE share',
+ 		info: '<p> This field indicates the mutually supported group the server intends to negotiate and is requesting a retried ClientHello key_share for. </p><br/> <p> Upon receiving this field the client checks if it this field correspong to a group provided in the clientHello.supported_groups. Additionally, it also checks that this field is not the same as the group in the clientHello.key_share. In case any of these checks are false then the handshake is aborted with an "illegal_parameter" alert --> MAN IN THE MIDDLE!??</p> <p> If these checks works, then the clientHello.key_share should be replaced by this field.</p>',
+ 	}
+  	];
 
  	$scope.rrClientHello = [
  		{eltType: 'ProtocolVersion', delete: 'yes', adjustment:'yes', eltName: 'legacy_version', stepValue: '= 0x0303;'}, 

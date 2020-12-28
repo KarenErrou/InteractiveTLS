@@ -18,7 +18,7 @@
                         <label ng-hide='checkbox'>
                             <input  type="radio"  ng-model="data.adjust" value="{{n}}" ng-change='nowAdjust()'>
                             {{n}}
-                            <br/>
+                            </br>
                         </label>
                         <label ng-if='storeidStep == "clientHello"' ng-show='checkbox'>
                             <input type="checkbox"  ng-model="cipherSuitesClient[n]" ng-change='nowAdjust()'>
@@ -57,7 +57,7 @@
                     <span ng-repeat="n in chExtensions">
                         <div style="display: inline-block;">
                             <div ng-if="n.delete == 'yes'" class="deleteButton"  ng-click="showInfo('chExtensions', n, 'delete')">x</div>
-                    <!--         <div ng-if="n.adjustment == 'yes'" class="adjustButton" ng-click="showInfo('clientHello', n, 'adjust')">+</div> -->
+                            <div ng-if="n.adjustment == 'yes'" class="adjustButton" ng-click="showInfo('chExtensions', n, 'adjust')">+</div>
                             <div class="infoButton" ng-click="showInfo('chExtensions', n, 'info')">i</div>
                             {{n.eltType}} {{n.eltName}} {{n.eltValue}} 
                         </div>
@@ -91,20 +91,33 @@
                             </br>
                         </span>
                     </div>
-                    <div ng-if="keyExchange[0] == 'HelloRetryRequest'" ng-repeat="n in helloRetryRequest">
-                        <div style="display: inline-block;">
-                            {{n.eltType}}  {{n.eltName}} {{n.eltValue}}
-                            <div ng-if="n.delete == 'yes'" class="deleteButton" ng-click="showInfo('helloRetryRequest', n, 'delete')">x</div>
-                            <div ng-if="n.adjustment == 'yes'" class="adjustButton" ng-click="showInfo('helloRetryRequest', n, 'adjust')">+</div>
-                            <div class="infoButton" ng-click="showInfo('helloRetryRequest', n, 'info')">i</div>
-                        </div>
-                        </br>        
+            <!---------- HELLORETRYREQUEST + ClientHello ----------->
+                    <div ng-if="keyExchange[0] == 'helloRetryRequest'">
+                         <span ng-repeat="n in helloRetryRequest">
+                            <div style="display: inline-block;">
+                                {{n.eltType}}  {{n.eltName}} {{n.eltValue}}
+                                <div ng-if="n.delete == 'yes'" class="deleteButton" ng-click="showInfo('helloRetryRequest', n, 'delete')">x</div>
+                                <div ng-if="n.adjustment == 'yes'" class="adjustButton" ng-click="showInfo('helloRetryRequest', n, 'adjust')">+</div>
+                                <div class="infoButton" ng-click="showInfo('helloRetryRequest', n, 'info')">i</div>
+                            </div>
+                            </br>        
+                        </span></br>
+                        <div> Extension: </div>
+                        <span ng-repeat="n in hrrExtensions">
+                            <div style="display: inline-block;">
+                                {{n.eltType}} {{n.eltName}} {{n.eltValue}} 
+                                 <div ng-if="n.delete == 'yes'" class="deleteButton"  ng-click="showInfo('hrrExtensions', n, 'delete')">x</div>
+                        <!--         <div ng-if="n.adjustment == 'yes'" class="adjustButton" ng-click="showInfo('clientHello', n, 'adjust')">+</div> -->
+                                <div class="infoButton" ng-click="showInfo('hrrExtensions', n, 'info')">i</div>
+                            </div>
+                            </br>
+                        </span>
                     </div>
                 </div>
             </div> 
 
 
-            <!---------- HELLORETRYREQUEST + ClientHello ----------->
+            
             <div ng-if="keyExchange[0] == 'helloRetryRequest'" class="stepClient"> 
                 <div class="stepClientContent">
                     <div class="circleClient" ng-model="step"> 3</div>    <h3>ClientHello</h3>        
