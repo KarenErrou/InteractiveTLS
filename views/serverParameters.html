@@ -1,0 +1,31 @@
+<div class="stepServer"> 
+    <div class="stepServerContent" id="serverParameters">
+        <div class="circleServer" ng-model="step" id="serverParameters"> 3</div> <h3>Encrypted Extension</h3>
+        
+        <span ng-repeat="n in encryptedExtension">
+            <div style="display: inline-block;">
+                {{n.eltType}}  {{n.eltName}} {{n.eltValue}}
+                <div ng-if="n.delete == 'yes'" class="deleteButton" ng-click="showInfo('encryptedExtension', n, 'delete')">x</div>
+                <div ng-if="n.adjustment == 'yes'" class="adjustButton" ng-click="showInfo('encryptedExtension', n, 'adjust')">+</div>
+                <div class="infoButton" ng-click="showInfo('encryptedExtension', n, 'info')">i</div>
+            </div>
+            </br>        
+        </span></br>     
+    </div>
+
+
+    <div class="stepServerContent" id="serverParameters">
+        <div class="circleServer" ng-model="step" id="serverParameters"> 4</div> <h3>Certificate Request</h3>
+        
+        <!-- <span ng-repeat="n in serverHello">
+            <div style="display: inline-block;">
+                {{n.eltType}}  {{n.eltName}} {{n.eltValue}}
+                <div ng-if="n.delete == 'yes'" class="deleteButton" ng-click="showInfo('serverHello', n, 'delete')">x</div>
+                <div ng-if="n.adjustment == 'yes'" class="adjustButton" ng-click="showInfo('serverHello', n, 'adjust')">+</div>
+                <div class="infoButton" ng-click="showInfo('serverHello', n, 'info')">i</div>
+            </div>
+            </br>        
+        </span></br>     --> 
+    </div>
+
+</div>

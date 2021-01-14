@@ -118,6 +118,7 @@ main{
   background-color: #889EB7;
   display: inline-block;
 }
+
 .adjustButton{
   height: 30px;
   width: 30px;
@@ -126,7 +127,7 @@ main{
   font-size:20px;
   margin:0px;
   color:white;
-  background-color: green;
+  background-color: #009200;
   display: inline-block;
 }
 
@@ -140,7 +141,8 @@ main{
   padding:0px;
   color:white;
   display: inline-block;
-  background-color: red;
+  background-color: #e70000;
+;
 }
 
 .alert{
@@ -170,9 +172,16 @@ main{
   text-align: left;
 }
 
+#keyExchange{
+  border-color: #99ace6;
+}
+
+#serverParameters{
+  border-color: #ff9f80;
+}
+
 .stepClientContent{
   border: 4px solid;
-  border-color: coral;
   margin-top: 15px;
   border-radius: 5%;
   margin-left: 10px; 
@@ -182,6 +191,7 @@ main{
   display: inline-block;
 }
 
+
 .stepServer{
   position:relative;
   font-size: 20px;
@@ -190,7 +200,6 @@ main{
 
 .stepServerContent{
   border: 4px solid;
-  border-color: coral;
   margin-top:15px;
   border-radius: 5%;
   padding: 20px;

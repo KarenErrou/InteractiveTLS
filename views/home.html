@@ -2,10 +2,11 @@
 <div class="row">
 
     <div class="col-lg-3 col-lg-3 col-lg-3" >
-        <div class="leftBox" > 
+        
+        <div class="leftBox"> 
             <h3>{{leftBoxTitle}}</h3> </br>
-            <div ng-bind-html="leftBoxContent" >
-                 
+            <div ng-bind-html="leftBoxContent"  >
+                
             </div>
             <div ng-if="adjusting == true" >
                 
@@ -15,14 +16,24 @@
             
                 <form>
                     <span ng-repeat="n in splitted">
-                        <label ng-hide='checkbox'>
+                        <label ng-if='checkbox == false'>
                             <input  type="radio"  ng-model="data.adjust" value="{{n}}" ng-change='nowAdjust()'>
                             {{n}}
                             </br>
                         </label>
-                        <label ng-if='storeidStep == "clientHello"' ng-show='checkbox'>
-                            <input type="checkbox"  ng-model="cipherSuitesClient[n]" ng-change='nowAdjust()'>
-                            {{n}}
+                        <label ng-if='checkbox == true' >
+                            <span ng-if='checkboxCipherSuites == true'>
+                                <input  type="checkbox"  ng-model="cipherSuitesClient[n]" ng-change='nowAdjust()'>
+                                {{n}}
+                            </span>
+                            <span ng-if='checkboxClientCert == true'>
+                                <input  type="checkbox"  ng-model="clientCert[n]" ng-change='nowAdjust()'>
+                                {{n}}
+                            </span>
+                            <span ng-if='checkboxServerCert == true'>
+                                <input  type="checkbox"  ng-model="serverCert[n]" ng-change='nowAdjust()'>
+                                {{n}}
+                            </span>
                             <br/>                                
                         </label>
                     </span>
@@ -33,109 +44,23 @@
     </div>
 
     <div class="col-lg-6 col-lg-6 col-lg-6">
+
         <div class="peers">
                 <div class="peerP1">Client</div>
                 <div class="peerP2">Server</div>
         </div>
         <div class="lignP1">
-    <!--------------- KEY EXCHANGE ------------------>
-        <!--------------- CLIENT REQUEST ------------------>    
-            <div class="stepClient">
-                <div class="stepClientContent">    
-                    <div class="circleClient" ng-model="step"> 1 </div> 
-                    <h3>ClientHello</h3>
-                    <span ng-repeat="n in clientHello">
-                        <div style="display: inline-block;">
-                            <div ng-if="n.delete == 'yes'" class="deleteButton"  ng-click="showInfo('clientHello', n, 'delete')">x</div>
-                            <div ng-if="n.adjustment == 'yes'" class="adjustButton" ng-click="showInfo('clientHello', n, 'adjust')">+</div>
-                            <div class="infoButton" ng-click="showInfo('clientHello', n, 'info')">i</div>
-                            {{n.eltType}} {{n.eltName}} {{n.eltValue}} 
-                        </div>
-                        </br>
-                    </span></br>
-                    <div> Extension: </div>
-                    <span ng-repeat="n in chExtensions">
-                        <div style="display: inline-block;">
-                            <div ng-if="n.delete == 'yes'" class="deleteButton"  ng-click="showInfo('chExtensions', n, 'delete')">x</div>
-                            <div ng-if="n.adjustment == 'yes'" class="adjustButton" ng-click="showInfo('chExtensions', n, 'adjust')">+</div>
-                            <div class="infoButton" ng-click="showInfo('chExtensions', n, 'info')">i</div>
-                            {{n.eltType}} {{n.eltName}} {{n.eltValue}} 
-                        </div>
-                        </br>
-                    </span>    
-                </div>
-            </div>    
-        <!--------------- SERVER RESPONSE ------------------>   
-            <!--------------- SERVERHELLO ------------------>
-            <div class="stepServer"> 
-                <div class="stepServerContent">
-                    <div class="circleServer" ng-model="step"> 2</div> <h3>{{keyExchange[0]}}</h3>
-                    <div ng-if="keyExchange[0] == 'serverHello'" >
-                        <span ng-repeat="n in serverHello">
-                            <div style="display: inline-block;">
-                                {{n.eltType}}  {{n.eltName}} {{n.eltValue}}
-                                <div ng-if="n.delete == 'yes'" class="deleteButton" ng-click="showInfo('serverHello', n, 'delete')">x</div>
-                                <div ng-if="n.adjustment == 'yes'" class="adjustButton" ng-click="showInfo('serverHello', n, 'adjust')">+</div>
-                                <div class="infoButton" ng-click="showInfo('serverHello', n, 'info')">i</div>
-                            </div>
-                            </br>        
-                        </span></br>
-                        <div> Extension: </div>
-                        <span ng-repeat="n in shExtensions">
-                            <div style="display: inline-block;">
-                                {{n.eltType}} {{n.eltName}} {{n.eltValue}} 
-                                 <div ng-if="n.delete == 'yes'" class="deleteButton"  ng-click="showInfo('shExtensions', n, 'delete')">x</div>
-                        <!--         <div ng-if="n.adjustment == 'yes'" class="adjustButton" ng-click="showInfo('clientHello', n, 'adjust')">+</div> -->
-                                <div class="infoButton" ng-click="showInfo('shExtensions', n, 'info')">i</div>
-                            </div>
-                            </br>
-                        </span>
-                    </div>
-            <!---------- HELLORETRYREQUEST + ClientHello ----------->
-                    <div ng-if="keyExchange[0] == 'helloRetryRequest'">
-                         <span ng-repeat="n in helloRetryRequest">
-                            <div style="display: inline-block;">
-                                {{n.eltType}}  {{n.eltName}} {{n.eltValue}}
-                                <div ng-if="n.delete == 'yes'" class="deleteButton" ng-click="showInfo('helloRetryRequest', n, 'delete')">x</div>
-                                <div ng-if="n.adjustment == 'yes'" class="adjustButton" ng-click="showInfo('helloRetryRequest', n, 'adjust')">+</div>
-                                <div class="infoButton" ng-click="showInfo('helloRetryRequest', n, 'info')">i</div>
-                            </div>
-                            </br>        
-                        </span></br>
-                        <div> Extension: </div>
-                        <span ng-repeat="n in hrrExtensions">
-                            <div style="display: inline-block;">
-                                {{n.eltType}} {{n.eltName}} {{n.eltValue}} 
-                                 <div ng-if="n.delete == 'yes'" class="deleteButton"  ng-click="showInfo('hrrExtensions', n, 'delete')">x</div>
-                        <!--         <div ng-if="n.adjustment == 'yes'" class="adjustButton" ng-click="showInfo('clientHello', n, 'adjust')">+</div> -->
-                                <div class="infoButton" ng-click="showInfo('hrrExtensions', n, 'info')">i</div>
-                            </div>
-                            </br>
-                        </span>
-                    </div>
-                </div>
-            </div> 
-
-
+            <!--------------- KEY EXCHANGE ------------------>
+            <div ng-include="'views/keyExchange.html'"></div>
             
-            <div ng-if="keyExchange[0] == 'helloRetryRequest'" class="stepClient"> 
-                <div class="stepClientContent">
-                    <div class="circleClient" ng-model="step"> 3</div>    <h3>ClientHello</h3>        
-                    <span ng-repeat="rr in rrClientHello">
-                        <span ng-if="o.id == rr.stepID">
-                            <div style="display: inline-block;">
-                                <div ng-if="n.delete == 'yes'" class="deleteButton" ng-click="showInfo('rrClientHello', n, 'delete')">x</div>
-                                <div ng-if="n.adjustment == 'yes'" class="adjustButton" ng-click="showInfo('rrClientHello', n, 'adjust')">+</div>
-                                <div class="infoButton" ng-click="showInfo('rrClientHello', n, 'info')">i</div>
-                                {{rr.eltType}}  {{rr.eltName}} {{rr.eltValue}}
-                            </div>
-                            </br>       
-                        </span> 
-                    </span>
-                </div>
-            </div>
+            <!--------------- SERVER PARAMETERS ------------------>
+            <div ng-include="'views/serverParameters.html'"></div>
+            
         </div>
     </div>
+
+
+
             
    <!-------------------------------------------->   
     <div class="col-lg-3 col-lg-3 col-lg-3">

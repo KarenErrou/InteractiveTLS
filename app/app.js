@@ -18,15 +18,24 @@ myTLSApp.config(['$routeProvider', function($routeProvider){
 
 }]);
 
-
+// myTLSApp.controller('KEController', ['$scope', '$http', function($scope, $http){}]);
 myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http){
 
-	$scope.step = 2;
-	$scope.client = true;
-	$scope.showInfoBox = false;
-	$scope.retryRequest = false;
+	// $scope.showInfoBox = false;
+	// $scope.retryRequest = false;
 	$scope.adjusting = false;
 	$scope.data = {adjust: 'test'};
+	
+	$scope.storeidStep;
+	$scope.storidField;
+	$scope.adjusted;
+
+	// Key Exchange 
+	$scope.tlsVersion = [1.3, 1.3];
+	$scope.random;
+	$scope.supportedgroupsKeyshare = [true,true,true,true];
+	$scope.pre_shared_keys = true;
+	$scope.supported_version = [true, true];	
 	$scope.cipherSuitesClient = {
 		"TLS_AES_128_GCM_SHA256": true,
 		"TLS_AES_256_GCM_SHA384": false,
@@ -37,17 +46,21 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 	$scope.cipherSuitesServer= "TLS_AES_128_GCM_SHA256";
 	$scope.cipherSuitesHelloRetryRequest= "TLS_AES_128_GCM_SHA256";
 
-	$scope.storeidStep;
-	$scope.storidField;
-	$scope.adjusted;
 
-	// Key Exchange 
-	$scope.tlsVersion = [1.3, 1.3];
-	$scope.random;
-	$scope.supportedgroupsKeyshare = [true,true,true,true];
-	$scope.pre_shared_keys = true;
-	// Extensions
-	$scope.supported_version = [true, true];	
+	//Server Parameters
+	$scope.clientCert = {
+		"RawPublicKey" : true,
+		"X.509" : true,
+		"Additional certificate types" : true
+	};
+	$scope.clientCertServer= "X.509";
+
+	$scope.serverCert = {
+		"RawPublicKey" : true,
+		"X.509" : true,
+		"Additional certificate types" : true
+	};
+	$scope.serverCertServer= "X.509";
 
 
 	$scope.showInfo = function (idStep, idField, LeftBoxType){ 
@@ -56,11 +69,11 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 		$scope.storeidStep = idStep;
 		$scope.storeidField = idField;
 		$scope.adjusting= false;
-		// $scope.step = value1;
-		if($scope.showInfoBox ==true){
-			$scope.showInfoBox =false;	
-		} 
-		else $scope.showInfoBox = true;
+		
+		// if($scope.showInfoBox ==true){
+		// 	$scope.showInfoBox =false;	
+		// } 
+		// else $scope.showInfoBox = true;
 
 
 		if(LeftBoxType == 'info'){
@@ -71,7 +84,7 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 
 
 		else if(LeftBoxType == 'adjust'){
-			document.querySelector(".leftBox").style.cssText = "  border-style: solid; border-color: green;";
+			document.querySelector(".leftBox").style.cssText = "  border-style: solid; border-color: #009200;";
 			$scope.leftBoxContent = " ";
 			$scope.leftBoxTitle = 'Adjust ' + idField.eltName;	
 			$scope.adjusting= true;
@@ -83,9 +96,22 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 			else{
 					$scope.splitted = '';
 			}
+			
+			$scope.checkboxCipherSuites = false;
+			$scope.checkboxClientCert = false;
+			$scope.checkboxServerCert = false;
 
 			if(idField.eltName == 'cipher_suites' && idStep == 'clientHello'){
 				$scope.checkbox = true;
+				$scope.checkboxCipherSuites = true;
+			}
+			else if (idField.eltName == 'Client_certificate_type' && idStep == 'chExtensions' ){
+				$scope.checkbox = true;	
+				$scope.checkboxClientCert = true;
+			}
+			else if (idField.eltName == 'Server_certificate_type' && idStep == 'chExtensions' ){
+				$scope.checkbox = true;	
+				$scope.checkboxServerCert = true;
 			}
 			else{
 				$scope.checkbox = false;
@@ -96,7 +122,7 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 		else  if(LeftBoxType == 'delete'){
 			$scope.leftBoxTitle = idField.eltName+ ' deleted' ;	
 			$scope.leftBoxContent = " ";
-			document.querySelector(".leftBox").style.cssText = "  border-style: solid; border-color: red;";
+			document.querySelector(".leftBox").style.cssText = "  border-style: solid; border-color:  #e70000;";
 			$scope.nowDelete();
 		}
     };
@@ -161,6 +187,28 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 									$scope.keyExchange[0]='serverHello';
 									//TODO: Check ther stuff for HELLORETRYREQUEST
 									$scope.chExtensions[elt1].eltValue="= ECDHE shares for some or all the groups";
+								}
+							break;
+
+							case 'Client_certificate_type':
+								if($scope.clientCert[$scope.clientCertServer] ==  false){
+										alert($scope.clientCertServer + " is selected in the server and wasn't offered by the client!! ABORT HANDSHAKE!");
+								}
+
+								if($scope.clientCert['RawPublicKey'] == false && $scope.clientCert['Additional certificate types'] == false){
+									alert("In case the client has no other certificate types remaining to send other than X.509 then this extension must be omitted.");
+									$scope.showInfo('chExtensions', $scope.storeidField, 'delete');
+								}
+							break;
+
+							case 'Server_certificate_type':
+								if($scope.serverCert[$scope.serverCertServer] ==  false){
+										alert($scope.serverCertServer + " is selected in the server and wasn't offered by the client!! ABORT HANDSHAKE!");
+								}
+
+								if($scope.serverCert['RawPublicKey'] == false && $scope.serverCert['Additional certificate types'] == false){
+									alert("In case the client has no other certificate types remaining to send other than X.509 then this extension must be omitted.");
+									$scope.showInfo('chExtensions', $scope.storeidField, 'delete');
 								}
 							break;
 		            		default:
@@ -236,6 +284,27 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 	        
 	        break;
             
+            case 'encryptedExtension':
+            	for (var elt1 in $scope.serverHello){
+            		if($scope.storeidField.eltName == $scope.serverHello[elt1].eltName){
+            			switch ($scope.storeidField.eltName){
+			            	case 'Client_certificate_type':
+			        			if($scope.clientCert[$scope.data.adjust] ==  false){
+									alert($scope.clientCertServer + " is selected in the server and wasn't offered by the client!! ABORT HANDSHAKE!");
+								}			
+								$scope.clientCertServer = data.adjust;
+							break;	
+
+							case 'Server_certificate_type':
+								if($scope.serverCert[$scope.data.adjust] ==  false){
+			        				alert($scope.clientCertServer + " is selected in the server and wasn't offered by the client!! ABORT HANDSHAKE!");
+								}			
+								$scope.serverCertServer = data.adjust;
+							break;
+						}
+					}
+				}
+            break;
             default:
         }
 		
@@ -393,6 +462,8 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 	// 		[{id:"ClientHello", value: clientHello}, 
 	// 		{id:"ServerHello", value: serverHello}];
 
+	
+
 	$scope.keyExchange = [
 		'serverHello'
 	];
@@ -413,11 +484,11 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
  		info: 'This field is a list of symmetric cipher options that are supported by the client in descending order of client preference. Cipher suites are a set of encryption rules dictating how the TLS handshake works.',
  		adjustM: 'Cipher suites in TLS1.3 use the same cipher suite space as pre-TLS1.3. But, they are defined differently. Therefore, cipher suites for TLS1.2 and lower cannot be used with TLS1.3 and vice versa. <br/> If the client is attempting a PSK establishment, then it should advertise at least one cipher suite indicating a Hash associated with the PSK. <p> In TLS1.3, Static RSA and Diffie-Helman cipher suites have been removed. Cipher suites were whittled down significantly in TLS 1.3 to the point where there are now just five recommended cipher suites:',
  		adjust: 'TLS_AES_128_GCM_SHA256;TLS_AES_256_GCM_SHA384;TLS_CHACHA20_POLY1305_SHA256;TLS_AES_128_CCM_SHA256;TLS_AES_128_CCM_8_SHA256'
- 				},
- 		{eltType: 'opaque', delete: 'no', adjustment:'no', eltName: 'legacy_compression_methods', eltValue: '<1..2^8-1>;', 
+ 		},
+ 		{eltType: 'opaque', delete: 'no', adjustment:'no', eltName: 'legacy_compression_methods', eltValue: ';', 
  			info: 'Versions of TLS before 1.3 supported compression with the list of supported compression methods being sent in this field. </br> In TLS 1.3, this vector MUST contain exactly one byte set to zero, which corresponds to the "null" compression method in prior versions of TLS.</br>'
  			+'If it is not the case, and the server receives a non 0 value, then the server must abort the handshake with an "illegal_parameter" alert.'
- 		},		
+ 		}	
  	];
 
  	$scope.chExtensions = [
@@ -431,6 +502,19 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
  		info: 'This field contains the endpoints cryptographic parameters. It is a list of offered key share values in descending order of client preference. This allows the encryption of messages after the clientHello and serverHello. <p> In previous versions the messages were sent unencrypted </p>',
  		adjustM: '<p>The client can send this field empty to request group selection from the server. This will yield to a helloRetryRequest, therefore, an additional round-trip.</p> <p> Or, the client can send one or more public keys with an algorithm that he thinks the server supports. Each key share value must correspond to a group offered in the supported_groups and must appear in its same order.',
  		adjust: 'empty;keys'
+ 		},
+ 		{eltType: '', delete: 'yes', adjustment:'no', eltName: 'Server_name', eltValue: ';', 
+ 		info: 'The <i>server_name</i> extension is used to guide certificate selection. Clients should send this extension, when applicable.',
+ 		},
+ 		{eltType: '', delete: 'yes', adjustment:'yes', eltName: 'Client_certificate_type', eltValue: ';', 
+ 		info: '<p> This extension indicates the certificate types the client is able to provide to the server in case requested (using certificate_request message). </p> <p> This extension can be omitted if the client doesn’t possess the corresponding raw public key or certificate that it can provide when a certificate_request is requested. It can also be omitted in case it is not configured to use one with the given TLS server. </p> <p> The default type is X.509. In case the client has no other certificate types remaining to send other than X.509 then this extension must be omitted. </p>',
+ 		adjustM: 'X.509 being the default. In case the client has no other certificate types remaining to send other than X.509, then this extension must be omitted. ',
+ 		adjust: 'RawPublicKey;X.509;Additional certificate types'
+ 		},
+ 		{eltType: '', delete: 'yes', adjustment:'yes', eltName: 'Server_certificate_type', eltValue: ';', 
+ 		info: '<p> This extension indicates the certificate types the client is able to process when given by the server.</p><p> This extension can be omitted if the client doesn’t possess the corresponding raw public key or certificate that it can process.</p><p> The default type is X.509. In case the client has no other certificate types remaining to send other than X.509 then this extension must be omitted.</p>',
+ 		adjustM: 'X.509 being the default. In case the client has no other certificate types remaining to send other than X.509, then this extension must be omitted. ',
+ 		adjust: 'RawPublicKey;X.509;Additional certificate types'
  		}
  	];
 
@@ -453,20 +537,17 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
  		adjustM: 'Cipher suites in TLS1.3 use the same cipher suite space as pre-TLS1.3. But, they are defined differently. Therefore, cipher suites for TLS1.2 and lower cannot be used with TLS1.3 and vice versa. <br/> If the client is attempting a PSK establishment, then it should advertise at least one cipher suite indicating a Hash associated with the PSK. <p> In TLS1.3, Static RSA and Diffie-Helman cipher suites have been removed. Cipher suites were whittled down significantly in TLS 1.3 to the point where there are now just five recommended cipher suites:',
  		adjust: 'TLS_AES_128_GCM_SHA256;TLS_AES_256_GCM_SHA384;TLS_CHACHA20_POLY1305_SHA256;TLS_AES_128_CCM_SHA256;TLS_AES_128_CCM_8_SHA256' 		
  		},
-		{eltType: 'opaque', delete: 'no', adjustment:'no', eltName: 'legacy_compression_methods', eltValue: '<1..2^8-1>;', 
+		{eltType: 'opaque', delete: 'no', adjustment:'no', eltName: 'legacy_compression_methods', eltValue: ';', 
 		info: 'Note that TLS 1.3 servers might receive TLS 1.2 or prior ClientHellos which contain other compression methods and (if negotiating such a prior version) must follow the procedures for the appropriate prior version of TLS. </br></br> This field\'s value in the serverHello must be a single byte which must have the value 0.'
-		}	 		
+		}
  	];
 
  	$scope.shExtensions = [
  		{eltName: 'supported_versions', delete: 'yes', adjustment:'no',
  			info: 'Indicates which versions of TLS the server uses. It is a list of of supported versions ordered in preference with the most preferred first. <br/><br/>This extension should only be available when the peer supports TLS1.3.'
  		},
- 		{eltType: '', delete: 'yes', adjustment:'no', eltName: 'supported_groups', eltValue: '= ECDHE groups', 
- 		info: 'In TLS1.3, servers can send this extension to the client in case there is a more preferred group to the one in the key_share extension but for now e is still willing to accept this clientHello. This field is therefore sent just to update the client’s view on the server’s preferences. But, before a successful completion of the handshake, the client shouldn\'t act upon any information gained from this field. After the successful completion of the handshake the client can use the information gained to change the groups used in its “key_share” extension in following connections.',
- 		},
- 		{eltType: '', delete: 'yes', adjustment:'no', eltName: 'key_share', eltValue: '= ECDHE share' 
- 		info: '<p>This field contains a single public key that is in the same group as one of the group selected in the <i>ClientHello.supported_groups</i>.</p> <p> When using ECDHE then the server offer one key in the serverHello. IF psk_ke is used, no key share must be sent.</p>',
+ 		{eltType: '', delete: 'yes', adjustment:'no', eltName: 'key_share', eltValue: '= ECDHE share' ,
+ 		info: '<p>This field contains a single public key that is in the same group as one of the group selected in the <i>ClientHello.supported_groups</i>.</p> <p> When using ECDHE then the server offer one key in the serverHello. IF psk_ke is used, no key share must be sent.</p>'
  		}
  	];
 
@@ -489,7 +570,7 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
  		adjustM: 'Cipher suites in TLS1.3 use the same cipher suite space as pre-TLS1.3. But, they are defined differently. Therefore, cipher suites for TLS1.2 and lower cannot be used with TLS1.3 and vice versa. <br/> If the client is attempting a PSK establishment, then it should advertise at least one cipher suite indicating a Hash associated with the PSK. <p> In TLS1.3, Static RSA and Diffie-Helman cipher suites have been removed. Cipher suites were whittled down significantly in TLS 1.3 to the point where there are now just five recommended cipher suites:',
  		adjust: 'TLS_AES_128_GCM_SHA256;TLS_AES_256_GCM_SHA384;TLS_CHACHA20_POLY1305_SHA256;TLS_AES_128_CCM_SHA256;TLS_AES_128_CCM_8_SHA256' 		
  		},
-		{eltType: 'opaque', delete: 'no', adjustment:'no', eltName: 'legacy_compression_methods', eltValue: '<1..2^8-1>;', 
+		{eltType: 'opaque', delete: 'no', adjustment:'no', eltName: 'legacy_compression_methods', eltValue: ';', 
 		info: 'Note that TLS 1.3 servers might receive TLS 1.2 or prior ClientHellos which contain other compression methods and (if negotiating such a prior version) must follow the procedures for the appropriate prior version of TLS. </br></br> This field\'s value in the serverHello must be a single byte which must have the value 0.'
  		}
  	];
@@ -497,9 +578,6 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
  	$scope.hrrExtensions = [
  		{eltName: 'supported_versions', delete: 'yes', adjustment:'yes',
  			info: 'Indicates which versions of TLS the server uses. It is a list of of supported versions ordered in preference with the most preferred first. <br/><br/>This extension should only be available when the peer supports TLS1.3.'
- 		},
- 		{eltType: '', delete: 'yes', adjustment:'no', eltName: 'supported_groups', eltValue: '= ECDHE groups', 
- 		info: 'In TLS1.3, servers can send this extension to the client in case there is a more preferred group to the one in the key_share extension but for now e is still willing to accept this clientHello. This field is therefore sent just to update the client’s view on the server’s preferences. But, before a successful completion of the handshake, the client shouldn\'t act upon any information gained from this field. After the successful completion of the handshake the client can use the information gained to change the groups used in its “key_share” extension in following connections.'
  		},
  		{eltType: '', delete: 'yes', adjustment:'no', eltName: 'key_share', eltValue: '= ECDHE share',
  		info: '<p> This field indicates the mutually supported group the server intends to negotiate and is requesting a retried ClientHello key_share for. </p><br/> <p> Upon receiving this field the client checks if it this field correspong to a group provided in the clientHello.supported_groups. Additionally, it also checks that this field is not the same as the group in the clientHello.key_share. In case any of these checks are false then the handshake is aborted with an "illegal_parameter" alert --> MAN IN THE MIDDLE!??</p> <p> If these checks works, then the clientHello.key_share should be replaced by this field.</p>',
@@ -530,6 +608,25 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
   //  $scope.showAddChoice = function(choice) {
   //    return choice.id === $scope.choices[$scope.choices.length-1].id;
   //  };
+
+    $scope.encryptedExtension = [
+	 	{eltType: '', delete: 'yes', adjustment:'no', eltName: 'Server_name', eltValue: ';', 
+ 		info: 'The <i> server_name" </i> extension is used to guide certificate selection. ',
+ 		},
+ 		{eltType: '', delete: 'yes', adjustment:'no', eltName: 'supported_groups', eltValue: '= ECDHE groups', 
+ 		info: 'In TLS1.3, servers can send this extension to the client in case there is a more preferred group to the one in the key_share extension but for now he is still willing to accept this clientHello. This field is therefore sent just to update the client’s view on the server’s preferences. But, before a successful completion of the handshake, the client shouldn\'t act upon any information gained from this field. After the successful completion of the handshake the client can use the information gained to change the groups used in its “key_share” extension in following connections.'
+ 		},
+ 		{eltType: '', delete: 'yes', adjustment:'yes', eltName: 'Client_certificate_type', eltValue: ';',
+ 		info: '<p> This extension should exist when the server requests a certificate form the client (in the certificate_request message). </p><p> This extension then indicates the type of certificates the client is requested to provide.</p>',
+ 		adjustM: '<p> The value in this extension must be selected from one of the values that are provided in the client_certificate_type extension in the client hello.</p> <p> If no client_certificate_type exists in the clientHello then the default X.508 should be chosen</p>',
+ 		adjust: 'RawPublicKey; X.509;Additional certificate types'
+ 		},
+ 		{eltType: '', delete: 'yes', adjustment:'yes', eltName: 'Server_certificate_type', eltValue: ';', 
+ 		info: '<p> This extension indicates the certificate types the server is going to provide.</p><p> This extension can be omitted if the server isn’t providing any other certificate types other than the default  X.509.</p>',
+ 		adjustM: '<p> The value in this extension must be selected from one of the values that are provided in the client_certificate_type extension in the client hello.</p> <p> If no client_certificate_type exists in the clientHello then the default X.508 should be chosen</p>',
+ 		adjust: 'RawPublicKey; X.509;Additional certificate types'
+ 		}
+ 	];
 
 }]);
 

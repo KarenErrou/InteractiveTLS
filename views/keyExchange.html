@@ -1,0 +1,97 @@
+<!--------------- CLIENTHELLO ------------------>
+<div class="stepClient" >
+    <div class="stepClientContent" id="keyExchange">    
+        <div class="circleClient" ng-model="step" id="keyExchange"> 1 </div> 
+        <h3>ClientHello</h3>
+        <span ng-repeat="n in clientHello">
+            <div style="display: inline-block;">
+                <div ng-if="n.delete == 'yes'" class="deleteButton"  ng-click="showInfo('clientHello', n, 'delete')">x</div>
+                <div ng-if="n.adjustment == 'yes'" class="adjustButton" ng-click="showInfo('clientHello', n, 'adjust')">+</div>
+                <div class="infoButton" ng-click="showInfo('clientHello', n, 'info')">i</div>
+                {{n.eltType}} {{n.eltName}} {{n.eltValue}} 
+            </div>
+            </br>
+        </span></br>
+        <div> Extension: </div>
+        <span ng-repeat="n in chExtensions">
+            <div style="display: inline-block;">
+                <div ng-if="n.delete == 'yes'" class="deleteButton"  ng-click="showInfo('chExtensions', n, 'delete')">x</div>
+                <div ng-if="n.adjustment == 'yes'" class="adjustButton" ng-click="showInfo('chExtensions', n, 'adjust')">+</div>
+                <div class="infoButton" ng-click="showInfo('chExtensions', n, 'info')">i</div>
+                {{n.eltType}} {{n.eltName}} {{n.eltValue}} 
+            </div>
+            </br>
+        </span>    
+    </div>
+</div>    
+
+<!--------------- SERVER RESPONSE ------------------>   
+<!--------------- SERVERHELLO ------------------>
+<div class="stepServer"> 
+    <div class="stepServerContent" id="keyExchange" ng-if="keyExchange[0] == 'serverHello'">
+        <div class="circleServer" ng-model="step" id="keyExchange"> 2</div> <h3>Server Hello</h3>
+        <!-- <div ng-if="keyExchange[0] == 'serverHello'" > -->
+        <span ng-repeat="n in serverHello">
+            <div style="display: inline-block;">
+                {{n.eltType}}  {{n.eltName}} {{n.eltValue}}
+                <div ng-if="n.delete == 'yes'" class="deleteButton" ng-click="showInfo('serverHello', n, 'delete')">x</div>
+                <div ng-if="n.adjustment == 'yes'" class="adjustButton" ng-click="showInfo('serverHello', n, 'adjust')">+</div>
+                <div class="infoButton" ng-click="showInfo('serverHello', n, 'info')">i</div>
+            </div>
+            </br>        
+        </span></br>
+        <div> Extension: </div>
+        <span ng-repeat="n in shExtensions">
+            <div style="display: inline-block;">
+                {{n.eltType}} {{n.eltName}} {{n.eltValue}} 
+                 <div ng-if="n.delete == 'yes'" class="deleteButton"  ng-click="showInfo('shExtensions', n, 'delete')">x</div>
+        <!--         <div ng-if="n.adjustment == 'yes'" class="adjustButton" ng-click="showInfo('clientHello', n, 'adjust')">+</div> -->
+                <div class="infoButton" ng-click="showInfo('shExtensions', n, 'info')">i</div>
+            </div>
+            </br>
+        </span>
+    </div>	
+
+<!---------- HELLORETRYREQUEST + ClientHello ----------->
+	<div class="stepServerContent" id="keyExchange" ng-if="keyExchange[0] == 'helloRetryRequest'">
+        <div class="circleServer" ng-model="step" id="keyExchange"> 2</div> <h3>Hello Retry Request</h3>
+        <!-- <div ng-if="keyExchange[0] == 'helloRetryRequest'"> -->
+             <span ng-repeat="n in helloRetryRequest">
+                <div style="display: inline-block;">
+                    {{n.eltType}}  {{n.eltName}} {{n.eltValue}}
+                    <div ng-if="n.delete == 'yes'" class="deleteButton" ng-click="showInfo('helloRetryRequest', n, 'delete')">x</div>
+                    <div ng-if="n.adjustment == 'yes'" class="adjustButton" ng-click="showInfo('helloRetryRequest', n, 'adjust')">+</div>
+                    <div class="infoButton" ng-click="showInfo('helloRetryRequest', n, 'info')">i</div>
+                </div>
+                </br>        
+            </span></br>
+            <div> Extension: </div>
+            <span ng-repeat="n in hrrExtensions">
+                <div style="display: inline-block;">
+                    {{n.eltType}} {{n.eltName}} {{n.eltValue}} 
+                     <div ng-if="n.delete == 'yes'" class="deleteButton"  ng-click="showInfo('hrrExtensions', n, 'delete')">x</div>
+            <!--         <div ng-if="n.adjustment == 'yes'" class="adjustButton" ng-click="showInfo('clientHello', n, 'adjust')">+</div> -->
+                    <div class="infoButton" ng-click="showInfo('hrrExtensions', n, 'info')">i</div>
+                </div>
+                </br>
+            </span>
+        </div>
+    </div>
+</div> 
+
+<div ng-if="keyExchange[0] == 'helloRetryRequest'" class="stepClient"> 
+    <div class="stepClientContent" id="keyExchange">
+        <div class="circleClient" ng-model="step" id="keyExchange"> 2.2</div>    <h3>ClientHello</h3>        
+        <span ng-repeat="rr in rrClientHello">
+            <span ng-if="o.id == rr.stepID">
+                <div style="display: inline-block;">
+                    <div ng-if="n.delete == 'yes'" class="deleteButton" ng-click="showInfo('rrClientHello', n, 'delete')">x</div>
+                    <div ng-if="n.adjustment == 'yes'" class="adjustButton" ng-click="showInfo('rrClientHello', n, 'adjust')">+</div>
+                    <div class="infoButton" ng-click="showInfo('rrClientHello', n, 'info')">i</div>
+                    {{rr.eltType}}  {{rr.eltName}} {{rr.eltValue}}
+                </div>
+                </br>       
+            </span> 
+        </span>
+    </div>
+</div>
