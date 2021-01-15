@@ -2,49 +2,10 @@
 <div class="row">
 
     <div class="col-lg-3 col-lg-3 col-lg-3" >
-        
-        <div class="leftBox"> 
-            <h3>{{leftBoxTitle}}</h3> </br>
-            <div ng-bind-html="leftBoxContent"  >
-                
-            </div>
-            <div ng-if="adjusting == true" >
-                
-                <p ng-bind-html="adjustMessage" >
-                 
-                 </p>
-            
-                <form>
-                    <span ng-repeat="n in splitted">
-                        <label ng-if='checkbox == false'>
-                            <input  type="radio"  ng-model="data.adjust" value="{{n}}" ng-change='nowAdjust()'>
-                            {{n}}
-                            </br>
-                        </label>
-                        <label ng-if='checkbox == true' >
-                            <span ng-if='checkboxCipherSuites == true'>
-                                <input  type="checkbox"  ng-model="cipherSuitesClient[n]" ng-change='nowAdjust()'>
-                                {{n}}
-                            </span>
-                            <span ng-if='checkboxClientCert == true'>
-                                <input  type="checkbox"  ng-model="clientCert[n]" ng-change='nowAdjust()'>
-                                {{n}}
-                            </span>
-                            <span ng-if='checkboxServerCert == true'>
-                                <input  type="checkbox"  ng-model="serverCert[n]" ng-change='nowAdjust()'>
-                                {{n}}
-                            </span>
-                            <br/>                                
-                        </label>
-                    </span>
-                </form>
-            </div>
-        </div>
-        
+        <div ng-include="'views/leftBox.html'"></div>
     </div>
 
     <div class="col-lg-6 col-lg-6 col-lg-6">
-
         <div class="peers">
                 <div class="peerP1">Client</div>
                 <div class="peerP2">Server</div>
@@ -58,11 +19,8 @@
             
         </div>
     </div>
-
-
-
             
-   <!-------------------------------------------->   
+   
     <div class="col-lg-3 col-lg-3 col-lg-3">
         <div class="alert" ng-if="error == true">
 
