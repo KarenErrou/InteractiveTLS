@@ -1,0 +1,70 @@
+<div class="content">
+	<p> Some of the terms in the step are missing. Here is in explanation which term is missing and why for each step </p>
+
+<div>
+	<p>
+		<h1 style="color:#99ace6"> Phase 1: Key Exchange </h1>
+		<uib-accordion >
+    	<div uib-accordion-group id="keyExchange" heading="ClientHello" >
+    		<p><span style="color:#e70000">Deletion:</span>
+      		All terms not in the extension are is mendatory and cannot be deleted from the terms sent to the server</p>
+      		<ul>
+      			<br/>
+      			
+      			<li><p><b>random</b></p>
+      				<p><span style="color:#009200">Adjustment:</span>
+      				Since random is a random number generated, there's no options to choose from.</p>
+      			</li>
+
+      			</br>
+
+      			<li><p><b>legacy_session_id</b></p>
+      				<p><span style="color:#009200">Adjustment:</span></p>
+      				<p><u>If Client TLS1.3 and Server TLS1.2 or below:</u></br>In compatibility mode: this field must be non-empty so a client not offering a pre-TLS1.3 session must generate a new 32-byte value. This value need not be random but should be unpredictable to avoid implementations fixating on a specific value (also known as ossification). Otherwise, it MUST be set as a zero-length vector (i.e., a zero-valued single byte length field). </p> <p><u>If Client TLS1.2 and Server TLS1.3:</u> </br>When a client has a cached session ID that is set by a pre-TLS1.3 server then this field should be set to that value </p> <p><u>If Client TLS1.2 and Server TLS1.2 or below: </u> </br> When a client has a cached session ID that is set by a pre-TLS1.3 server then this field should be set to that value. </p> <p> <u> If Client TLS1.1 or below and Server TLS1.3 or TLS1.2: </u> </br> When a client has a cached session ID that is set by a pre-TLS1.3 server then this field should be set to that value.</p>
+      			</li>
+
+      			</br>
+
+      			<li><p><b>legacy_compression_methods</b></p>
+      				<p><span style="color:#009200">Adjustment:</span> This vector should contain exactly one byte set to zero that represents "null" in the previous versions of TLS. In case any other value is received, this leads to a abortion of the handshake with an "illegal_parameter" alert. Potentially a man in the middle attack. </p>
+      			</li>
+
+      		</ul>
+    	</div>
+    	<div uib-accordion-group id="keyExchange" heading="ServerHello & HelloRetryRequest" >
+      		<p><span style="color:#e70000">Deletion:</span>
+      		All terms not in the extension are is mendatory and cannot be deleted from the terms sent to the server</p>
+      		<ul>
+      			</br>
+      			<li><p><b>legacy_session_id</b></p>
+      				<p><span style="color:#009200">Adjustment:</span></p>
+      				<p><u>If Client TLS1.3 and Server TLS1.2 or below:</u></br>In compatibility mode: this field must be non-empty so a client not offering a pre-TLS1.3 session must generate a new 32-byte value. This value need not be random but should be unpredictable to avoid implementations fixating on a specific value (also known as ossification). Otherwise, it MUST be set as a zero-length vector (i.e., a zero-valued single byte length field). </p> <p><u>If Client TLS1.2 and Server TLS1.3:</u> </br>When a client has a cached session ID that is set by a pre-TLS1.3 server then this field should be set to that value </p> <p><u>If Client TLS1.2 and Server TLS1.2 or below: </u> </br> When a client has a cached session ID that is set by a pre-TLS1.3 server then this field should be set to that value. </p> <p> <u> If Client TLS1.1 or below and Server TLS1.3 or TLS1.2: </u> </br> When a client has a cached session ID that is set by a pre-TLS1.3 server then this field should be set to that value.</p>
+      			</li>
+
+      			<br/>
+      			<li><p><b>legacy_compression_methods</b></p>
+      				<p><span style="color:#009200">Adjustment:</span> This vector should contain exactly one byte set to zero that represents "null" in the previous versions of TLS. In case any other value is received, this leads to a abortion of the handshake with an "illegal_parameter" alert. Potentially a man in the middle attack. </p>
+      			</li>
+      		</ul>
+    	</div>
+  		</uib-accordion> 
+	</p>
+  	<p>
+		<h1 style="color:#ff9f80"> Phase 2: Server Parameters </h1>
+		<uib-accordion >
+    	<div uib-accordion-group id="serverParameters" heading="Encrypted Extensions" >
+      		This content is straight in the template.
+    	</div>
+    	<div uib-accordion-group id="serverParameters" heading="Certificate Request" >
+      		This content is straight in the template.
+    	</div>
+  		</uib-accordion> 
+	</p>
+
+</div>
+
+
+
+	
+	
+</div>

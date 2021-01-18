@@ -8,6 +8,10 @@ h1,h2,h3{
   margin: 0;
 }
 
+.panel-title{
+  font-size:30px !important;
+}
+
 #menu-bar{
   background-color: #2471A3;
   color: #fff;
@@ -34,8 +38,8 @@ menu-bar li{
 
 #menu-bar a{
   color: #fff;
-  font-size: 28px;
-  padding-right:30px;
+  font-size: 25px;
+  padding-right:50px;
 }
 
 main{
