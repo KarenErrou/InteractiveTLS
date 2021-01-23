@@ -1,11 +1,11 @@
 <div class="content">
 	<p> Some of the terms in the step are missing. Here is in explanation which term is missing and why for each step </p>
-
+	<br/>
 <div>
 	<p>
-		<h1 style="color:#99ace6"> Phase 1: Key Exchange </h1>
-		<uib-accordion >
-    	<div uib-accordion-group id="keyExchange" heading="ClientHello" >
+		<h4 style="color:#99ace6"> Key Exchange </h4>
+		<uib-accordion  >
+    	<div uib-accordion-group id="keyExchange" heading="ClientHello" style="border-radius: 2%">
     		<p><span style="color:#e70000">Deletion:</span>
       		All terms not in the extension are is mendatory and cannot be deleted from the terms sent to the server</p>
       		<ul>
@@ -29,16 +29,31 @@
       				<p><span style="color:#009200">Adjustment:</span> This vector should contain exactly one byte set to zero that represents "null" in the previous versions of TLS. In case any other value is received, this leads to a abortion of the handshake with an "illegal_parameter" alert. Potentially a man in the middle attack. </p>
       			</li>
 
+      			<br/>
+      		</ul>
+
+
+  			<p><b>To facilitate the user experience, some extensions were not included:</p>
+    			
+    			<p><u>Extensions not included:</u></b></p>
+    			<br/>
+			<ul>
+      			<li><p><b>Padding:</b></p>
+      				<p>This extension data is an arbitrary number of zero bytes. This field is available so it can be used to pad a ClientHello to a desired size. This sometimes helps  avoiding implementation bugs that are caused by ClientHello sizes.</p>
+      			</li>
+
       		</ul>
     	</div>
-    	<div uib-accordion-group id="keyExchange" heading="ServerHello & HelloRetryRequest" >
+    	
+    	<div uib-accordion-group id="keyExchange" heading="ServerHello & HelloRetryRequest"  style="border-radius: 2%">
       		<p><span style="color:#e70000">Deletion:</span>
       		All terms not in the extension are is mendatory and cannot be deleted from the terms sent to the server</p>
-      		<ul>
+      			<ul>
       			</br>
       			<li><p><b>legacy_session_id</b></p>
       				<p><span style="color:#009200">Adjustment:</span></p>
-      				<p><u>If Client TLS1.3 and Server TLS1.2 or below:</u></br>In compatibility mode: this field must be non-empty so a client not offering a pre-TLS1.3 session must generate a new 32-byte value. This value need not be random but should be unpredictable to avoid implementations fixating on a specific value (also known as ossification). Otherwise, it MUST be set as a zero-length vector (i.e., a zero-valued single byte length field). </p> <p><u>If Client TLS1.2 and Server TLS1.3:</u> </br>When a client has a cached session ID that is set by a pre-TLS1.3 server then this field should be set to that value </p> <p><u>If Client TLS1.2 and Server TLS1.2 or below: </u> </br> When a client has a cached session ID that is set by a pre-TLS1.3 server then this field should be set to that value. </p> <p> <u> If Client TLS1.1 or below and Server TLS1.3 or TLS1.2: </u> </br> When a client has a cached session ID that is set by a pre-TLS1.3 server then this field should be set to that value.</p>
+      				<p><u>If Client TLS1.3 and Server TLS1.2 or below:</u></br>In compatibility mode: this field must be non-empty so a client not offering a pre-TLS1.3 session must generate a new 32-byte value. This value need not be random but should be unpredictable to avoid implementations fixating on a specific value (also known as ossification). Otherwise, it MUST be set as a zero-length vector (i.e., a zero-valued single byte length field). </p>
+      				<p><u>If Client TLS1.2 or below</u> </br>When a client has a cached session ID that is set by a pre-TLS1.3 server then this field should be set to that value </p> 
       			</li>
 
       			<br/>
@@ -46,24 +61,67 @@
       				<p><span style="color:#009200">Adjustment:</span> This vector should contain exactly one byte set to zero that represents "null" in the previous versions of TLS. In case any other value is received, this leads to a abortion of the handshake with an "illegal_parameter" alert. Potentially a man in the middle attack. </p>
       			</li>
       		</ul>
+      	
     	</div>
   		</uib-accordion> 
 	</p>
+	</br>
   	<p>
-		<h1 style="color:#ff9f80"> Phase 2: Server Parameters </h1>
+		<h4 style="color:#ff9f80"> Server Parameters</h4>
 		<uib-accordion >
-    	<div uib-accordion-group id="serverParameters" heading="Encrypted Extensions" >
-      		This content is straight in the template.
-    	</div>
-    	<div uib-accordion-group id="serverParameters" heading="Certificate Request" >
+
+		<div uib-accordion-group id="serverParameters" heading="Encrypted Extensions"  style="border-radius: 2%">
+			
+    			<p><b>To facilitate the user experience, some extensions were not included:</p>
+    			
+    			<p><u>Extensions not included:</u></b></p>
+    			<br/>
+ 	     		<ul>
+      			    			
+      			<li><p><b>Max_fragment_length:</b></p>
+      			<p>
+      			The fixed maximum plaintext fragment length specified in TLS without this extension is 2^14 bytes. Sometimes, due to memory or bandwidth limitation, smaller maximum fragment length are needed. The size minimization can be done by including this extension in the clientHello. Possible values for this extension are: 2^9, 2^10, 2^11 or 2^12.</p>
+      			</p>
+      			When servers receive a clientHello having the extension <i>max_fragment_length</i>, they may accept the requested size by including an extension of type  "max_fragment_length". The value of the  <i>max_fragment_length</i> extension in the serverHello should be the same as the value in  "max_fragment_length"  in the clientHello.
+  				</p>
+
+      			</br>
+
+      			<li><p><b>Server_name:</b></p>
+      				<p>Clients should send this extension in the clientHello when applicable. It helps to give the server the name of the server he is contacting, especially in cases where the server host multiple ‘virtual’ servers at a single underlying network address.</p>
+
+      				<p>When the extension <i>server_name</i> in the clientHello is offered, it could be used by the server to guide its selection of an appropriate certificate to return and other aspects of security policy. If so, the server should include an extension of type <i>server_name</i> that should be empty.
+					</p>
+      			</li>
+
+      			<br/>
+
+      			<li><p><b>Application_layer_protocol_negotiation:</b></p>
+      				<p>This extension let the application layer to negotiate protocol selection within the TLS handshake. This extension let the application layer to negotiate protocol selection within the TLS handshake. The client can send a list in the extension <i>application_layer_protocol_negotiation</i> in the ClientHello in descending order of preference that are the protocols advertised by the client. The server receiving this extension may return a suitable protocol selection in its own extension of type <i>application_layer_protocol_negotiation</i>. 
+      				</p>
+      			</li>
+
+      			</br>
+
+      			<li><p><b>Heartbeat:</b></p>
+      				<p>In TLS, no feature is available that keep the connection alive without continuous data transfer. This is overcomed with the heartbeat extension. When a user sends a HeartbeatRequest message, the other peer should answer immediately with a HeartbeatResponse. </p>
+      				<p> The support of this feature is used in the clientHello’s and the encryptedExtension’s extensions. In the extension data, not only the peer can indicate if he supports Heartbeats, but also if he can receive HearbeatRequest messages and respond with aHeartBeatResponse messages or only send HearbeatRequest messages. </p>
+					<p> The heartBeat protocol is then run on top of the record protocol. The heartbeat message may arrive anytime and whenever a heartbeatRequest message is received it should be answered by a heartbeatResponse message. </p>
+      			</li>
+      			
+      			</br>
+      		</ul>
+
+		</div>
+    
+    	<div uib-accordion-group id="serverParameters" heading="Certificate Request"  style="border-radius: 2%" >
       		This content is straight in the template.
     	</div>
   		</uib-accordion> 
 	</p>
-
+</br>
+<h1 style="color:red">  </h1>
 </div>
-
-
 
 	
 	

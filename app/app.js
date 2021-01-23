@@ -516,9 +516,9 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
  		adjustM: '<p>The client can send this field empty to request group selection from the server. This will yield to a helloRetryRequest, therefore, an additional round-trip.</p> <p> Or, the client can send one or more public keys with an algorithm that he thinks the server supports. Each key share value must correspond to a group offered in the supported_groups and must appear in its same order.',
  		adjust: 'empty;keys'
  		},
- 		{eltType: '', delete: 'yes', adjustment:'no', eltName: 'Server_name', eltValue: ';', 
- 		info: 'The <i>server_name</i> extension is used to guide certificate selection. Clients should send this extension, when applicable.',
- 		},
+ 		// {eltType: '', delete: 'yes', adjustment:'no', eltName: 'Server_name', eltValue: ';', 
+ 		// info: 'This extension is used to guide certificate selection. Clients should send this extension when applicable. It helps to give the server the name of the server he is contacting, especially in cases where the server host multiple ‘virtual’ servers at a single underlying network address.'
+ 		// },
  		{eltType: '', delete: 'yes', adjustment:'yes', eltName: 'Client_certificate_type', eltValue: ';', 
  		info: '<p> This extension indicates the certificate types the client is able to provide to the server in case requested (using certificate_request message). </p> <p> This extension can be omitted if the client doesn’t possess the corresponding raw public key or certificate that it can provide when a certificate_request is requested. It can also be omitted in case it is not configured to use one with the given TLS server. </p> <p> The default type is X.509. In case the client has no other certificate types remaining to send other than X.509 then this extension must be omitted. </p>',
  		adjustM: 'X.509 being the default. In case the client has no other certificate types remaining to send other than X.509, then this extension must be omitted. ',
@@ -638,9 +638,9 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
   //  };
 
     $scope.encryptedExtension = [
-	 	{eltType: '', delete: 'yes', adjustment:'no', eltName: 'Server_name', eltValue: ';', 
- 		info: 'The <i> server_name" </i> extension is used to guide certificate selection. ',
- 		},
+	 	// {eltType: '', delete: 'yes', adjustment:'no', eltName: 'Server_name', eltValue: ';', 
+ 		// info: 'The <i> server_name" </i> extension is used to guide certificate selection. ',
+ 		// },
  		{eltType: '', delete: 'yes', adjustment:'no', eltName: 'supported_groups', eltValue: '= ECDHE groups', 
  		info: 'In TLS1.3, servers can send this extension to the client in case there is a more preferred group to the one in the key_share extension but for now he is still willing to accept this clientHello. This field is therefore sent just to update the client’s view on the server’s preferences. But, before a successful completion of the handshake, the client shouldn\'t act upon any information gained from this field. After the successful completion of the handshake the client can use the information gained to change the groups used in its “key_share” extension in following connections.'
  		},

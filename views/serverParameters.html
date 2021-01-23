@@ -3,7 +3,8 @@
 <!--------------- Encrypted Encryption ------------------>   
 <div class="stepServer"> 
 	<div class="stepServerContent" id="serverParameters" ng-if="step<3" style="background-color: #E5E7E9;">
-        <div class="circleServer" ng-model="step" id="serverParameters"> 3</div> <h2>Encrypted Extension</h2>
+        <div class="circleServer" ng-model="step" id="serverParameters"> 3</div> 
+        <h3>Encrypted Extension</h3>
         <span ng-repeat="n in encryptedExtension">
             <div style="display: inline-block;">
                 {{n.eltType}}  {{n.eltName}} {{n.eltValue}}
@@ -14,8 +15,8 @@
 
 
     <div class="stepServerContent" id="serverParameters" ng-if= "step>=3">
-        <div class="circleServer" ng-model="step" id="serverParameters"> 3</div> <h2>Encrypted Extension</h2>
-        
+        <div class="circleServer" ng-model="step" id="serverParameters"> 3</div> 
+        <h3>Encrypted Extension</h3>
         <span ng-repeat="n in encryptedExtension">
             <div style="display: inline-block;">
                 {{n.eltType}}  {{n.eltName}} {{n.eltValue}}
@@ -34,7 +35,8 @@
 <!--------------- Certificate Request ------------------>   
 <div class="stepServer"> 
     <div class="stepServerContent" id="serverParameters" ng-if="step <4" style="background-color: #E5E7E9;">
-        <div class="circleServer" ng-model="step" id="serverParameters"> 4</div> <h2>Certificate Request</h2>
+        <div class="circleServer" ng-model="step" id="serverParameters"> 4</div> 
+        <h3>Certificate Request</h3>
         <!-- <span ng-repeat="n in certificateRequest">
             <div style="display: inline-block;">
                 {{n.eltType}}  {{n.eltName}} {{n.eltValue}}

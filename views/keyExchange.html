@@ -2,7 +2,7 @@
 <div class="stepClient" >
     <div class="stepClientContent" id="keyExchange">    
         <div class="circleClient"  id="keyExchange"> 1 </div> 
-        <h2>ClientHello</h2>
+        <h3>ClientHello</h3>
         <span ng-repeat="n in clientHello">
             <div style="display: inline-block;">
                 <div ng-if="n.delete == 'yes' && step >= 1.0" class="deleteButton"  ng-click="showInfo('clientHello', n, 'delete')">x</div>
@@ -34,7 +34,7 @@
 <div class="stepServer"> 
 	<div class="stepServerContent" id="keyExchange" ng-if="keyExchange[0] == 'serverHello' && step<2.0" style="background-color:#E5E7E9;">
     	<div class="circleServer"  id="keyExchange"> 2</div> 
-    	<h2>Server Hello</h2>
+    	<h3>Server Hello</h3>
     	<!-- <div ng-if="keyExchange[0] == 'serverHello'" 	> -->
     	<span ng-repeat="n in serverHello">
         	<div style="display: inline-block;">
@@ -52,7 +52,7 @@
     </div>
     <div class="stepServerContent" id="keyExchange" ng-if="keyExchange[0] == 'serverHello' && step>=2.0">
         <div class="circleServer" id="keyExchange"> 2</div> 
-        <h2>Server Hello</h2>
+        <h3>Server Hello</h3>
         <!-- <div ng-if="keyExchange[0] == 'serverHello'" > -->
         <span ng-repeat="n in serverHello">
             <div style="display: inline-block;">
@@ -82,7 +82,7 @@
 	<!---------- HELLORETRYREQUEST ----------->	
 	<div class="stepServerContent" id="keyExchange" ng-if="keyExchange[0] == 'helloRetryRequest' && step<2"  style="background-color:#E5E7E9;">
 		<div class="circleServer"  id="keyExchange"> 2</div> 
-		<h2>Hello Retry Request</h2>
+		<h3>Hello Retry Request</h3>
 		<span ng-repeat="n in helloRetryRequest">
             <div style="display: inline-block;">
                 {{n.eltType}}  {{n.eltName}} {{n.eltValue}}
@@ -100,7 +100,7 @@
 
 	<div class="stepServerContent" id="keyExchange" ng-if="keyExchange[0] == 'helloRetryRequest' && step>=2">
         <div class="circleServer" id="keyExchange"> 2</div> 
-        <h2>Hello Retry Request</h2>
+        <h3>Hello Retry Request</h3>
         <!-- <div ng-if="keyExchange[0] == 'helloRetryRequest'"> -->
         <span ng-repeat="n in helloRetryRequest">
             <div style="display: inline-block;">
@@ -131,7 +131,8 @@
 <!---------- ClientHello ----------->
 <div ng-if="keyExchange[0] == 'helloRetryRequest'" class="stepClient"> 
     <div class="stepClientContent" id="keyExchange" ng-if="step<2.5" style="background-color:#E5E7E9">
-        <div class="circleClient" ng-model="step" id="keyExchange"> 2.2</div>    <h2>ClientHello</h2>        
+        <div class="circleClient" ng-model="step" id="keyExchange"> 2.2</div>    
+        <h3>ClientHello</h3>        
         <span ng-repeat="rr in rrClientHello">
             <span ng-if="o.id == rr.stepID">
                 <div style="display: inline-block;">
@@ -147,7 +148,8 @@
 
 
     <div class="stepClientContent" id="keyExchange" ng-if="step>=2.5">
-        <div class="circleClient" ng-model="step" id="keyExchange"> 2.2</div>    <h2>ClientHello</h2>        
+        <div class="circleClient" ng-model="step" id="keyExchange"> 2.2</div>    
+        <h>ClientHello</h3>        
         <span ng-repeat="rr in rrClientHello">
             <span ng-if="o.id == rr.stepID">
                 <div style="display: inline-block;">
