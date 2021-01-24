@@ -5,7 +5,7 @@
 	<div class="stepServerContent" id="serverParameters" ng-if="step<3" style="background-color: #E5E7E9;">
         <div class="circleServer" ng-model="step" id="serverParameters"> 3</div> 
         <h3>Encrypted Extension</h3>
-        <span ng-repeat="n in encryptedExtension">
+        <span ng-repeat="n in encryptedExtension" ng-if="n.deleted=='no'">
             <div style="display: inline-block;">
                 {{n.eltType}}  {{n.eltName}} {{n.eltValue}}
             </div>
@@ -17,7 +17,7 @@
     <div class="stepServerContent" id="serverParameters" ng-if= "step>=3">
         <div class="circleServer" ng-model="step" id="serverParameters"> 3</div> 
         <h3>Encrypted Extension</h3>
-        <span ng-repeat="n in encryptedExtension">
+        <span ng-repeat="n in encryptedExtension" ng-if="n.deleted=='no'">
             <div style="display: inline-block;">
                 {{n.eltType}}  {{n.eltName}} {{n.eltValue}}
                 <div ng-if="n.delete == 'yes'" class="deleteButton" ng-click="showInfo('encryptedExtension', n, 'delete')">x</div>
@@ -37,7 +37,7 @@
     <div class="stepServerContent" id="serverParameters" ng-if="step <4" style="background-color: #E5E7E9;">
         <div class="circleServer" ng-model="step" id="serverParameters"> 4</div> 
         <h3>Certificate Request</h3>
-        <!-- <span ng-repeat="n in certificateRequest">
+        <!-- <span ng-repeat="n in certificateRequest" ng-if="n.deleted=='no'">
             <div style="display: inline-block;">
                 {{n.eltType}}  {{n.eltName}} {{n.eltValue}}
             </div>
