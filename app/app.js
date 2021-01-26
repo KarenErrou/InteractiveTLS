@@ -307,7 +307,18 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 									$scope.showInfo('chExtensions', $scope.storeidField, 'delete');
 								}
 							break;
-		            		default:
+
+							case 'psk_key_exchange_modes':
+								if($scope.data.adjust == 'psk_ke'){
+									$scope.chExtensions[elt1].eltValue="= psk_ke"
+								}
+								else if ($scope.data.adjust == 'psk_dhe_ke'){
+									$scope.keyExchange[0]='serverHello';
+									$scope.chExtensions[elt1].eltValue="= psk_dhe_ke";
+								}
+								$scope.updateNextSteps('clientHello','psk_key_exchange_modes', 'adjusted');
+							break;
+							default:
 		            	}
 		            }
 		        }
@@ -407,9 +418,15 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 	};
 
 	$scope.updateNextSteps = function (originalUpdate,fieldUpdated,type){
-		
 		switch (originalUpdate) {
 			case 'clientHello':
+			if(type == 'deleted'){
+				for (var elt1 in $scope.chExtensions){
+	        			if($scope.storeidField.eltName == $scope.chExtensions[elt1].eltName){
+							$scope.chExtensions[elt1].deleted="yes";
+					}
+				}
+			}
 			//////// KEY ECHANGE
 				///something in clientHello Changed
 				switch(fieldUpdated){
@@ -417,6 +434,7 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 					case 'legacy_version':
 						$scope.checkRandom();
 					break;
+
 					case 'supported_versions':
 						if($scope.tlsVersion[0]==1.3){
 							alert("TLS 1.3 CientHello messages always contain 'supported_versions', otherwise, they will be interpreted as TLS 1.2 ClientHello messages.");
@@ -435,17 +453,15 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 						// $scope.newItem= {eltName: 'supported_versions', delete: 'yes', 
 						// info: 'Indicates which versions of TLS it supports.'}
 						// $scope.chExtensions.splice(0, 0, $scope.newItem);
-						
-
-						break;
+					break;
 
 					case 'supported_groups':
 						// $scope.supportedgroupsKeyshare[0]=false;
-						for (var elt1 in $scope.chExtensions){
-	        				if($scope.storeidField.eltName == $scope.chExtensions[elt1].eltName){
-								$scope.chExtensions[elt1].deleted="yes";
-							}
-						}
+						// for (var elt1 in $scope.chExtensions){
+	     //    				if($scope.storeidField.eltName == $scope.chExtensions[elt1].eltName){
+						// 		$scope.chExtensions[elt1].deleted="yes";
+						// 	}
+						// }
 
 
 						for (var elt1 in $scope.chExtensions){
@@ -474,17 +490,17 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 								}
 							}
 						}
-
-						
 					break;			
 
 					case 'key_share':
 						if(type == 'deleted'){
 							// $scope.supportedgroupsKeyshare[1]=false;
 							for (var elt1 in $scope.chExtensions){
-		        				if($scope.storeidField.eltName == $scope.chExtensions[elt1].eltName){
-									$scope.chExtensions[elt1].deleted="yes";
-								}
+		      //   				if($scope.storeidField.eltName == $scope.chExtensions[elt1].eltName){
+								// 	$scope.chExtensions[elt1].deleted="yes";
+								// }
+
+									
 							}
 
 							// if($scope.supportedgroupsKeyshare[0]==true){
@@ -512,9 +528,100 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 										}
 									}
 								}
+								if($scope.chExtensions[elt1].eltName == 'psk_key_exchange_modes'){
+									if($scope.chExtensions[elt1].deleted=='no' && $scope.chExtensions[elt1].eltValue=='= psk_dhe_ke'){
+										alert("When PSK_dhe_ke is selected in psk_key_exchange_modes, then key_share should be included in the extensions")
+									}
+								}
 							}
 
 						}
+					break;
+
+					case 'psk_key_exchange_modes':
+						key_share = [true,true];
+						pre_shared = [true,true]; // true means is in extension right now
+					
+						for (var elt1 in $scope.chExtensions){
+							if($scope.chExtensions[elt1].eltName == 'key_share'){
+								if($scope.chExtensions[elt1].deleted=="no"){
+									key_share[0] = true;
+								}
+								else{
+									key_share[0] = false;
+								}
+							}
+							else{
+								if($scope.chExtensions[elt1].eltName == 'pre_shared_keys'){
+									if($scope.chExtensions[elt1].deleted=="no"){
+										pre_shared[0] = true;
+									}
+									else{
+										pre_shared[0] = false;
+									}
+								}
+							}
+						}
+						for (var elt1 in $scope.shExtensions){
+							if($scope.shExtensions[elt1].eltName == 'key_share'){
+								if($scope.shExtensions[elt1].deleted=="no"){
+									key_share[1] = true;
+								}
+								else{
+									key_share[1] = false;
+								}
+							}
+							else if($scope.shExtensions[elt1].eltName == 'pre_shared_keys'){
+								if($scope.shExtensions[elt1].deleted=="no"){
+									pre_shared[1] = true;
+								}
+								else{
+									pre_shared[1] = false;
+								}
+							}
+						}
+					
+						if(type=='adjusted'){
+							if($scope.storeidField.eltValue == '= psk_ke'){
+								if(key_share[0] || key_share[1]){
+									alert("psk_ke chosen in psk_key_exchange_modes --> key_share should not be in the extensions")
+								}			
+								
+							}
+							else if($scope.storeidField.eltValue == '= psk_dhe_ke'){
+								if(key_share[0]==false || key_share[1]==false){
+									alert("PSK_dhe_ke chosen in psk_key_exchange_modes --> key_share should be in the extensions")
+								}			
+							}
+							if(pre_shared[0] == false){
+								alert("when psk_key_exchange_modes is in the extensions, pre_shared_keys should be there too")
+							}
+						}
+
+						else if (type== 'deleted'){
+							if(pre_shared[0] == true){
+								alert("when pre_shared_keys is in the extension, psk_key_exchange_modes should be there too")
+							}
+						}
+					break;
+
+					case 'pre_shared_keys':
+
+						if (type == 'deleted'){
+alert("HI");
+							for (var elt1 in $scope.chExtensions){
+								if($scope.chExtensions[elt1].eltName == 'psk_key_exchange_modes'){
+									if($scope.chExtensions[elt1].deleted=="no"){
+										alert("psk_key_exchange_modes should be removed when pre_shared_keys is removed")
+									}
+								}else if($scope.chExtensions[elt1].eltName == 'key_share'){
+									if($scope.chExtensions[elt1].deleted=="yes"){
+										alert("Either key_share or pre_shared_keys should be available in the extensions to negotiate a key exchange mode.")
+									}
+								}
+							}
+						}
+					break;
 					default:
 				}
 				
@@ -667,6 +774,21 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
  		info: '<p> This extension indicates the certificate types the client is able to process when given by the server.</p><p> This extension can be omitted if the client doesn’t possess the corresponding raw public key or certificate that it can process.</p><p> The default type is X.509. In case the client has no other certificate types remaining to send other than X.509 then this extension must be omitted.</p>',
  		adjustM: 'X.509 being the default. In case the client has no other certificate types remaining to send other than X.509, then this extension must be omitted. ',
  		adjust: 'RawPublicKey;X.509;Additional certificate types'
+ 		},
+ 		{eltType: '', delete: 'yes', adjustment:'no', eltName: 'early_data', eltValue: ';', deleted:'yes',
+ 		info: '<p> if psk is used then the “pre_shared_key” extension is required and must be the last extension in the clientHello. </p>'
+ 		// adjustM: 'X.509 being the default. In case the client has no other certificate types remaining to send other than X.509, then this extension must be omitted. ',
+ 		// adjust: 'RawPublicKey;X.509;Additional certificate types'
+ 		},
+		{eltType: '', delete: 'yes', adjustment:'yes', eltName: 'psk_key_exchange_modes', eltValue: '= psk_dhe_ke;', deleted:'no',
+ 		info: '<p> When PSK is selected, the client must include in its clientHello this extension that indicates the key exchange modes that can be used with PSKs </p>',
+ 		adjustM: '<ul><li>psk_ke (psk-only key establishment): the server must not supply the key_share extension.</li><li> psk_dhe_ke (psk with EC_DHE): key_share extension must also be supplied</li></ul>',
+ 		adjust: 'psk_ke;psk_dhe_ke'
+ 		},
+ 		{eltType: '', delete: 'yes', adjustment:'yes', eltName: 'pre_shared_keys', eltValue: ';', deleted:'no',
+ 		info: '<p> if psk is used then the “pre_shared_key” extension is required and must be the last extension in the clientHello. </p>'
+ 		// adjustM: 'X.509 being the default. In case the client has no other certificate types remaining to send other than X.509, then this extension must be omitted. ',
+ 		// adjust: 'RawPublicKey;X.509;Additional certificate types'
  		}
  	];
 
