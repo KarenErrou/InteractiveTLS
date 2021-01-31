@@ -5,12 +5,12 @@
     </div>
     <div ng-if="adjusting == true" >
         
-        <p ng-bind-html="adjustMessage" >
+        <p ng-bind-html="adjustMessage" ng-if='supported_groups[0]== false && supported_groups[1]== false && key_share== false'>
          
          </p>
     
-        <form>
-            <span ng-repeat="n in splitted">
+        <form >
+            <span ng-repeat="n in splitted" ng-if='supported_groups[0]== false && supported_groups[1]== false && key_share== false'>
                 <label ng-if='checkbox == false'>
                     <input  type="radio"  ng-model="data.adjust" value="{{n}}" ng-change='nowAdjust()'>
                     {{n}}
@@ -29,8 +29,41 @@
                         <input  type="checkbox"  ng-model="serverCert[n]" ng-change='nowAdjust()'>
                         {{n}}
                     </span>
-                    <br/>                                
+                    <br/>  
                 </label>
+            </span>
+
+            <span ng-if='supported_groups[0]== true && key_share== false||supported_groups[1]== true && key_share== false'>
+                <p><b>Elliptic Curve Groups (ECDHE):</b></p>
+                <span ng-repeat="n in groupsSplitted1">
+                    <input ng-if="supported_groups[0] == true" type="checkbox"  ng-model="ECDHEClient[n]" ng-change='nowAdjust()'>
+                    <input ng-if="supported_groups[1] == true" type="checkbox"  ng-model="ECDHEServer[n]" ng-change='nowAdjust()'>
+                     {{n}}
+                     <br/>
+                </span>
+                <br/>
+                <p><b>Finite Field Groups (DHE):</b></p>
+                <span ng-repeat="n in groupsSplitted2">
+                    <input ng-if="supported_groups[0] == true" type="checkbox"  ng-model="DHEClient[n]" ng-change='nowAdjust()'>
+                    <input ng-if="supported_groups[1] == true" type="checkbox"  ng-model="DHEServer[n]" ng-change='nowAdjust()'>
+                     {{n}}
+                     <br/>
+                </span>
+            </span>
+            <span ng-if='key_share == true'>
+                <p><b>Elliptic Curve Groups (ECDHE):</b></p>
+                <span ng-repeat="n in groupsSplitted1" >
+                    <input  type="radio"  ng-model="data.adjust" value="{{n}}"  ng-change='nowAdjust()'>
+                    {{n}}
+                    </br>
+                </span>
+
+                <p><b>Finite Field Groups (DHE):</b></p>
+                <span ng-repeat="n in groupsSplitted2" >
+                    <input  type="radio"  ng-model="data.adjust" value="{{n}}"  ng-change='nowAdjust()'>
+                    {{n}}
+                    </br>
+                </span>                   
             </span>
         </form>
     </div>

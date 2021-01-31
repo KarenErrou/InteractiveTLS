@@ -37,7 +37,7 @@
 
         <form ng-if="addList[0] == true && listAdd.length >0">
             <span ng-repeat="(m,n) in listAdd">
-            <input type="checkbox"  ng-model="listAddSelect[n]" ng-change='nowAdjust()'>
+            <input type="checkbox"  ng-model="listAddSelect[n]" >
                 {{n}}
             </input>
             <br/>
@@ -90,13 +90,13 @@
             <div style="display: inline-block;">
                 {{n.eltType}} {{n.eltName}} {{n.eltValue}} 
                 <div ng-if="n.delete == 'yes'" class="deleteButton"  ng-click="showInfo('shExtensions', n, 'delete')">x</div>
-        <!--         <div ng-if="n.adjustment == 'yes'" class="adjustButton" ng-click="showInfo('clientHello', n, 'adjust')">+</div> -->
+                <div ng-if="n.adjustment == 'yes'" class="adjustButton" ng-click="showInfo('shExtensions', n, 'adjust')">+</div>
                 <div class="infoButton" ng-click="showInfo('shExtensions', n, 'info')">i</div>
             </div>
             </br>
         </span> </br>
         <button ng-show='step == 2.0' ng-click="incrementStep(step,'normal')" >
-  			Send to Client
+  			Next Step
 		</button>
 
         <button ng-if="addList[1] == false || listAdd.length ==0" style="background-color: green; color:white;" ng-click="add('serverHello',1)">
@@ -108,7 +108,7 @@
 
         <form ng-if="addList[1] == true && listAdd.length >0">
             <span ng-repeat="(m,n) in listAdd">
-            <input type="checkbox"  ng-model="listAddSelect[n]" ng-change='nowAdjust()'>
+            <input type="checkbox"  ng-model="listAddSelect[n]" >
                 {{n}}
             </input>
             <br/>
@@ -164,20 +164,21 @@
             </div>
             </br>
         </span>
+        <br/>
         <button ng-show='step == 2' ng-click="incrementStep(step,unnormal)" >
   			Send to Client
 		</button>
 
-        <button ng-if="addList[3] == false || listAdd.length ==0" style="background-color: green; color:white;" ng-click="add('helloRetryRequest',0)">
+        <button ng-if="addList[2] == false || listAdd.length ==0" style="background-color: green; color:white;" ng-click="add('helloRetryRequest',2)">
             Add
         </button>
-        <div ng-if="addList[3] == true && listAdd.length==0">
+        <div ng-if="addList[2] == true && listAdd.length==0">
             Nothing to add 
         </div>
 
-        <form ng-if="addList[3] == true && listAdd.length >0">
+        <form ng-if="addList[2] == true && listAdd.length >0">
             <span ng-repeat="(m,n) in listAdd">
-            <input type="checkbox"  ng-model="listAddSelect[n]" ng-change='nowAdjust()'>
+            <input type="checkbox"  ng-model="listAddSelect[n]" >
                 {{n}}
             </input>
             <br/>
@@ -197,7 +198,7 @@
     <div class="stepClientContent" id="keyExchange" ng-if="step<2.5" style="background-color:#E5E7E9">
         <div class="circleClient" ng-model="step" id="keyExchange"> 2.2</div>    
         <h3>ClientHello</h3>        
-        <span ng-repeat="rr in rrClientHello" ng-if="n.deleted=='no'">
+        <span ng-repeat="rr in rrClientHello" ng-if="rr.deleted=='no'">
             <span ng-if="o.id == rr.stepID">
                 <div style="display: inline-block;">
                     {{rr.eltType}}  {{rr.eltName}} {{rr.eltValue}}
@@ -210,8 +211,8 @@
 
     <div class="stepClientContent" id="keyExchange" ng-if="step>=2.5">
         <div class="circleClient" ng-model="step" id="keyExchange"> 2.2</div>    
-        <h>ClientHello</h3>        
-        <span ng-repeat="rr in rrClientHello" ng-if="n.deleted=='no'">
+        <h3>ClientHello</h3>        
+        <span ng-repeat="rr in rrClientHello" ng-if="rr.deleted=='no'">
             <span ng-if="o.id == rr.stepID">
                 <div style="display: inline-block;">
                    <!--  <div ng-if="n.delete == 'yes'" class="deleteButton" ng-click="showInfo('rrClientHello', n, 'delete')">x</div> -->
@@ -225,5 +226,23 @@
         <button ng-show='step == 2.5' ng-click="incrementStep(step,unnormal)" >
   			Send to Server
 		</button>
+
+        <button ng-if="addList[3] == false || listAdd.length ==0" style="background-color: green; color:white;" ng-click="add('rrClientHello',3)">
+            Add
+        </button>
+        <div ng-if="addList[3] == true && listAdd.length==0">
+            Nothing to add 
+        </div>
+
+        <form ng-if="addList[3] == true && listAdd.length >0">
+            <span ng-repeat="(m,n) in listAdd">
+            <input type="checkbox"  ng-model="listAddSelect[n]">
+                {{n}}
+            </input>
+            <br/>
+            </span>
+            <button style="background-color: green; color:white;" ng-click="addAdjust('rrClientHello')">
+                Adjust
+            </button>
     </div>
 </div>

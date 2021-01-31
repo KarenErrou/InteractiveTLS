@@ -30,6 +30,13 @@
       			</li>
 
       			<br/>
+            <li><p><b>supported_versions</b></p>
+              <p><span style="color:#009200">Adjustment:</span> This extension is used by the client to indicate what versions of TLS he supports. It consists of a list of the version supported order in an descending order of preference.
+              In TLS1.3, the supported_version extension should always be available and having as highest value 0x0304 that indicates version TLS1.3. 
+            </p>
+            <p> Since only TLS1.3 is available in this application, the adjustment of this list is disabled.</p>
+            </li>
+          <br/>
       		</ul>
 
 
@@ -60,7 +67,16 @@
       			<li><p><b>legacy_compression_methods</b></p>
       				<p><span style="color:#009200">Adjustment:</span> This vector should contain exactly one byte set to zero that represents "null" in the previous versions of TLS. In case any other value is received, this leads to a abortion of the handshake with an "illegal_parameter" alert. Potentially a man in the middle attack. </p>
       			</li>
+            <br/>
+              <li><p><b>supported_versions</b></p>
+              <p><span style="color:#009200">Adjustment:</span> This extension is used by the server to indicate what versions of TLS he supports. It consists of a list of the version supported order in an descending order of preference.
+              In TLS1.3, the supported_version extension should always be available and having as highest value 0x0304 that indicates version TLS1.3. 
+            </p>
+            <p> Since only TLS1.3 is available in this application, the adjustment of this list is disabled.</p>
+            </li>
+          <br/>
       		</ul>
+
       	
     	</div>
   		</uib-accordion> 

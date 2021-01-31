@@ -32,13 +32,11 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 			$scope.step = step + 1.0;
 		else
 			$scope.step = step + 0.5;
-
-
 	};
 
 	$scope.listAdd = [];
 	$scope.listAddSelect =[];
-	$scope.addList = [false, false];
+	$scope.addList = [false, false, false, false, false, false];
 	$scope.add = function(step, index){
 		$scope.listAdd = [];
 		for(var i in $scope.addList){
@@ -55,21 +53,12 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 			}
 		}
 		
-		if(step=='clientHello'){
-			
-			// if($scope.addList[0] == false){
-			// 	$scope.addList[0] = true;
-			// }
-			// else{
-			// 	$scope.addList[0] = false;
-			// }
-			
+		if(step=='clientHello'){		
 			for (var elt1 in $scope.chExtensions){
     			if($scope.chExtensions[elt1].deleted == "yes"){
     				$scope.listAdd.push($scope.chExtensions[elt1].eltName);
 				}
 			}	
-			
 		}
 		else if(step=='serverHello'){
 			for (var elt1 in $scope.shExtensions){
@@ -78,21 +67,74 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 				}
 			}	
 		}
+		else if(step=='encryptedExtension'){
+			for (var elt1 in $scope.encryptedExtension){
+    			if($scope.encryptedExtension[elt1].deleted == "yes"){
+    				$scope.listAdd.push($scope.encryptedExtension[elt1].eltName);
+				}
+			}
+		}
+		else if(step == 'certificateRequest'){
+			for (var elt1 in $scope.certificateRequest){
+    			if($scope.certificateRequest[elt1].deleted == "yes"){
+    				$scope.listAdd.push($scope.certificateRequest[elt1].eltName);
+				}
+			}
+		}	
 	};
 
 	$scope.addAdjust = function(step){
 		for(var i in $scope.addList){
 			$scope.addList[i] = false;
 		}
+
 		if(step=='clientHello'){
 			for (var elt1 in $scope.chExtensions){
 				for(var elt2 in $scope.listAddSelect){					
     				if($scope.chExtensions[elt1].eltName == String(elt2)){
     					$scope.chExtensions[elt1].deleted = "no";	
+    					$scope.storeidField = $scope.chExtensions[elt1];
+    					$scope.updateNextSteps('clientHello',$scope.chExtensions[elt1].eltName, '');
+					}
+
+				}
+			} 
+
+		}
+		if(step=='serverHello'){
+			for (var elt1 in $scope.shExtensions){
+				for(var elt2 in $scope.listAddSelect){					
+    				if($scope.shExtensions[elt1].eltName == String(elt2)){
+    					$scope.shExtensions[elt1].deleted = "no";	
+    					$scope.storeidField = $scope.shExtensions[elt1];
+    					$scope.updateNextSteps('serverHello',$scope.shExtensions[elt1].eltName, '');
 					}
 				}
 			} 
 		}
+		if(step=='encryptedExtension'){
+			for (var elt1 in $scope.encryptedExtension){
+				for(var elt2 in $scope.listAddSelect){					
+    				if($scope.encryptedExtension[elt1].eltName == String(elt2)){
+    					$scope.encryptedExtension[elt1].deleted = "no";	
+    					$scope.storeidField = $scope.encryptedExtension[elt1];
+    					$scope.updateNextSteps('encryptedExtension',$scope.encryptedExtension[elt1].eltName, '');
+					}
+				}
+			} 
+		}
+		if(step=='certificateRequest'){
+			for (var elt1 in $scope.certificateRequest){
+				for(var elt2 in $scope.listAddSelect){					
+    				if($scope.certificateRequest[elt1].eltName == String(elt2)){
+    					$scope.certificateRequest[elt1].deleted = "no";	
+    					$scope.storeidField = $scope.certificateRequest[elt1];
+    					$scope.updateNextSteps('certificateRequest',$scope.certificateRequest[elt1].eltName, '');
+					}
+				}
+			} 
+		}
+
 	}
 
 	$scope.adjusting = false;
@@ -118,6 +160,38 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 	};
 	$scope.cipherSuitesServer= "TLS_AES_128_GCM_SHA256";
 	$scope.cipherSuitesHelloRetryRequest= "TLS_AES_128_GCM_SHA256";
+
+
+	$scope.ECDHEClient = {
+		"secp256r1(0x0017)": true, 
+		"secp384r1(0x0018)": true,
+		"secp521r1(0x0019)": false,
+		"x25519(0x001D)": false, 
+		"x448(0x001E)": false
+	}
+
+	$scope.DHEClient = {
+		"ffdhe2048(0x0100)": false, 	
+		"ffdhe3072(0x0101)": false, 
+		"ffdhe4096(0x0102)": false,
+		"ffdhe6144(0x0103)": false,
+		"ffdhe8192(0x0104)": false
+	}
+	$scope.ECDHEServer = {
+		"secp256r1(0x0017)": true, 
+		"secp384r1(0x0018)": true,
+		"secp521r1(0x0019)": false,
+		"x25519(0x001D)": false, 
+		"x448(0x001E)": false
+	}
+
+	$scope.DHEServer = {
+		"ffdhe2048(0x0100)": false, 	
+		"ffdhe3072(0x0101)": false, 
+		"ffdhe4096(0x0102)": false,
+		"ffdhe6144(0x0103)": false,
+		"ffdhe8192(0x0104)": false
+	}
 
 
 	//Server Parameters
@@ -160,19 +234,15 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 			document.querySelector(".leftBox").style.cssText = "  border-style: solid; border-color: #009200;";
 			$scope.leftBoxContent = " ";
 			$scope.leftBoxTitle = 'Adjust ' + idField.eltName;	
-			$scope.adjusting= true;
-			if(idField.adjustM){$scope.adjustMessage = idField.adjustM;}
-			if(idField.adjust){
-				var str = idField.adjust;
-				$scope.splitted = str.split(";");
-			}
-			else{
-					$scope.splitted = '';
-			}
 			
+			$scope.adjusting= true;
+			
+			$scope.supported_groups = [false,false];
 			$scope.checkboxCipherSuites = false;
 			$scope.checkboxClientCert = false;
 			$scope.checkboxServerCert = false;
+			$scope.key_share = false;
+			
 
 			if(idField.eltName == 'cipher_suites' && idStep == 'clientHello'){
 				$scope.checkbox = true;
@@ -186,10 +256,35 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 				$scope.checkbox = true;	
 				$scope.checkboxServerCert = true;
 			}
+			else if (idField.eltName == 'supported_groups' && idStep == 'chExtensions' ){
+				$scope.supported_groups[0] = true;	
+			}
+			else if (idField.eltName == 'supported_groups' && idStep == 'encryptedExtension' ){
+				$scope.supported_groups[1] = true;	
+			}
+			else if (idField.eltName == 'key_share' && idStep == 'shExtensions' ){
+				$scope.key_share = true;	
+			}
 			else{
 				$scope.checkbox = false;
 			}			
-
+			if($scope.supported_groups[0] == true || $scope.supported_groups[1] == true || $scope.key_share == true){
+				if(idField.adjustM){$scope.adjustMessage = idField.adjustM;}
+				var str1 = idField.adjust1;
+				$scope.groupsSplitted1 = str1.split(";");
+				var str2 = idField.adjust2;
+				$scope.groupsSplitted2 = str2.split(";");
+			}
+			else{
+				if(idField.adjustM){$scope.adjustMessage = idField.adjustM;}
+				if(idField.adjust){
+					var str = idField.adjust;
+					$scope.splitted = str.split(";");
+				}
+				else{
+						$scope.splitted = '';
+				}	
+			}
 		}
 
 		else  if(LeftBoxType == 'delete'){
@@ -244,6 +339,16 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 				}
 				// $scope.shExtensions = $scope.shExtensions.filter(item => item.eltName !== $scope.storeidField.eltName);
 				$scope.updateNextSteps('serverHello',$scope.storeidField.eltName,'deleted');
+			break;
+			
+			case 'encryptedExtension':
+				for (var elt1 in $scope.encryptedExtension){
+    				if($scope.storeidField.eltName == $scope.encryptedExtension[elt1].eltName){
+						$scope.encryptedExtension[elt1].deleted = 'yes';
+					}
+				}
+				// $scope.shExtensions = $scope.shExtensions.filter(item => item.eltName !== $scope.storeidField.eltName);
+				$scope.updateNextSteps('encryptedExtension',$scope.storeidField.eltName,'deleted');
 			break;
 			default:
 		}
@@ -367,6 +472,25 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 		        }
 
 	        break;
+	        case 'shExtensions':
+	        	for (var elt1 in $scope.shExtensions){
+            		if($scope.storeidField.eltName == $scope.shExtensions[elt1].eltName){
+            			switch ($scope.storeidField.eltName){
+							case 'key_share':
+								if($scope.ECDHEClient[$scope.data.adjust] ==  false || $scope.DHEClient[$scope.data.adjust] == false){
+		            				//cpher suite selected by the server must be one from the list chosen by the client
+									alert($scope.data.adjust + " is selected in the server and wasn't offered by the client!! ABORT HANDSHAKE!");
+								}
+								if($scope.data.adjust == 'secp256r1(0x0017)' || $scope.data.adjust == 'secp384r1(0x0018)' || $scope.data.adjust == 'secp521r1(0x0019)' || $scope.data.adjust == 'x25519(0x001D)' || $scope.data.adjust == 'x448(0x001E)'){
+ 									$scope.shExtensions[elt1].eltValue = '= ECDHE';
+								} else{
+									$scope.shExtensions[elt1].eltValue = '= DHE';
+								}						
+							break;
+						}
+					}
+				}
+	        break;
 
             case 'helloRetryRequest':
 				for (var elt1 in $scope.serverHello){
@@ -399,14 +523,14 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 			        			if($scope.clientCert[$scope.data.adjust] ==  false){
 									alert($scope.clientCertServer + " is selected in the server and wasn't offered by the client!! ABORT HANDSHAKE!");
 								}			
-								$scope.clientCertServer = data.adjust;
+								$scope.clientCertServer = $scope.data.adjust;
 							break;	
 
 							case 'Server_certificate_type':
 								if($scope.serverCert[$scope.data.adjust] ==  false){
 			        				alert($scope.clientCertServer + " is selected in the server and wasn't offered by the client!! ABORT HANDSHAKE!");
 								}			
-								$scope.serverCertServer = data.adjust;
+								$scope.serverCertServer = $scope.data.adjust;
 							break;
 						}
 					}
@@ -419,16 +543,17 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 
 	$scope.updateNextSteps = function (originalUpdate,fieldUpdated,type){
 		switch (originalUpdate) {
+			//////// KEY ECHANGE
 			case 'clientHello':
-			if(type == 'deleted'){
-				for (var elt1 in $scope.chExtensions){
-	        			if($scope.storeidField.eltName == $scope.chExtensions[elt1].eltName){
-							$scope.chExtensions[elt1].deleted="yes";
+				if(type == 'deleted'){
+					for (var elt1 in $scope.chExtensions){
+		        			if($scope.storeidField.eltName == $scope.chExtensions[elt1].eltName){
+								$scope.chExtensions[elt1].deleted="yes";
+						}
 					}
 				}
-			}
-			//////// KEY ECHANGE
-				///something in clientHello Changed
+				
+		
 				switch(fieldUpdated){
 					///legacy_version in clientHello Changed -> Check tlsVersion Client and server
 					case 'legacy_version':
@@ -445,9 +570,9 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 						}
 
 						$scope.leftBoxTitle = 'supported_versions NOT deleted' ;	
-						for (var elt1 in $scope.chExtensions){
-	        				if($scope.storeidField.eltName == $scope.chExtensions[elt1].eltName){
-								$scope.chExtensions[elt1].deleted="no";
+						for (var elt2 in $scope.chExtensions){
+	        				if($scope.storeidField.eltName == $scope.chExtensions[elt2].eltName){
+								$scope.chExtensions[elt2].deleted="no";
 							}
 						}
 						// $scope.newItem= {eltName: 'supported_versions', delete: 'yes', 
@@ -456,86 +581,109 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 					break;
 
 					case 'supported_groups':
-						// $scope.supportedgroupsKeyshare[0]=false;
-						// for (var elt1 in $scope.chExtensions){
-	     //    				if($scope.storeidField.eltName == $scope.chExtensions[elt1].eltName){
-						// 		$scope.chExtensions[elt1].deleted="yes";
-						// 	}
-						// }
-
-
-						for (var elt1 in $scope.chExtensions){
-
-							// if($scope.supportedgroupsKeyshare[1]==true){
-							// 	alert("ECDHE is not supported since supported groups is not available. Key share shouldn't be available and PSK must be supported.");
-							// 	alert("missing extension");
-							// }
-
-	        				if($scope.chExtensions[elt1].eltName == 'key_share'){
-								if($scope.chExtensions[elt1].deleted=="no"){
-									alert("ECDHE is not supported since supported groups is not available. Key share shouldn't be available and PSK must be supported.");
-									alert("missing extension");
+						for (var elt2 in $scope.chExtensions){
+		        			if($scope.chExtensions[elt2].eltName == 'key_share'){					
+								if($scope.chExtensions[elt2].deleted=="no"){
+									if($scope.storeidField.deleted == "yes"){
+										alert("Supported groups is not available. Key share shouldn't be available and PSK must be supported.");
+										alert("missing extension");
+									}
+								}
+								else if($scope.chExtensions[elt2].deleted=="yes"){
+									if($scope.storeidField.deleted == "no"){
+										alert("Key Share and supported_group should always be available together");
+										alert("missing extension");
+									}
 								}
 							}
 
-							// if($scope.pre_shared_keys[0]==false){
-							// 	alert("ECDHE is not supported since supported groups is not available. PSK must be supported.");
-							// 	alert("missing extension");
+						
+							// else if($scope.chExtensions[elt1].eltName == 'pre_shared_keys'){
+							// 	if($scope.chExtensions[elt1].deleted=="yes"){
+							// 		alert("Supported groups is not available. PSK must be supported.");
+							// 		alert("missing extension");
+							// 	}
 							// }
-
-							if($scope.chExtensions[elt1].eltName == 'pre_shared_keys'){
-								if($scope.chExtensions[elt1].deleted=="yes"){
-									alert("ECDHE is not supported since supported groups is not available. PSK must be supported.");
-									alert("missing extension");
-								}
-							}
-						}
+						}					
 					break;			
 
 					case 'key_share':
-						if(type == 'deleted'){
-							// $scope.supportedgroupsKeyshare[1]=false;
-							for (var elt1 in $scope.chExtensions){
-		      //   				if($scope.storeidField.eltName == $scope.chExtensions[elt1].eltName){
-								// 	$scope.chExtensions[elt1].deleted="yes";
-								// }
-
-									
+						supported_groups= true;
+						pre_shared_keys = true;
+						// $scope.supportedgroupsKeyshare[1]=false;
+						for (var elt1 in $scope.chExtensions){
+							if($scope.chExtensions[elt1].eltName == 'supported_groups'){
+								if($scope.chExtensions[elt1].deleted=="yes"){
+									supported_groups = false;
+								}
+								else{
+									supported_groups = true;
+								}
 							}
+							else if($scope.chExtensions[elt1].eltName == 'pre_shared_keys'){
+								if($scope.chExtensions[elt1].deleted=="no"){
+									pre_shared = true;
+								}
+								else{
+									pre_shared = false;
+								}
+							}
+							else if($scope.chExtensions[elt1].eltName == 'psk_key_exchange_modes'){
+								if($scope.chExtensions[elt1].deleted=='no' && $scope.chExtensions[elt1].eltValue=='= psk_dhe_ke'){
+									alert("When PSK_dhe_ke is selected in psk_key_exchange_modes, then key_share should be included in the extensions")
+								}
+							}
+						}
+						
+						if($scope.storeidField.deleted == "no"){
+							if(supported_groups == false){
+								alert("Supported groups is not available.");	
+								alert("missing extension");
+							}
+						}
+
+						if($scope.storeidField.deleted == "yes"){
+							if(supported_groups == true){
+								alert("key_share should be available when supported groups is available");
+								alert("missing extension");
+							}
+							if(pre_shared == false){
+								alert("PSK must be supported.");	
+								alert("missing extension");
+							}
+
+						}
+							
 
 							// if($scope.supportedgroupsKeyshare[0]==true){
 							// 	alert("key_share should be available when supported groups is available");
 							// 	alert("missing extension");
 							// }
-							for (var elt1 in $scope.chExtensions){
-								if($scope.chExtensions[elt1].eltName == 'supported_groups'){
-									if($scope.chExtensions[elt1].deleted=="no"){
-										alert("key_share should be available when supported groups is available");
-										alert("missing extension");
-									}
+							// for (var elt1 in $scope.chExtensions){
+							// 	if($scope.chExtensions[elt1].eltName == 'supported_groups'){
+							// 		if($scope.chExtensions[elt1].deleted=="no"){
+							// 			alert("key_share should be available when supported groups is available");
+							// 			alert("missing extension");
+							// 		}
 								// else{
 								// 	if($scope.pre_shared_keys[0]==false){
 								// 		alert("ECDHE is not supported since supported groups is not available. PSK must be supported.");
 								// 		alert("missing extension");
 								// 	}
 								// }
-									else{
-										if($scope.chExtensions[elt1].eltName == 'pre_shared_keys'){
-											if($scope.chExtensions[elt1].deleted=="yes"){
-												alert("ECDHE is not supported since supported groups is not available. PSK must be supported.");	
-												alert("missing extension");
-											}
-										}
-									}
-								}
-								if($scope.chExtensions[elt1].eltName == 'psk_key_exchange_modes'){
-									if($scope.chExtensions[elt1].deleted=='no' && $scope.chExtensions[elt1].eltValue=='= psk_dhe_ke'){
-										alert("When PSK_dhe_ke is selected in psk_key_exchange_modes, then key_share should be included in the extensions")
-									}
-								}
-							}
+									// else{
+									// 	if($scope.chExtensions[elt1].eltName == 'pre_shared_keys'){
+									// 		if($scope.chExtensions[elt1].deleted=="yes"){
+									// 			alert("Supported groups is not available. PSK must be supported.");	
+									// 			alert("missing extension");
+									// 		}
+									// 	}
+									// }
+							// 	}
+								
+							// }
 
-						}
+						// }
 					break;
 
 					case 'psk_key_exchange_modes':
@@ -584,39 +732,44 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 						if(type=='adjusted'){
 							if($scope.storeidField.eltValue == '= psk_ke'){
 								if(key_share[0] || key_share[1]){
-									alert("psk_ke chosen in psk_key_exchange_modes --> key_share should not be in the extensions")
+									alert("psk_ke chosen in psk_key_exchange_modes --> key_share should not be in the extensions");
 								}			
 								
 							}
 							else if($scope.storeidField.eltValue == '= psk_dhe_ke'){
 								if(key_share[0]==false || key_share[1]==false){
-									alert("PSK_dhe_ke chosen in psk_key_exchange_modes --> key_share should be in the extensions")
+									alert("PSK_dhe_ke chosen in psk_key_exchange_modes --> key_share should be in the extensions");
 								}			
 							}
 							if(pre_shared[0] == false){
-								alert("when psk_key_exchange_modes is in the extensions, pre_shared_keys should be there too")
+								alert("when psk_key_exchange_modes is in the extensions, pre_shared_keys should be there too");
 							}
 						}
-
 						else if (type== 'deleted'){
 							if(pre_shared[0] == true){
-								alert("when pre_shared_keys is in the extension, psk_key_exchange_modes should be there too")
+								alert("when pre_shared_keys is in the extension, psk_key_exchange_modes should be there too");
 							}
 						}
+						else{
+							if(pre_shared[0] == false){
+								alert("when psk_key_exchange_modes is in the extensions, pre_shared_keys should be there too");
+							}
+						}
+						
+
 					break;
 
 					case 'pre_shared_keys':
 
 						if (type == 'deleted'){
-alert("HI");
 							for (var elt1 in $scope.chExtensions){
 								if($scope.chExtensions[elt1].eltName == 'psk_key_exchange_modes'){
 									if($scope.chExtensions[elt1].deleted=="no"){
-										alert("psk_key_exchange_modes should be removed when pre_shared_keys is removed")
+										alert("psk_key_exchange_modes should be removed when pre_shared_keys is removed");
 									}
 								}else if($scope.chExtensions[elt1].eltName == 'key_share'){
 									if($scope.chExtensions[elt1].deleted=="yes"){
-										alert("Either key_share or pre_shared_keys should be available in the extensions to negotiate a key exchange mode.")
+										alert("Either key_share or pre_shared_keys should be available in the extensions to negotiate a key exchange mode.");
 									}
 								}
 							}
@@ -628,6 +781,13 @@ alert("HI");
 			break;
 
 			case 'serverHello':
+			if(type == 'deleted'){
+				for (var elt1 in $scope.shExtensions){
+	        			if($scope.storeidField.eltName == $scope.shExtensions[elt1].eltName){
+							$scope.shExtensions[elt1].deleted="yes";
+					}
+				}
+			}
 				switch(fieldUpdated){
 					case 'legacy_version':
 						$scope.checkRandom();
@@ -651,6 +811,24 @@ alert("HI");
 						$scope.chExtensions.splice(0, 0, $scope.newItem);
 					break;			
 					default:
+				}
+			break;
+			case 'encryptedExtension':
+				if(type == 'deleted'){
+					for (var elt1 in $scope.encryptedExtension){
+		        			if($scope.storeidField.eltName == $scope.encryptedExtension[elt1].eltName){
+								$scope.encryptedExtension[elt1].deleted="yes";
+						}
+					}
+				}
+			break;
+			case 'certificateRequest':
+				if(type == 'deleted'){
+					for (var elt1 in $scope.certificateRequest){
+		        			if($scope.storeidField.eltName == $scope.certificateRequest[elt1].eltName){
+								$scope.certificateRequest[elt1].deleted="yes";
+						}
+					}
 				}
 			break;
 
@@ -723,8 +901,10 @@ alert("HI");
 	
 
 	$scope.keyExchange = [
-		'serverHello'
+		'serverHello', 'certificateRequest'
 	];
+
+	
 
  	$scope.clientHello = [
  		{eltType: 'ProtocolVersion', eltName: 'legacy_version', eltValue: '= 0x0303;', delete: 'no', adjustment:'yes', deleted:'no',
@@ -754,10 +934,13 @@ alert("HI");
  		{eltName: 'supported_versions', delete: 'yes', adjustment:'no', deleted:'no',
  			info: 'Indicates which versions of TLS the client supports. It is a list of of supported versions ordered in preference with the most preferred first. <br/>For TLS1.3, 0x0304 (the number of TLS1.3) should be at the top of the list. </br></br> This extension should only be available when the peer supports TLS1.3.'
  		},
- 		{eltType: '', delete: 'yes', adjustment:'no', eltName: 'supported_groups', eltValue: '= ECDHE groups', deleted:'no',
- 		info: 'If available, the client supports elliptic curves (ECDHE) cryptography. This field contains the supported groups that the client supports for key exchange. It is ordered from most to least preferred. <br/> In previous versions it was called <i> elleptic curves</i> and only supported elleptic curves groups. In TLS1.3, signature algorithms are negotiated in another extension. <br/> It contains values for Elliptic curve groups (ECDHE), Finite Field Groups (DHE) and other reserved coodes for private use.',
+ 		{eltType: '', delete: 'yes', adjustment:'yes', eltName: 'supported_groups', eltValue: ';', deleted:'no',
+ 		info: 'This extension indicates which named groups the client supports for key exchange. This extension must be given with a <i>key_share</i> extension that will contain the (EC)DHE shares for some or all of the groups.',
+ 		adjustM: '',
+ 		adjust1: 'secp256r1(0x0017);secp384r1(0x0018);secp521r1(0x0019);x25519(0x001D);x448(0x001E)',
+ 		adjust2: 'ffdhe2048(0x0100);ffdhe3072(0x0101);ffdhe4096(0x0102);ffdhe6144(0x0103);ffdhe8192(0x0104)'
  		},
- 		{eltType: '', delete: 'yes', adjustment:'yes', eltName: 'key_share', eltValue: '= ECDHE shares for some or all the groups', deleted:'no',
+ 		{eltType: '', delete: 'yes', adjustment:'yes', eltName: 'key_share', eltValue: '= (EC)DHE keys', deleted:'no',
  		info: 'This field contains the endpoints cryptographic parameters. It is a list of offered key share values in descending order of client preference. This allows the encryption of messages after the clientHello and serverHello. <p> In previous versions the messages were sent unencrypted </p>',
  		adjustM: '<p>The client can send this field empty to request group selection from the server. This will yield to a helloRetryRequest, therefore, an additional round-trip.</p> <p> Or, the client can send one or more public keys with an algorithm that he thinks the server supports. Each key share value must correspond to a group offered in the supported_groups and must appear in its same order.',
  		adjust: 'empty;keys'
@@ -785,10 +968,8 @@ alert("HI");
  		adjustM: '<ul><li>psk_ke (psk-only key establishment): the server must not supply the key_share extension.</li><li> psk_dhe_ke (psk with EC_DHE): key_share extension must also be supplied</li></ul>',
  		adjust: 'psk_ke;psk_dhe_ke'
  		},
- 		{eltType: '', delete: 'yes', adjustment:'yes', eltName: 'pre_shared_keys', eltValue: ';', deleted:'no',
+ 		{eltType: '', delete: 'yes', adjustment:'no', eltName: 'pre_shared_keys', eltValue: ';', deleted:'no',
  		info: '<p> if psk is used then the “pre_shared_key” extension is required and must be the last extension in the clientHello. </p>'
- 		// adjustM: 'X.509 being the default. In case the client has no other certificate types remaining to send other than X.509, then this extension must be omitted. ',
- 		// adjust: 'RawPublicKey;X.509;Additional certificate types'
  		}
  	];
 
@@ -820,8 +1001,13 @@ alert("HI");
  		{eltName: 'supported_versions', delete: 'yes', adjustment:'no', deleted:'no',
  			info: 'Indicates which versions of TLS the server uses. It is a list of of supported versions ordered in preference with the most preferred first. <br/><br/>This extension should only be available when the peer supports TLS1.3.'
  		},
- 		{eltType: '', delete: 'yes', adjustment:'no', eltName: 'key_share', eltValue: '= ECDHE share', deleted:'no',
- 		info: '<p>This field contains a single public key that is in the same group as one of the group selected in the <i>ClientHello.supported_groups</i>.</p> <p> When using ECDHE then the server offer one key in the serverHello. IF psk_ke is used, no key share must be sent.</p>'
+ 		{eltType: '', delete: 'yes', adjustment:'no', eltName: 'pre_shared_keys', eltValue: ';', deleted:'no',
+ 		info: '<p> if psk is used then the “pre_shared_key” extension is required.'
+ 		},
+ 		{eltType: '', delete: 'yes', adjustment:'yes', eltName: 'key_share', eltValue: '= ECDHE', deleted:'no',
+ 		info: '<p>This field contains a single public key that is in the same group as one of the group selected in the <i>ClientHello.supported_groups</i>.</p> <p> When using ECDHE then the server offer one key in the serverHello. IF psk_ke is used, no key share must be sent.</p>',
+ 		adjust1: 'secp256r1(0x0017);secp384r1(0x0018);secp521r1(0x0019);x25519(0x001D);x448(0x001E)',
+ 		adjust2: 'ffdhe2048(0x0100);ffdhe3072(0x0101);ffdhe4096(0x0102);ffdhe6144(0x0103);ffdhe8192(0x0104)'
  		}
  	];
 
@@ -877,8 +1063,7 @@ alert("HI");
  		adjust: 'TLS_AES_128_GCM_SHA256;TLS_AES_256_GCM_SHA384;TLS_CHACHA20_POLY1305_SHA256;TLS_AES_128_CCM_SHA256;TLS_AES_128_CCM_8_SHA256'
  		},
  		{eltType: 'opaque', delete: 'no', adjustment:'no', eltName: 'legacy_compression_methods', eltValue: ';', deleted:'no',
- 			info: 'Versions of TLS before 1.3 supported compression with the list of supported compression methods being sent in this field. </br> In TLS 1.3, this vector MUST contain exactly one byte set to zero, which corresponds to the "null" compression method in prior versions of TLS.</br>'
- 			+'If it is not the case, and the server receives a non 0 value, then the server must abort the handshake with an "illegal_parameter" alert.'
+ 			info: 'Versions of TLS before 1.3 supported compression with the list of supported compression methods being sent in this field. </br> In TLS 1.3, this vector MUST contain exactly one byte set to zero, which corresponds to the "null" compression method in prior versions of TLS.</br> If it is not the case, and the server receives a non 0 value, then the server must abort the handshake with an "illegal_parameter" alert.'
  		}	
  	];
 
@@ -886,8 +1071,11 @@ alert("HI");
 	 	// {eltType: '', delete: 'yes', adjustment:'no', eltName: 'Server_name', eltValue: ';', 
  		// info: 'The <i> server_name" </i> extension is used to guide certificate selection. ',
  		// },
- 		{eltType: '', delete: 'yes', adjustment:'no', eltName: 'supported_groups', eltValue: '= ECDHE groups', deleted:'no',
- 		info: 'In TLS1.3, servers can send this extension to the client in case there is a more preferred group to the one in the key_share extension but for now he is still willing to accept this clientHello. This field is therefore sent just to update the client’s view on the server’s preferences. But, before a successful completion of the handshake, the client shouldn\'t act upon any information gained from this field. After the successful completion of the handshake the client can use the information gained to change the groups used in its “key_share” extension in following connections.'
+ 		{eltType: '', delete: 'yes', adjustment:'yes', eltName: 'supported_groups', eltValue: ';', deleted:'yes',
+ 		info: 'The server may send a supported group extension. <p>As in the clientHello, it is a list from most to least preferred group supported by the peer.</p> ',
+ 		adjustM: '',
+ 		adjust1: 'secp256r1(0x0017);secp384r1(0x0018);secp521r1(0x0019);x25519(0x001D);x448(0x001E)',
+ 		adjust2: 'ffdhe2048(0x0100);ffdhe3072(0x0101);ffdhe4096(0x0102);ffdhe6144(0x0103);ffdhe8192(0x0104)'
  		},
  		{eltType: '', delete: 'yes', adjustment:'yes', eltName: 'Client_certificate_type', eltValue: ';', deleted:'no',
  		info: '<p> This extension should exist when the server requests a certificate form the client (in the certificate_request message). </p><p> This extension then indicates the type of certificates the client is requested to provide.</p>',
@@ -900,6 +1088,11 @@ alert("HI");
  		adjust: 'RawPublicKey; X.509;Additional certificate types'
  		}
  	];
+
+ 	$scope.certificateRequest = [
+	 	
+ 	];
+
 
 }]);
 
