@@ -75,9 +75,21 @@
             <p> Since only TLS1.3 is available in this application, the adjustment of this list is disabled.</p>
             </li>
           <br/>
-      		</ul>
 
+        </ul>
+        <p><b>To facilitate the user experience, some extensions were not included:</p>
+          
+          <p><u>Extensions not included:</u></b></p>
+          <br/>
+      <ul>
+          <li><p><b>Cookie</b></p>
+              <p>Cookies extension can be added in the helloRetryRequest. When it is the case, the client must add in the clientHello responded a cookie extension. 
+          The cookie extension should not be added in the serverHello or the clientHello than is not a response to a helloRetryRequest.</p>
+            </li>
+          <br/>
+          
       	
+          </ul>
     	</div>
   		</uib-accordion> 
 	</p>

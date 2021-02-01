@@ -24,12 +24,19 @@ myTLSApp.config(['$routeProvider', function($routeProvider){
 
 // myTLSApp.controller('KEController', ['$scope', '$http', function($scope, $http){}]);
 myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http){
-
+	$scope.error = true;
 	$scope.step = 1.0;
-	
+	$scope.alertsList = [
+ 		
+  	];
+
 	$scope.incrementStep = function(step,type){
 		if(type == 'normal')
 			$scope.step = step + 1.0;
+		else if(type == 'serverHello')
+			$scope.step = 4.0;
+		else if(type == 'clientHello')
+			$scope.step = 3.0;
 		else
 			$scope.step = step + 0.5;
 	};
@@ -67,6 +74,20 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 				}
 			}	
 		}
+		else if(step=='helloRetryRequest'){
+			for (var elt1 in $scope.hrrExtensions){
+    			if($scope.hrrExtensions[elt1].deleted == "yes"){
+    				$scope.listAdd.push($scope.hrrExtensions[elt1].eltName);
+				}
+			}	
+		}
+		else if(step=='rrClientHello'){
+			for (var elt1 in $scope.rrClientHello){
+    			if($scope.rrClientHello[elt1].deleted == "yes"){
+    				$scope.listAdd.push($scope.rrClientHello[elt1].eltName);
+				}
+			}	
+		}
 		else if(step=='encryptedExtension'){
 			for (var elt1 in $scope.encryptedExtension){
     			if($scope.encryptedExtension[elt1].deleted == "yes"){
@@ -90,46 +111,78 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 
 		if(step=='clientHello'){
 			for (var elt1 in $scope.chExtensions){
-				for(var elt2 in $scope.listAddSelect){					
-    				if($scope.chExtensions[elt1].eltName == String(elt2)){
-    					$scope.chExtensions[elt1].deleted = "no";	
-    					$scope.storeidField = $scope.chExtensions[elt1];
-    					$scope.updateNextSteps('clientHello',$scope.chExtensions[elt1].eltName, '');
+				for(var elt2 in $scope.listAddSelect){	
+					if($scope.listAddSelect[elt2]==true){					
+    					if($scope.chExtensions[elt1].eltName == String(elt2)){
+    						$scope.chExtensions[elt1].deleted = "no";	
+    						$scope.storeidField = $scope.chExtensions[elt1];
+    						$scope.updateNextSteps('clientHello',$scope.chExtensions[elt1].eltName, '');
+						}
 					}
-
 				}
 			} 
-
 		}
-		if(step=='serverHello'){
+		else if(step=='serverHello'){
 			for (var elt1 in $scope.shExtensions){
-				for(var elt2 in $scope.listAddSelect){					
-    				if($scope.shExtensions[elt1].eltName == String(elt2)){
-    					$scope.shExtensions[elt1].deleted = "no";	
-    					$scope.storeidField = $scope.shExtensions[elt1];
-    					$scope.updateNextSteps('serverHello',$scope.shExtensions[elt1].eltName, '');
+				for(var elt2 in $scope.listAddSelect){
+					if($scope.listAddSelect[elt2]==true){					
+	    				if($scope.shExtensions[elt1].eltName == String(elt2)){
+	    					$scope.shExtensions[elt1].deleted = "no";	
+	    					$scope.storeidField = $scope.shExtensions[elt1];
+	    					$scope.updateNextSteps('serverHello',$scope.shExtensions[elt1].eltName, '');
+						}
 					}
 				}
 			} 
 		}
-		if(step=='encryptedExtension'){
+		else if(step=='helloRetryRequest'){
+			for (var elt1 in $scope.hrrExtensions){
+				for(var elt2 in $scope.listAddSelect){	
+					if($scope.listAddSelect[elt2]==true){				
+    					if($scope.hrrExtensions[elt1].eltName == String(elt2)){
+    						$scope.hrrExtensions[elt1].deleted = "no";	
+    						$scope.storeidField = $scope.hrrExtensions[elt1];
+    						$scope.updateNextSteps('helloRetryRequest',$scope.hrrExtensions[elt1].eltName, '');
+						}
+					}
+				}
+			} 
+		}
+		else if(step=='rrClientHello'){
+			for (var elt1 in $scope.rrClientHello){
+				for(var elt2 in $scope.listAddSelect){	
+					if($scope.listAddSelect[elt2]==true){				
+    					if($scope.rrClientHello[elt1].eltName == String(elt2)){
+    						$scope.rrClientHello[elt1].deleted = "no";	
+    						$scope.storeidField = $scope.rrClientHello[elt1];
+    						$scope.updateNextSteps('rrClientHello',$scope.rrClientHello[elt1].eltName, '');
+						}
+					}
+				}
+			} 
+		}
+		else if(step=='encryptedExtension'){
 			for (var elt1 in $scope.encryptedExtension){
-				for(var elt2 in $scope.listAddSelect){					
-    				if($scope.encryptedExtension[elt1].eltName == String(elt2)){
-    					$scope.encryptedExtension[elt1].deleted = "no";	
-    					$scope.storeidField = $scope.encryptedExtension[elt1];
-    					$scope.updateNextSteps('encryptedExtension',$scope.encryptedExtension[elt1].eltName, '');
+				for(var elt2 in $scope.listAddSelect){
+					if($scope.listAddSelect[elt2]==true){						
+	    				if($scope.encryptedExtension[elt1].eltName == String(elt2)){
+	    					$scope.encryptedExtension[elt1].deleted = "no";	
+	    					$scope.storeidField = $scope.encryptedExtension[elt1];
+	    					$scope.updateNextSteps('encryptedExtension',$scope.encryptedExtension[elt1].eltName, '');
+						}
 					}
 				}
 			} 
 		}
-		if(step=='certificateRequest'){
+		else if(step=='certificateRequest'){
 			for (var elt1 in $scope.certificateRequest){
-				for(var elt2 in $scope.listAddSelect){					
-    				if($scope.certificateRequest[elt1].eltName == String(elt2)){
-    					$scope.certificateRequest[elt1].deleted = "no";	
-    					$scope.storeidField = $scope.certificateRequest[elt1];
-    					$scope.updateNextSteps('certificateRequest',$scope.certificateRequest[elt1].eltName, '');
+				for(var elt2 in $scope.listAddSelect){	
+					if($scope.listAddSelect[elt2]==true){					
+	    				if($scope.certificateRequest[elt1].eltName == String(elt2)){
+	    					$scope.certificateRequest[elt1].deleted = "no";	
+	    					$scope.storeidField = $scope.certificateRequest[elt1];
+	    					$scope.updateNextSteps('certificateRequest',$scope.certificateRequest[elt1].eltName, '');
+						}
 					}
 				}
 			} 
@@ -321,7 +374,6 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 				// $scope.chExtensions = $scope.chExtensions.filter(item => item.eltName !== $scope.storeidField.eltName);
 				$scope.updateNextSteps('clientHello',$scope.storeidField.eltName,'deleted');
 			break;
-
 			case 'serverHello':
 				for (var elt1 in $scope.serverHello){
     				if($scope.storeidField.eltName == $scope.serverHello[elt1].eltName){
@@ -330,6 +382,15 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 				}
 				// $scope.serverHello = $scope.serverHello.filter(item => item.eltName !== $scope.storeidField.eltName);
 				$scope.updateNextSteps('serverHello',$scope.storeidField.eltName,'deleted');
+			break;
+			case 'hrrExtensions':
+				for (var elt1 in $scope.hrrExtensions){
+    				if($scope.storeidField.eltName == $scope.hrrExtensions[elt1].eltName){
+						$scope.hrrExtensions[elt1].deleted = 'yes';
+					}
+				}
+				// $scope.serverHello = $scope.serverHello.filter(item => item.eltName !== $scope.storeidField.eltName);
+				$scope.updateNextSteps('helloRetryRequest',$scope.storeidField.eltName,'deleted');
 			break;
 			case 'shExtensions':
 				for (var elt1 in $scope.shExtensions){
@@ -367,8 +428,27 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 		            		break;
 							case 'cipher_suites':
 								if($scope.cipherSuitesClient[$scope.cipherSuitesServer] ==  false){
-										alert($scope.cipherSuitesServer + " is selected in the server and wasn't offered by the client!! ABORT HANDSHAKE!");
+									$scope.alreadyAvailable = false;
+									for(var alerts in $scope.alertsList){
+										if($scope.alertsList[alerts].description == $scope.cipherSuitesServer + " is selected in the server and wasn't offered by the client!! ABORT HANDSHAKE!"){
+											$scope.alreadyAvailable = true;
+										}
+									}
+									if($scope.alreadyAvailable == false){
+										$scope.alertsList.push({
+								    		title:   "Cipher Suites Client", step: 'clientHello',
+		    								description: $scope.cipherSuitesServer + " is selected in the server and wasn't offered by the client!!  ABORT HANDSHAKE "
+										});
+									}
+
 								}			
+
+								else if($scope.cipherSuitesClient[$scope.cipherSuitesServer] ==  true){
+									for(var alerts in $scope.alertsList){
+										if($scope.alertsList[alerts].title == "Cipher Suites Client"){
+											$scope.alertsList.splice(alerts);										}
+									}
+								}
 							break;		            		
 							default:
 		            	}
@@ -813,6 +893,52 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 					default:
 				}
 			break;
+			case 'helloRetryRequest':
+				if(type == 'deleted'){
+					for (var elt1 in $scope.hrrExtensions){
+		        			if($scope.storeidField.eltName == $scope.hrrExtensions[elt1].eltName){
+								$scope.hrrExtensions[elt1].deleted="yes";
+						}
+					}
+				}
+				switch(fieldUpdated){
+					// case 'cookie':
+					// 	for (var elt1 in $scope.rrClientHello){
+		   //      			if($scope.rrClientHello[elt1].eltName == "cookie"){
+					// 			if($scope.rrClientHello[elt1].deleted=="yes" && $scope.storeidField.deleted == "no")
+					// 				alert("When cookie is available is the extension of helloRetryRequest, the client must include a cookie extension to its response clientHello");
+					// 			if($scope.rrClientHello[elt1].deleted=="no" && $scope.storeidField.deleted == "yes")
+					// 				alert("The client must not include a cookie extension if it is not available in the extension of helloRetryRequest");
+					// 		}
+					// 	}
+						
+					// break;		
+					default:
+				}
+			break;
+			case 'rrClientHello':
+				if(type == 'deleted'){
+					for (var elt1 in $scope.rrClientHello){
+		        			if($scope.storeidField.eltName == $scope.rrClientHello[elt1].eltName){
+								$scope.rrClientHello[elt1].deleted="yes";
+						}
+					}
+				}
+				switch(fieldUpdated){
+					// case 'cookie':
+					// 	for (var elt1 in $scope.hrrExtensions){
+		   //      			if($scope.hrrExtensions[elt1].eltName == "cookie"){
+					// 			if($scope.hrrExtensions[elt1].deleted=="yes" && $scope.storeidField.deleted == "no")
+					// 				alert("The client must not include a cookie extension if it is not available in the extension of helloRetryRequest");
+					// 			if($scope.hrrExtensions[elt1].deleted=="no" && $scope.storeidField.deleted == "yes")
+					// 				alert("When cookie is available is the extension of helloRetryRequest, the client must include a cookie extension to its response clientHello");
+					// 		}
+					// 	}
+						
+					// break;		
+					default:
+				}
+			break
 			case 'encryptedExtension':
 				if(type == 'deleted'){
 					for (var elt1 in $scope.encryptedExtension){
@@ -1041,7 +1167,10 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
  		},
  		{eltType: '', delete: 'yes', adjustment:'no', eltName: 'key_share', eltValue: '= ECDHE share', deleted:'no',
  		info: '<p> This field indicates the mutually supported group the server intends to negotiate and is requesting a retried ClientHello key_share for. </p><br/> <p> Upon receiving this field the client checks if it this field correspong to a group provided in the clientHello.supported_groups. Additionally, it also checks that this field is not the same as the group in the clientHello.key_share. In case any of these checks are false then the handshake is aborted with an "illegal_parameter" alert --> MAN IN THE MIDDLE!??</p> <p> If these checks works, then the clientHello.key_share should be replaced by this field.</p>',
- 	}
+ 		},
+		// {eltType: '', delete: 'yes', adjustment:'no', eltName: 'cookie', eltValue: ';', deleted:'yes',
+		// info: ''
+ 	// 	}
   	];
 
  	$scope.rrClientHello = [
@@ -1064,7 +1193,11 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
  		},
  		{eltType: 'opaque', delete: 'no', adjustment:'no', eltName: 'legacy_compression_methods', eltValue: ';', deleted:'no',
  			info: 'Versions of TLS before 1.3 supported compression with the list of supported compression methods being sent in this field. </br> In TLS 1.3, this vector MUST contain exactly one byte set to zero, which corresponds to the "null" compression method in prior versions of TLS.</br> If it is not the case, and the server receives a non 0 value, then the server must abort the handshake with an "illegal_parameter" alert.'
- 		}	
+ 		}
+ 		,
+		// {eltType: '', delete: 'yes', adjustment:'no', eltName: 'cookie', eltValue: ';', deleted:'yes',
+		// info: ''
+ 	// 	}
  	];
 
     $scope.encryptedExtension = [

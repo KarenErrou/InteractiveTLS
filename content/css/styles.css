@@ -91,14 +91,20 @@ main{
 
 }
 
+
 .leftBox{
-  position:relative;
+  position: -webkit-sticky; /* Safari */
+  position: sticky;
   padding:25px;
+  /*width:15%;*/
   display: inline-block;
-  margin:10%;
+  margin:5%;
+  top:0;
   border-radius: 10%;
   text-align: center;
 }
+
+
 
 .infoButton{
   height: 20px;
@@ -149,19 +155,19 @@ main{
 }*/
 
 .threadAlert{
-  position:fixed;
-  background-color: #F7DC6F;
-  margin:5%;  
-  color: #fff;
-  border-radius: 20%;
+  position:relative;
+  background-color: #ff9999;
+  border: 3px solid;
+  border-color: red;
+  margin:10%;  
+  color: #000;
+  border-radius: 10%;
   padding:20px;
   text-align: center;
 }
 
 .stepClient{
   position:relative;
-  /*top:15%;*/
-  /*font-size: 10px;*/
   text-align: left;
 }
 
@@ -169,8 +175,47 @@ main{
   border-color: #99ace6;
 }
 
+
+#keyExchangeButton{
+  margin-top:5px;
+  padding: 0px 20px;
+  position: relative;
+  border: 1px solid;
+  border-color:#000;
+  background-color:#99ace6;
+  border-radius: 0%;
+  color: #fff;
+}
+
 #serverParameters{
   border-color: #ff9f80;
+}
+
+
+#serverParametersButton{
+  margin-top:5px;
+  padding: 0px 20px;
+  position: relative;
+  border: 1px solid;
+  border-color:#000;
+  background-color:#ff9f80;
+  border-radius: 0%;
+  color: #fff;
+}
+
+#authentication{
+  border-color: red;
+}
+
+#authenticationButton{
+  margin-top:5px;
+  padding: 0px 20px;
+  position: relative;
+  border: 1px solid;
+  border-color:#000;
+  background-color:red;
+  border-radius: 0%;
+  color: #fff;
 }
 
 .stepClientContent{
@@ -179,6 +224,7 @@ main{
   border-radius: 5%;
   margin-left: 10px; 
   padding: 18px;
+  padding-top: 0px;
   padding-left:20px;
   font-size:16px;
   display: inline-block;
@@ -196,6 +242,7 @@ main{
   margin-top:10px;
   border-radius: 5%;
   padding: 20px;
+  padding-top: 0px;
   font-size:16px;
   padding-right:20px;
   display: inline-block;
