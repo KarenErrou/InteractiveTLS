@@ -26,6 +26,7 @@ myTLSApp.config(['$routeProvider', function($routeProvider){
 myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http){
 	$scope.error = true;
 	$scope.step = 1.0;
+	// $scope.postHandshake = true;
 	$scope.alertsList = [
  		
   	];
@@ -632,8 +633,6 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 						}
 					}
 				}
-				
-		
 				switch(fieldUpdated){
 					///legacy_version in clientHello Changed -> Check tlsVersion Client and server
 					case 'legacy_version':
@@ -854,6 +853,14 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 								}
 							}
 						}
+					break;
+					case 'post_handshake_auth':
+						// if (type == 'deleted'){
+						// 	$scope.postHandshake = false;
+						// }
+						// else{
+						// 	$scope.postHandshake = true;	
+						// }
 					break;
 					default:
 				}
@@ -1093,6 +1100,9 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
  		info: '<p> When PSK is selected, the client must include in its clientHello this extension that indicates the key exchange modes that can be used with PSKs </p>',
  		adjustM: '<ul><li>psk_ke (psk-only key establishment): the server must not supply the key_share extension.</li><li> psk_dhe_ke (psk with EC_DHE): key_share extension must also be supplied</li></ul>',
  		adjust: 'psk_ke;psk_dhe_ke'
+ 		},
+ 		{eltType: '', delete: 'yes', adjustment:'no', eltName: 'post_handshake_auth', eltValue: ';', deleted:'no',
+ 		info: 'When this extension is sent by the client, then it indicates that he is willing to perform post-handshake authentication. When this extension is missing, servers should not send a post-handshake CertificateRequest. This extension value should be of zero length.'
  		},
  		{eltType: '', delete: 'yes', adjustment:'no', eltName: 'pre_shared_keys', eltValue: ';', deleted:'no',
  		info: '<p> if psk is used then the “pre_shared_key” extension is required and must be the last extension in the clientHello. </p>'

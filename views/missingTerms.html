@@ -36,6 +36,12 @@
             </p>
             <p> Since only TLS1.3 is available in this application, the adjustment of this list is disabled.</p>
             </li>
+            <br/>
+            <li><p><b>post_handshake_auth</b></p>
+              <p><span style="color:#009200">Adjustment:</span> This extension value should be of zero length.
+              <p> When this extension is provided in the clientHello, the server can at any time after the handshake completion,  request client authentication. The request is done by sending a certificateRequest message. In this case, the client should respond with the appropriate authentication messages.</p>
+              <p> In other words, if the client decides the certificate, certificateVerify, and finished messages. If the client on the other hand wants to decline, then he must send a certificate message not containing any certificate, followed by Finished message. </p>
+            </li>
           <br/>
       		</ul>
 
