@@ -1060,7 +1060,10 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
  		{eltType: 'opaque', delete: 'no', adjustment:'no', eltName: 'legacy_compression_methods', eltValue: ';', deleted:'no',
  			info: 'Versions of TLS before 1.3 supported compression with the list of supported compression methods being sent in this field. </br> In TLS 1.3, this vector MUST contain exactly one byte set to zero, which corresponds to the "null" compression method in prior versions of TLS.</br>'
  			+'If it is not the case, and the server receives a non 0 value, then the server must abort the handshake with an "illegal_parameter" alert.'
- 		}	
+ 		},
+ 		{eltType: '', delete: 'yes', adjustment:'no', eltName: 'Certificate Authorities', eltValue: ';', deleted:'yes',
+ 		info: 'In  this  extension  the  client  may  indicate the certificate authorities (CAs) that he supports.  The data of thisfield is a list of distinguished names of CAs.'
+ 		}
  	];
 
  	$scope.chExtensions = [
@@ -1233,7 +1236,12 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
  	];
 
  	$scope.certificateRequest = [
-	 	
+	 	{eltType: '', delete: 'no', adjustment:'no', eltName: 'certificate_request_context', eltValue: ';', deleted:'yes',
+ 		info: ' Identifier for the certificate re-quest and will be echoed in the client’sCertificatemessage later on. It must be unique within the scope of this connection, preventing replay of the client CertificateVerify messages.'
+ 		},
+ 		{eltType: '', delete: 'yes', adjustment:'no', eltName: 'Certificate Authorities', eltValue: ';', deleted:'yes',
+ 		info: 'In  this  extension  the  server  may  indicate the certificate authorities (CAs) that he supports.  The data of thisfield is a list of distinguished names of CAs.'
+ 		}
  	];
 
 

@@ -60,12 +60,25 @@
         <div class="circleServer" ng-if="keyExchange[0] == 'helloRetryRequest'" ng-model="step" id="serverParameters"> 6</div> 
         <div class="circleServer" ng-if="keyExchange[0] == 'serverHello'" ng-model="step" id="serverParameters"> 4</div> 
         <h3>Certificate Request</h3>
-        <!-- <span ng-repeat="n in certificateRequest" ng-if="n.deleted=='no'">
-            <div style="display: inline-block;">
+
+        <span ng-repeat="n in certificateRequest">
+            <div ng-if="n.eltName == 'certificate_request_context'">
+                <div style="display: inline-block;">
+                    {{n.eltType}}  {{n.eltName}} {{n.eltValue}}
+                    <div class="infoButton" ng-click="showInfo('certificateRequest', n, 'info')">i</div>              
+                    
+                </br>  </br>
+                <p>Extensions: </p>  
+                </div>
+            </div>
+            <div ng-if="n.eltName != 'certificate_request_context'" style="display: inline-block;">
                 {{n.eltType}}  {{n.eltName}} {{n.eltValue}}
+                <div ng-if="n.delete == 'yes'" class="deleteButton" ng-click="showInfo('certificateRequest', n, 'delete')">x</div>
+                <div ng-if="n.adjustment == 'yes'" class="adjustButton" ng-click="showInfo('certificateRequest', n, 'adjust')">+</div>
+                <div class="infoButton" ng-click="showInfo('certificateRequest', n, 'info')">i</div>
             </div>
             </br>        
-        </span></br>   -->
+        </span></br>  
     </div>
 
 
@@ -74,15 +87,24 @@
         <div class="circleServer" ng-if="keyExchange[0] == 'serverHello'" ng-model="step" id="serverParameters"> 4</div> 
         <h3>Certificate Request</h3>
         
-        <!-- <span ng-repeat="n in certificateRequest">
-            <div style="display: inline-block;">
+        <span ng-repeat="n in certificateRequest">
+            <div ng-if="n.eltName == 'certificate_request_context'">
+                <div style="display: inline-block;">
+                    {{n.eltType}}  {{n.eltName}} {{n.eltValue}}
+                    <div class="infoButton" ng-click="showInfo('certificateRequest', n, 'info')">i</div>              
+                    
+                </br>  </br>
+                <p>Extensions: </p>  
+                </div>
+            </div>
+            <div ng-if="n.eltName != 'certificate_request_context'" style="display: inline-block;">
                 {{n.eltType}}  {{n.eltName}} {{n.eltValue}}
                 <div ng-if="n.delete == 'yes'" class="deleteButton" ng-click="showInfo('certificateRequest', n, 'delete')">x</div>
                 <div ng-if="n.adjustment == 'yes'" class="adjustButton" ng-click="showInfo('certificateRequest', n, 'adjust')">+</div>
                 <div class="infoButton" ng-click="showInfo('certificateRequest', n, 'info')">i</div>
             </div>
             </br>        
-        </span></br>   -->
+        </span></br>  
        
 
         <button ng-if="addList[5] == false || listAdd.length ==0" style="background-color: green; color:white;" ng-click="add('certificateRequest',5)">

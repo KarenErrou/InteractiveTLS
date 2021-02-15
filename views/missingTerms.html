@@ -42,7 +42,12 @@
               <p> When this extension is provided in the clientHello, the server can at any time after the handshake completion,  request client authentication. The request is done by sending a certificateRequest message. In this case, the client should respond with the appropriate authentication messages.</p>
               <p> In other words, if the client decides the certificate, certificateVerify, and finished messages. If the client on the other hand wants to decline, then he must send a certificate message not containing any certificate, followed by Finished message. </p>
             </li>
-          <br/>
+            <br/>
+
+            <li><p><b>Certificate Authorities</b></p>
+              <p><span style="color:#009200">Adjustment:</span>   The data of thisfield is a list of distinguished names of CAs </p>
+            </li>
+            <br/>
       		</ul>
 
 
@@ -50,7 +55,7 @@
     			
     			<p><u>Extensions not included:</u></b></p>
     			<br/>
-			<ul>
+	     		<ul>
       			<li><p><b>Padding:</b></p>
       				<p>This extension data is an arbitrary number of zero bytes. This field is available so it can be used to pad a ClientHello to a desired size. This sometimes helps  avoiding implementation bugs that are caused by ClientHello sizes.</p>
       			</li>
@@ -149,7 +154,22 @@
 		</div>
     
     	<div uib-accordion-group id="serverParameters" heading="Certificate Request"  style="border-radius: 2%" >
-      		This content is straight in the template.
+      		<ul> 
+            <li><p><b>certificate_request_context</b></p>
+              <p><span style="color:#009200">Adjustment:</span> If this field is not used in the post-handshakeauthentication exchanges, it must always be of zero length.
+             </p>
+          
+
+              <p><span style="color:#e70000">Deletion:</span>
+              Since it is not an extension this field is always mandatory.</p>
+            </li>
+            <br/>
+
+            <li><p><b>Certificate Authorities</b></p>
+              <p><span style="color:#009200">Adjustment:</span>   The data of thisfield is a list of distinguished names of CAs </p>
+            </li>
+
+          </ul>
     	</div>
   		</uib-accordion> 
 	</p>
