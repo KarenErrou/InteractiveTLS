@@ -1,41 +1,78 @@
 <div class="content">
-<div class="row">
-
-    <div class="col-lg-3 col-lg-3 col-lg-3" >
-        <div ng-include="'views/leftBox.html'"></div>
-    </div>
-
-    <div class="col-lg-6 col-lg-6 col-lg-6">
-        <div class="peers">
-                <div class="peerP1">Client</div>
-                <div class="peerP2">Server</div>
-        </div>
-        <div class="lignP1">
-            <!--------------- KEY EXCHANGE ------------------>
-            <div ng-include="'views/keyExchange.html'"></div>
-            
-            <!--------------- SERVER PARAMETERS ------------------>
-            <div ng-include="'views/serverParameters.html'"></div>
-
-            <!--------------- SERVER PARAMETERS ------------------>
-            <div ng-include="'views/authentication.html'"></div>
-            
-        </div>
-    </div>
-            
-   
-    <div class="col-lg-3 col-lg-3 col-lg-3">
-        <div ng-if="error == true">
-            <span ng-repeat="alerts in alertsList"  on-click="showAlert()">
-                <div class="threadAlert">
-                    <div style="font-size:24px;">{{alerts.title}}</div><br/>
-                    {{alerts.description}}
-                </div>
-            </span> 
-        </div><br/>
-        </div>
-
+    <div class="row">
         
+        <div class="col-lg-3 col-lg-3 col-lg-3" >
+            
+        </div>
+
+        <div class="col-lg-6 col-lg-6 col-lg-6">
+            <div id="mode"  >
+                Current key exchange mode: 
+                <span ng-if="keyExMode == 0">ECDHE</span>
+                <span ng-if="keyExMode == 1">DHE</span>
+                <span ng-if="keyExMode == 2">PSK with DHE</span>
+                <span ng-if="keyExMode == 3">PSK with ECDHE</span>
+            </div>
+        </div>
+        
+
+        <div class="col-lg-3 col-lg-3 col-lg-3">
+        </div>
+
     </div>
-</div>
+
+    <div class="row">
+        <div class="col-lg-3 col-lg-3 col-lg-3" >
+            <div ng-include="'views/leftBox.html'"></div>
+        </div>
+
+        <div class="col-lg-6 col-lg-6 col-lg-6">
+            <div class="peers">
+                    <div class="peerP1">Client</div>
+                    <div class="peerP2">Server</div>
+            </div>
+            <div class="lignP1">
+                <!--------------- KEY EXCHANGE ------------------>
+                <div ng-include="'views/keyExchange.html'"></div>
+                
+                <!--------------- SERVER PARAMETERS ------------------>
+                <div ng-include="'views/serverParameters.html'"></div>
+
+                <!--------------- SERVER PARAMETERS ------------------>
+                <div ng-include="'views/authentication.html'"></div>
+                
+            </div>
+        </div>
+                
+       
+        <div class="col-lg-3 col-lg-3 col-lg-3">
+            <div ng-if="error == true">
+                <span ng-repeat="alerts in alertsList"  on-click="showAlert()">
+                    <div class="threadAlert">
+                        <div style="font-size:24px;">Alert!</div>
+                        <div style="font-size:24px;">{{alerts.title}}</div><br/>
+                        {{alerts.description}}
+                    </div>
+                </span> 
+            </div><br/>
+
+            <div ng-if="explainAlert != empty">
+                <div class="explainAlert">
+                    <div style="font-size:24px;">Explanation:</div><br/>
+                    <div ng-bind-html="explainAlert"  >
+                    
+                    </div>
+                </div>
+            </div><br/>
+
+            <div ng-if="explainAlert != empty">
+                <div class="explainAlert">
+                    <div style="font-size:24px;">Explanation:</div><br/>
+                    <div ng-bind-html="explainAlert"  >
+                    
+                    </div>
+                </div>
+            </div><br/>
+        </div>
+    </div>
 </div>

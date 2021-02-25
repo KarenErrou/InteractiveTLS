@@ -10,10 +10,19 @@
       		All terms not in the extension are is mendatory and cannot be deleted from the terms sent to the server</p>
       		<ul>
       			<br/>
+
+            <li><p><b>legacy_version</b></p>
+              <p><span style="color:#009200">Adjustment:</span>
+              In version prior to TLS1.3, this field was used for version negotiation.</br> In TLS1.3 this field should be equal to <b> 0x0303 </b>, which indicates TLS1.2 and the version preferences are indicated by the client in a later extension parameter (<i>supported_versions)</i> which is mandatory in TLS1.3 having 0x0304 as its highest version. </p>
+            </li>
+
+            <br/>
       			
       			<li><p><b>random</b></p>
       				<p><span style="color:#009200">Adjustment:</span>
       				Since random is a random number generated, there's no options to choose from.</p>
+              <p> If the client is TLS1.2 and the server TLS1.3 this value should be equal to: 44 4F 57 4E 47 52 44 01 <br/>
+              If the client is TLS1.1 or below and the server is TLS1.3 or TLS1.2 this value should be equal to: 44 4F 57 4E 47 52 44 00 </p>
       			</li>
 
       			</br>
@@ -68,24 +77,51 @@
       		All terms not in the extension are is mendatory and cannot be deleted from the terms sent to the server</p>
       			<ul>
       			</br>
+
+            <li><p><b>legacy_version</b></p>
+              <p><span style="color:#009200">Adjustment:</span>
+              In version prior to TLS1.3, this field was used for version negotiation.</br> In TLS1.3 this field should be equal to <b> 0x0303 </b>, which indicates TLS1.2 and the version preferences are indicated by the server in a later extension parameter (<i>supported_versions</i>) which is mandatory in TLS1.3 having 0x0304 as its highest version. </p>
+            </li>
+
+            <br/>
+
+            <li><p><b>random (ServerHello)</b></p>
+              <p><span style="color:#009200">Adjustment:</span>
+              In version prior to TLS1.3, this field was used for version negotiation.</br> In TLS1.3 this field should be equal to <b> 0x0303 </b>, which indicates TLS1.2 and the version preferences are indicated by the server in a later extension parameter (<i>supported_versions)</i> which is mandatory in TLS1.3 having 0x0304 as its highest version. </p>
+              <p> If the client is TLS1.2 and the server TLS1.3 this value should be equal to: 44 4F 57 4E 47 52 44 01 <br/>
+             If the client is TLS1.1 or below and the server is TLS1.3 or TLS1.2 this value should be equal to: 44 4F 57 4E 47 52 44 00 </p>
+            </li>
+
+            <br/>
+
+            <li><p><b>random (HelloRetryRequest)</b></p>
+              <p><span style="color:#009200">Adjustment:</span>
+              To identify the helloRetryRequest message from a serverHello message, the random number of the helloRetryRequest is always equal to: <p>CF 21 AD 74 E5 9A 61 11 BE 1D 8C 02 1E 65 B8 91<br/>C2 A2 11 16 7A BB 8C 5E 07 9E 09 E2 C8 A8 33 9C</p></p>
+            </li>
+
+            <br/>
+
       			<li><p><b>legacy_session_id</b></p>
       				<p><span style="color:#009200">Adjustment:</span></p>
       				<p><u>If Client TLS1.3 and Server TLS1.2 or below:</u></br>In compatibility mode: this field must be non-empty so a client not offering a pre-TLS1.3 session must generate a new 32-byte value. This value need not be random but should be unpredictable to avoid implementations fixating on a specific value (also known as ossification). Otherwise, it MUST be set as a zero-length vector (i.e., a zero-valued single byte length field). </p>
       				<p><u>If Client TLS1.2 or below</u> </br>When a client has a cached session ID that is set by a pre-TLS1.3 server then this field should be set to that value </p> 
       			</li>
 
-      			<br/>
+            <br/>
       			<li><p><b>legacy_compression_methods</b></p>
       				<p><span style="color:#009200">Adjustment:</span> This vector should contain exactly one byte set to zero that represents "null" in the previous versions of TLS. In case any other value is received, this leads to a abortion of the handshake with an "illegal_parameter" alert. Potentially a man in the middle attack. </p>
       			</li>
+
             <br/>
-              <li><p><b>supported_versions</b></p>
+
+            <li><p><b>supported_versions</b></p>
               <p><span style="color:#009200">Adjustment:</span> This extension is used by the server to indicate what versions of TLS he supports. It consists of a list of the version supported order in an descending order of preference.
               In TLS1.3, the supported_version extension should always be available and having as highest value 0x0304 that indicates version TLS1.3. 
             </p>
             <p> Since only TLS1.3 is available in this application, the adjustment of this list is disabled.</p>
             </li>
           <br/>
+          
 
         </ul>
         <p><b>To facilitate the user experience, some extensions were not included:</p>

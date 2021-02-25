@@ -65,17 +65,12 @@
             <div ng-if="n.eltName == 'certificate_request_context'">
                 <div style="display: inline-block;">
                     {{n.eltType}}  {{n.eltName}} {{n.eltValue}}
-                    <div class="infoButton" ng-click="showInfo('certificateRequest', n, 'info')">i</div>              
-                    
-                </br>  </br>
-                <p>Extensions: </p>  
+                    </br>  </br>
+                    <span> <b>Extensions: </b></span>  
                 </div>
             </div>
             <div ng-if="n.eltName != 'certificate_request_context'" style="display: inline-block;">
                 {{n.eltType}}  {{n.eltName}} {{n.eltValue}}
-                <div ng-if="n.delete == 'yes'" class="deleteButton" ng-click="showInfo('certificateRequest', n, 'delete')">x</div>
-                <div ng-if="n.adjustment == 'yes'" class="adjustButton" ng-click="showInfo('certificateRequest', n, 'adjust')">+</div>
-                <div class="infoButton" ng-click="showInfo('certificateRequest', n, 'info')">i</div>
             </div>
             </br>        
         </span></br>  
@@ -92,9 +87,8 @@
                 <div style="display: inline-block;">
                     {{n.eltType}}  {{n.eltName}} {{n.eltValue}}
                     <div class="infoButton" ng-click="showInfo('certificateRequest', n, 'info')">i</div>              
-                    
                 </br>  </br>
-                <p>Extensions: </p>  
+                <span> <b>Extensions: </b></span>  
                 </div>
             </div>
             <div ng-if="n.eltName != 'certificate_request_context'" style="display: inline-block;">

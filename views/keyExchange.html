@@ -12,7 +12,7 @@
             </div>
             </br>
         </span></br>
-        <div> Extension: </div>
+        <div><b> Extensions: </b></div>
         <span ng-repeat="n in chExtensions" ng-if="n.deleted=='no'">
             <div style="display: inline-block;" >
                 <div ng-if="n.delete == 'yes' && step >= 1.0" class="deleteButton"  ng-click="showInfo('chExtensions', n, 'delete')">x</div>
@@ -58,6 +58,7 @@
     </div>
 </div>    
 
+
 <!---------- HELLORETRYREQUEST + ClientHello ----------->
     <!---------- HELLORETRYREQUEST -----------> 
 <div class="stepServer"> 
@@ -70,7 +71,7 @@
             </div>
             </br>        
         </span></br>
-        <div> Extension: </div>
+        <div><b> Extensions: </b></div>
         <span ng-repeat="n in hrrExtensions" ng-if="n.deleted=='no'">
             <div style="display: inline-block;">
                 {{n.eltType}} {{n.eltName}} {{n.eltValue}} 
@@ -92,7 +93,7 @@
             </div>
             </br>        
         </span></br>
-        <div> Extension: </div>
+        <div><b> Extensions: </b></div>
         <span ng-repeat="n in hrrExtensions" ng-if="n.deleted=='no'">
             <div style="display: inline-block;">
                 {{n.eltType}} {{n.eltName}} {{n.eltValue}} 
@@ -191,6 +192,13 @@
     </div>
 </div>
 
+<!----------------------- EARLY DATA ---------------->
+<div ng-if="early_dataClient == true && (keyExMode == 2 || keyExMode == 3 || keyExMode == 4)" class="stepClient"> 
+    <div class="stepClientContent" id="keyExchange" style="background-color:#E5E7E9">
+        <h3>Application Data</h3>        
+    </div>
+</div>
+
 
 <!--------------- SERVER RESPONSE ------------------>   
 <!--------------- SERVERHELLO ------------------>
@@ -206,7 +214,7 @@
             </div>
             </br>        
         </span></br>
-        <div> Extension: </div>
+        <div><b> Extensions: </b></div>
         <span ng-repeat="n in shExtensions" ng-if="n.deleted=='no'">
             <div style="display: inline-block;">
                 {{n.eltType}} {{n.eltName}} {{n.eltValue}} 
@@ -228,7 +236,7 @@
             </div>
             </br>        
         </span></br>
-        <div> Extension: </div>
+        <div><b> Extensions: </b></div>
         <span ng-repeat="n in shExtensions" ng-if="n.deleted=='no'">
             <div style="display: inline-block;">
                 {{n.eltType}} {{n.eltName}} {{n.eltValue}} 

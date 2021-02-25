@@ -6,11 +6,12 @@ body{
 
 #menu-bar{
   background-color: #2471A3;
+  padding:5px;
   color: #fff;
   padding-left: 20px;
 }
 
-#menu-bar h1{
+#menu-bar #title{
   font-size: 18px;
   font-weight: normal;
   display: inline-block;
@@ -37,6 +38,20 @@ menu-bar li{
 main{
   margin: 20px auto;
 /*  font-size:25px;*/
+}
+
+#mode{
+  padding:10px;
+  font-size:18px;
+  /*width:15%;*/
+  display: inline-block;
+  top:0;
+  text-align: center;
+  width:100%;
+  border: 3px solid;
+  border-color: #2471A3;
+  margin:3% 0%; 
+  border-radius: 10%;
 }
 
 .peerP1{
@@ -159,6 +174,18 @@ main{
   background-color: #ff9999;
   border: 3px solid;
   border-color: red;
+  margin:10%;  
+  color: #000;
+  border-radius: 10%;
+  padding:20px;
+  text-align: center;
+}
+
+.explainAlert{
+  position:relative;
+  /*background-color: #FFE055;*/
+  border: 3px solid;
+  border-color: #FFB636;
   margin:10%;  
   color: #000;
   border-radius: 10%;

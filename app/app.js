@@ -197,7 +197,13 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 	$scope.storeidStep;
 	$scope.storidField;
 	$scope.adjusted;
+	// 0- ECDHE , 1- DHE, 2- PSK ECDHE, 3- PSK DHE, 4- PSK Only, 5- depends on peer reply
+	$scope.keyExMode = 0;
 
+	// 0 - ECDHE, 1- DHE, 2- ECDHE + DHE
+	$scope.supp_groups = 0;
+
+	$scope.explainAlert;
 	// Key Exchange 
 	$scope.tlsVersion = [1.3, 1.3];
 	// $scope.supportedgroupsKeyshare = [true,true,true,true];
@@ -270,6 +276,7 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 		$scope.storeidStep = idStep;
 		$scope.storeidField = idField;
 		$scope.adjusting= false;
+		$scope.early_dataClient = false;
 		
 		// if($scope.showInfoBox ==true){
 		// 	$scope.showInfoBox =false;	
@@ -423,22 +430,24 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
            	    for (var elt1 in $scope.clientHello){
 	        		if($scope.storeidField.eltName == $scope.clientHello[elt1].eltName){
 	        			switch ($scope.storeidField.eltName){
-		            		case 'legacy_version':
-		            			$scope.adjustVersion('clientHello', elt1, elt);
-								$scope.updateNextSteps('clientHello','legacy_version', 'adjusted');
-		            		break;
+		      //       		case 'legacy_version':
+		      //       			$scope.adjustVersion('clientHello', elt1, elt);
+								// $scope.updateNextSteps('clientHello','legacy_version', 'adjusted');
+		      //       		break;
+
+
 							case 'cipher_suites':
+							 	$scope.alreadyAvailable = false;
 								if($scope.cipherSuitesClient[$scope.cipherSuitesServer] ==  false){
-									$scope.alreadyAvailable = false;
 									for(var alerts in $scope.alertsList){
-										if($scope.alertsList[alerts].description == $scope.cipherSuitesServer + " is selected in the server and wasn't offered by the client!! ABORT HANDSHAKE!"){
+										if($scope.alertsList[alerts].title == "Cipher Suites"){
 											$scope.alreadyAvailable = true;
 										}
 									}
 									if($scope.alreadyAvailable == false){
 										$scope.alertsList.push({
-								    		title:   "Cipher Suites Client", step: 'clientHello',
-		    								description: $scope.cipherSuitesServer + " is selected in the server and wasn't offered by the client!!  ABORT HANDSHAKE "
+								    		title:   "Cipher Suites", step: 'clientHello',
+		    								description: $scope.cipherSuitesServer + " is selected in the server and wasn't offered by the client    !!  ABORT HANDSHAKE !! "
 										});
 									}
 
@@ -446,10 +455,10 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 
 								else if($scope.cipherSuitesClient[$scope.cipherSuitesServer] ==  true){
 									for(var alerts in $scope.alertsList){
-										if($scope.alertsList[alerts].title == "Cipher Suites Client"){
-											$scope.alertsList.splice(alerts);										}
+										$scope.alertsList.splice($scope.alertsList[alerts].title.indexOf("Cipher Suites"),1);										
 									}
 								}
+								alreadyAvailable = false;
 							break;		            		
 							default:
 		            	}
@@ -463,34 +472,95 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 		        			case 'key_share':
 								if($scope.data.adjust == 'empty'){
 									$scope.keyExchange[0]='helloRetryRequest';
-									$scope.chExtensions[elt1].eltValue="= empty"
+									$scope.chExtensions[elt1].eltValue="= empty";
+									$scope.explainAlert = "<p>ClientHello.key_share extension is empty. This means the client request group selection from the server.</p><p>This will yield to a helloRetryRequest, therefore, an additional round-trip.</p>";
 								}
 								else{
 									$scope.keyExchange[0]='serverHello';
-									//TODO: Check ther stuff for HELLORETRYREQUEST
-									$scope.chExtensions[elt1].eltValue="= ECDHE shares for some or all the groups";
+									if($scope.supp_groups == 0){
+										$scope.chExtensions[elt1].eltValue="= ECDHE keys";
+									} else if($scope.supp_groups == 1){
+										$scope.chExtensions[elt1].eltValue="= DHE keys";
+									} else if($scope.supp_groups == 2){
+										$scope.chExtensions[elt1].eltValue="= ECDHE + DHE keys";
+									}
+
 								}
 							break;
 
 							case 'Client_certificate_type':
-								if($scope.clientCert[$scope.clientCertServer] ==  false){
-										alert($scope.clientCertServer + " is selected in the server and wasn't offered by the client!! ABORT HANDSHAKE!");
-								}
 
+								// if($scope.clientCert[$scope.clientCertServer] ==  false){
+								// 		alert($scope.clientCertServer + " is selected in the server and wasn't offered by the client!! ABORT HANDSHAKE!");
+								// }
+								$scope.alreadyAvailable = false;
+								if($scope.clientCert[$scope.clientCertServer] ==  false){
+									for(var alerts in $scope.alertsList){
+										if($scope.alertsList[alerts].title ==  "Client Certificate"){
+											$scope.alreadyAvailable = true;
+										}
+									}
+									if($scope.alreadyAvailable == false){
+										$scope.alertsList.push({
+								    		title:   "Client Certificate", step: 'chExtensions',
+		    								description: $scope.clientCertServer + " is selected in the server and wasn't offered by the client    !!  ABORT HANDSHAKE !! "
+										});
+									}
+
+								}			
+
+								else if($scope.clientCert[$scope.clientCertServer] ==  true ){
+									for(var alerts in $scope.alertsList){
+										$scope.alertsList.splice($scope.alertsList[alerts].title.indexOf("Client Certificate"),1);										
+									}
+								}
+								alreadyAvailable = false;
+
+								//TODO AttentionAlerts
 								if($scope.clientCert['RawPublicKey'] == false && $scope.clientCert['Additional certificate types'] == false){
 									alert("In case the client has no other certificate types remaining to send other than X.509 then this extension must be omitted.");
 									$scope.showInfo('chExtensions', $scope.storeidField, 'delete');
+									for(var alerts in $scope.alertsList){
+										$scope.alertsList.splice($scope.alertsList[alerts].title.indexOf("Client Certificate"),1);																			
+									}
 								}
 							break;
 
 							case 'Server_certificate_type':
+								// if($scope.serverCert[$scope.serverCertServer] ==  false){
+								// 		alert($scope.serverCertServer + " is selected in the server and wasn't offered by the client!! ABORT HANDSHAKE!");
+								// }
+								$scope.alreadyAvailable = false;
 								if($scope.serverCert[$scope.serverCertServer] ==  false){
-										alert($scope.serverCertServer + " is selected in the server and wasn't offered by the client!! ABORT HANDSHAKE!");
-								}
+									for(var alerts in $scope.alertsList){
+										if($scope.alertsList[alerts].title == "Server Certificate"){
+											$scope.alreadyAvailable = true;
+										
+										}
+									}
+									if($scope.alreadyAvailable == false){
+										$scope.alertsList.push({
+								    		title:   "Server Certificate", step: 'chExtensions',
+		    								description: $scope.serverCertServer + " is selected in the server and wasn't offered by the client    !!  ABORT HANDSHAKE !! "
+										});
+									}
 
+								}			
+
+								else if($scope.serverCert[$scope.serverCertServer] ==  true ){
+									for(var alerts in $scope.alertsList){
+										$scope.alertsList.splice($scope.alertsList[alerts].title.indexOf("Server Certificate"),1);		
+									}
+								}
+								$scope.alreadyAvailable = false;
+
+								//TODO AttentionAlerts
 								if($scope.serverCert['RawPublicKey'] == false && $scope.serverCert['Additional certificate types'] == false){
 									alert("In case the client has no other certificate types remaining to send other than X.509 then this extension must be omitted.");
 									$scope.showInfo('chExtensions', $scope.storeidField, 'delete');
+									for(var alerts in $scope.alertsList){
+										$scope.alertsList.splice($scope.alertsList[alerts].title.indexOf("Server Certificate"),1);								
+									}
 								}
 							break;
 
@@ -504,6 +574,54 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 								}
 								$scope.updateNextSteps('clientHello','psk_key_exchange_modes', 'adjusted');
 							break;
+
+						
+
+							case 'supported_groups':
+			      				ECDHEBoolClient = false;
+								DHEBoolClient = false;
+								keyshare = false;
+
+								for(var elt3 in $scope.ECDHEClient){
+									if($scope.ECDHEClient[elt3] == true)
+									ECDHEBoolClient = true;
+								}
+								for(var elt3 in $scope.DHEClient){
+									if($scope.DHEClient[elt3]== true)
+										DHEBoolClient = true;
+								}
+
+								for (var elt2 in $scope.chExtensions){
+	        						if($scope.chExtensions[elt2].eltName == "key_share"){
+        								if(ECDHEBoolClient == true){
+											if(DHEBoolClient == true){
+												$scope.supp_groups = 2;
+												$scope.storeidField.eltValue = "= ECDHE + DHE";
+												$scope.chExtensions[elt2].eltValue = "= ECDHE + DHE keys";
+											}
+										else{
+											$scope.supp_groups = 0;
+											$scope.storeidField.eltValue = "= ECDHE";
+											$scope.chExtensions[elt2].eltValue = "= ECDHE keys";
+										}
+										} else{
+											if(DHEBoolClient == true){
+												$scope.supp_groups = 1;
+												$scope.storeidField.eltValue = "= DHE";
+												$scope.chExtensions[elt2].eltValue = "= DHE keys";
+											}
+											else {
+												//TODO AttentionAlerts
+												alert("supported_groups sent empty!");
+												$scope.ECDHEClient["secp256r1(0x0017)"] = true;
+												$scope.supp_groups = 0;
+												$scope.storeidField.eltValue = "= ECDHE";
+												$scope.chExtensions[elt2].eltValue = "= ECDHE keys";
+											}
+										}
+									}
+								}
+							break;
 							default:
 		            	}
 		            }
@@ -513,32 +631,59 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
             	for (var elt1 in $scope.serverHello){
             		if($scope.storeidField.eltName == $scope.serverHello[elt1].eltName){
             			switch ($scope.storeidField.eltName){
-							case 'legacy_version':
-								$scope.adjustVersion('serverHello', elt1, elt);
-								$scope.updateNextSteps('clientHello','legacy_version', 'adjusted');
-		            		break;
+							// case 'legacy_version':
+							// 	$scope.adjustVersion('serverHello', elt1, elt);
+							// 	$scope.updateNextSteps('clientHello','legacy_version', 'adjusted');
+		     //        		break;
 
-            				case 'random':
-            					$scope.storeElt;
-            					for (var elt in $scope.splitted){
-				            		if($scope.data.adjust == $scope.splitted[elt]){
-				            			if( $scope.splitted[elt] == 'random'){
-					            			$scope.serverHello[elt1].eltValue = ';';
-				            			}
-				            			else{
-			            					$scope.serverHello[elt1].eltValue = $scope.splitted[elt] + ';';
-				            			}
-				            			$scope.storeElt = $scope.splitted[elt];
-									}
-								}
-							$scope.updateNextSteps('serverHello','random', 'adjusted');
-		            		break;
+       //      				case 'random':
+       //      					$scope.storeElt;
+       //      					for (var elt in $scope.splitted){
+				   //          		if($scope.data.adjust == $scope.splitted[elt]){
+				   //          			if( $scope.splitted[elt] == 'random'){
+					  //           			$scope.serverHello[elt1].eltValue = ';';
+				   //          			}
+				   //          			else{
+			    //         					$scope.serverHello[elt1].eltValue = $scope.splitted[elt] + ';';
+				   //          			}
+				   //          			$scope.storeElt = $scope.splitted[elt];
+							// 		}
+							// 	}
+							// $scope.updateNextSteps('serverHello','random', 'adjusted');
+		     //        		break;
 
 		            		case 'cipher_suites':
-		            			if($scope.cipherSuitesClient[$scope.cipherSuitesServer] ==  false){
-		            				//cpher suite selected by the server must be one from the list chosen by the client
-										alert($scope.cipherSuitesServer + " is selected in the server and wasn't offered by the client!! ABORT HANDSHAKE!");
+		      //       			if($scope.cipherSuitesClient[$scope.cipherSuitesServer] ==  false){
+		      //       				//cpher suite selected by the server must be one from the list chosen by the client
+								// 	alert($scope.cipherSuitesServer + " is selected in the server and wasn't offered by the client!! ABORT HANDSHAKE!");
+								// }			
+								$scope.cipherSuitesServer = $scope.data.adjust;
+
+								$scope.alreadyAvailable = false;
+								if($scope.cipherSuitesClient[$scope.cipherSuitesServer] ==  false){
+									for(var alerts in $scope.alertsList){
+										if($scope.alertsList[alerts].title == "Cipher Suites"){
+											$scope.alreadyAvailable = true;
+										}
+									}
+									if($scope.alreadyAvailable == false){
+										$scope.alertsList.push({
+								    		title:   "Cipher Suites", step: 'clientHello',
+		    								description: $scope.cipherSuitesServer + " is selected in the server and wasn't offered by the client    !!  ABORT HANDSHAKE !! "
+										});
+									}
+
 								}			
+
+								if($scope.cipherSuitesClient[$scope.cipherSuitesServer] ==  true){
+									for(var alerts in $scope.alertsList){
+										$scope.alertsList.splice($scope.alertsList[alerts].title.indexOf("Cipher Suites"),1);		
+									}
+								}
+								$scope.alreadyAvailable = false;
+
+
+								//TODO HelloRetryRequest
 								if(keyExchange[0]=='helloRetryRequest'){
 									//the serverHello and HelloRetryRequest 's cipher suite must be the same.
 									if($scope.cipherSuitesServer != $scope.cipherSuitesHelloRetryRequest){
@@ -558,16 +703,40 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
             		if($scope.storeidField.eltName == $scope.shExtensions[elt1].eltName){
             			switch ($scope.storeidField.eltName){
 							case 'key_share':
+								// if($scope.ECDHEClient[$scope.data.adjust] ==  false || $scope.DHEClient[$scope.data.adjust] == false){
+		      //       				//cpher suite selected by the server must be one from the list chosen by the client
+								// 	alert($scope.data.adjust + " is selected in the server and wasn't offered by the client!! ABORT HANDSHAKE!");
+								// }
+								
+								$scope.alreadyAvailable = false;
 								if($scope.ECDHEClient[$scope.data.adjust] ==  false || $scope.DHEClient[$scope.data.adjust] == false){
-		            				//cpher suite selected by the server must be one from the list chosen by the client
-									alert($scope.data.adjust + " is selected in the server and wasn't offered by the client!! ABORT HANDSHAKE!");
+									for(var alerts in $scope.alertsList){
+										if($scope.alertsList[alerts].title == "Key Shares"){
+											$scope.alreadyAvailable = true;
+										}
+									}
+									if($scope.alreadyAvailable == false){
+										$scope.alertsList.push({
+								    		title:   "Key Shares", step: 'clientHello',
+		    								description: $scope.data.adjust + " is selected in the server and wasn't offered by the client!! ABORT HANDSHAKE!"
+										});
+									}
+
+								}			
+
+								if($scope.ECDHEClient[$scope.data.adjust] ==  true || $scope.DHEClient[$scope.data.adjust] == true){
+									for(var alerts in $scope.alertsList){
+										$scope.alertsList.splice($scope.alertsList[alerts].title.indexOf("Key Shares"),1);		
+									}
 								}
+								$scope.alreadyAvailable = false;
+
 								if($scope.data.adjust == 'secp256r1(0x0017)' || $scope.data.adjust == 'secp384r1(0x0018)' || $scope.data.adjust == 'secp521r1(0x0019)' || $scope.data.adjust == 'x25519(0x001D)' || $scope.data.adjust == 'x448(0x001E)'){
  									$scope.shExtensions[elt1].eltValue = '= ECDHE';
 								} else{
 									$scope.shExtensions[elt1].eltValue = '= DHE';
-								}						
-							break;
+								}
+								break;
 						}
 					}
 				}
@@ -580,8 +749,10 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 		            		case 'cipher_suites':
 		            			if($scope.cipherSuitesClient[$scope.cipherSuitesHelloRetryRequest] ==  false){
 		            				//cpher suite selected by the server must be one from the list chosen by the client
-										alert($scope.cipherSuitesServer + " is selected in the server and wasn't offered by the client!! ABORT HANDSHAKE!");
-								}			
+									alert($scope.cipherSuitesServer + " is selected in the server and wasn't offered by the client!! ABORT HANDSHAKE!");
+								}	
+
+								//TODO		
 								if($scope.cipherSuitesServer != $scope.cipherSuitesHelloRetryRequest){
 									//the serverHello and HelloRetryRequest 's cipher suite must be the same.
 									alert("Cipher suites of helloRetryRequest and serverHello should be the same!! ABORT HANDSHAKE WITH ILLEGAL PARAMETER ALERT");
@@ -597,21 +768,72 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 	        break;
             
             case 'encryptedExtension':
-            	for (var elt1 in $scope.serverHello){
-            		if($scope.storeidField.eltName == $scope.serverHello[elt1].eltName){
+            	for (var elt1 in $scope.encryptedExtension){
+            		if($scope.storeidField.eltName == $scope.encryptedExtension[elt1].eltName){
             			switch ($scope.storeidField.eltName){
 			            	case 'Client_certificate_type':
-			        			if($scope.clientCert[$scope.data.adjust] ==  false){
-									alert($scope.clientCertServer + " is selected in the server and wasn't offered by the client!! ABORT HANDSHAKE!");
-								}			
+
+			     //    			if($scope.clientCert[$scope.data.adjust] ==  false){
+								// 	alert($scope.clientCertServer + " is selected in the server and wasn't offered by the client!! ABORT HANDSHAKE!");
+								// }			
+								
 								$scope.clientCertServer = $scope.data.adjust;
+
+								$scope.alreadyAvailable = false;
+								if($scope.clientCert[$scope.data.adjust] ==  false){
+									for(var alerts in $scope.alertsList){
+										if($scope.alertsList[alerts].title == "Client Certificate"){
+											$scope.alreadyAvailable = true;
+										
+										}
+									}
+									if($scope.alreadyAvailable == false){
+										$scope.alertsList.push({
+								    		title:   "Client Certificate", step: 'chExtensions',
+		    								description: $scope.clientCertServer + " is selected in the server and wasn't offered by the client    !!  ABORT HANDSHAKE !! "
+										});
+									}
+
+								}			
+
+								else if($scope.clientCert[$scope.data.adjust] ==  true){
+									for(var alerts in $scope.alertsList){
+										$scope.alertsList.splice($scope.alertsList[alerts].title.indexOf("Client Certificate"),1);		
+									}
+								}
+								$scope.alreadyAvailable = false;
+								
 							break;	
 
 							case 'Server_certificate_type':
-								if($scope.serverCert[$scope.data.adjust] ==  false){
-			        				alert($scope.clientCertServer + " is selected in the server and wasn't offered by the client!! ABORT HANDSHAKE!");
-								}			
 								$scope.serverCertServer = $scope.data.adjust;
+								// if($scope.serverCert[$scope.data.adjust] ==  false){
+			     //    				alert($scope.serverCertServer + " is selected in the server and wasn't offered by the client!! ABORT HANDSHAKE!");
+								// }	
+
+								$scope.alreadyAvailable = false;
+								if($scope.serverCert[$scope.data.adjust] ==  false){
+									for(var alerts in $scope.alertsList){
+										if($scope.alertsList[alerts].title == "Server Certificate"){
+											$scope.alreadyAvailable = true;
+										
+										}
+									}
+									if($scope.alreadyAvailable == false){
+										$scope.alertsList.push({
+								    		title:   "Server Certificate", step: 'chExtensions',
+		    								description: $scope.serverCertServer + " is selected in the server and wasn't offered by the client    !!  ABORT HANDSHAKE !! "
+										});
+									}
+
+								}			
+
+								else if($scope.serverCert[$scope.data.adjust] ==  true){
+									for(var alerts in $scope.alertsList){
+										$scope.alertsList.splice($scope.alertsList[alerts].title.indexOf("Server Certificate"),1);		
+									}
+								}
+								$scope.alreadyAvailable = false;
 							break;
 						}
 					}
@@ -635,18 +857,18 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 				}
 				switch(fieldUpdated){
 					///legacy_version in clientHello Changed -> Check tlsVersion Client and server
-					case 'legacy_version':
-						$scope.checkRandom();
-					break;
+					// case 'legacy_version':
+					// 	$scope.checkRandom();
+					// break;
 
 					case 'supported_versions':
-						if($scope.tlsVersion[0]==1.3){
+						// if($scope.tlsVersion[0]==1.3){
 							alert("TLS 1.3 CientHello messages always contain 'supported_versions', otherwise, they will be interpreted as TLS 1.2 ClientHello messages.");
-						}						
+						// }						
 						
-						if($scope.tlsVersion[0]==1.2){
-							alert("Server and Client will negotiate TLS1.2 <br/> NOT AVAILABLE IN THIS APP <br/> <b>TLS1.3 should be negotiated</b>");
-						}
+						// if($scope.tlsVersion[0]==1.2){
+						// 	alert("Server and Client will negotiate TLS1.2 <br/> NOT AVAILABLE IN THIS APP <br/> <b>TLS1.3 should be negotiated</b>");
+						// }
 
 						$scope.leftBoxTitle = 'supported_versions NOT deleted' ;	
 						for (var elt2 in $scope.chExtensions){
@@ -676,14 +898,17 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 								}
 							}
 
-						
+							
 							// else if($scope.chExtensions[elt1].eltName == 'pre_shared_keys'){
 							// 	if($scope.chExtensions[elt1].deleted=="yes"){
 							// 		alert("Supported groups is not available. PSK must be supported.");
 							// 		alert("missing extension");
 							// 	}
 							// }
-						}					
+						}
+
+						
+
 					break;			
 
 					case 'key_share':
@@ -839,7 +1064,6 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 					break;
 
 					case 'pre_shared_keys':
-
 						if (type == 'deleted'){
 							for (var elt1 in $scope.chExtensions){
 								if($scope.chExtensions[elt1].eltName == 'psk_key_exchange_modes'){
@@ -850,9 +1074,14 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 									if($scope.chExtensions[elt1].deleted=="yes"){
 										alert("Either key_share or pre_shared_keys should be available in the extensions to negotiate a key exchange mode.");
 									}
+									else{
+
+										$scope.keyExMode = 0;
+									}
 								}
 							}
 						}
+
 					break;
 					case 'post_handshake_auth':
 						// if (type == 'deleted'){
@@ -862,6 +1091,26 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 						// 	$scope.postHandshake = true;	
 						// }
 					break;
+
+					case 'early_data':
+						if (type == 'deleted'){
+							$scope.early_dataClient = false;
+						}
+						else{
+							$scope.early_dataClient = true;
+							for (var elt1 in $scope.chExtensions){
+								if($scope.chExtensions[elt1].eltName == 'pre_shared_keys'){
+									if($scope.chExtensions[elt1].deleted=="yes"){
+										alert("psk mode should be selected when using early data");
+										//CHECK ERROR PSK
+									}
+									else{
+										alert("This data is not forward secret.")
+									}
+								}
+							}
+						}
+						break;
 					default:
 				}
 				
@@ -876,22 +1125,22 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 				}
 			}
 				switch(fieldUpdated){
-					case 'legacy_version':
-						$scope.checkRandom();
-					break;
+					// case 'legacy_version':
+					// 	$scope.checkRandom();
+					// break;
 
-					case 'random':
-						$scope.checkRandom();
-					break;
+					// case 'random':
+					// 	$scope.checkRandom();
+					// break;
 
 					case 'supported_versions':
-						if($scope.tlsVersion[0]==1.3){
+						// if($scope.tlsVersion[0]==1.3){
 							alert("TLS 1.3 ServerHello messages always contain 'supported_versions', otherwise, they will be interpreted as TLS 1.2 ClientHello messages.");
-						}						
+						// }						
 						
-						if($scope.tlsVersion[0]==1.2){
-							alert("Server and Client will negotiate TLS1.2 <br/> NOT AVAILABLE IN THIS APP <br/> <b>TLS1.3 should be negotiated</b>");
-						}
+						// if($scope.tlsVersion[0]==1.2){
+						// 	alert("Server and Client will negotiate TLS1.2 <br/> NOT AVAILABLE IN THIS APP <br/> <b>TLS1.3 should be negotiated</b>");
+						// }
 						$scope.leftBoxTitle = 'supported_versions NOT deleted' ;	
 						$scope.newItem= {eltName: 'supported_versions', delete: 'yes', 
 						info: 'Indicates which versions of TLS it supports.'}
@@ -969,67 +1218,67 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 		}
 	};
 
-	$scope.adjustVersion= function(step, elt1, elt){
-		if(step == 'clientHello'){
-			for (var elt in $scope.splitted){
-				// alert($scope.splitted[elt]);
-				if($scope.data.adjust == $scope.splitted[elt]){
-					$scope.clientHello[elt1].eltValue = $scope.splitted[elt] + ';';
-					if($scope.clientHello[elt1].eltValue == '= 0x0303;'){
-						$scope.tlsVersion[0] = 1.3;
+	// $scope.adjustVersion= function(step, elt1, elt){
+	// 	if(step == 'clientHello'){
+	// 		for (var elt in $scope.splitted){
+	// 			// alert($scope.splitted[elt]);
+	// 			if($scope.data.adjust == $scope.splitted[elt]){
+	// 				$scope.clientHello[elt1].eltValue = $scope.splitted[elt] + ';';
+	// 				if($scope.clientHello[elt1].eltValue == '= 0x0303;'){
+	// 					$scope.tlsVersion[0] = 1.3;
 
-					}
-					else $scope.tlsVersion[0] = 1.2;
-				}
-			}
-		}
-		else if (step == 'serverHello'){
-			for (var elt in $scope.splitted){
-				if($scope.data.adjust == $scope.splitted[elt]){
-					$scope.serverHello[elt1].eltValue = $scope.splitted[elt] + ';';
-					if($scope.clientHello[elt1].eltValue == '= 0x0303'){
-						$scope.tlsVersion[1] = 1.3;
+	// 				}
+	// 				else $scope.tlsVersion[0] = 1.2;
+	// 			}
+	// 		}
+	// 	}
+	// 	else if (step == 'serverHello'){
+	// 		for (var elt in $scope.splitted){
+	// 			if($scope.data.adjust == $scope.splitted[elt]){
+	// 				$scope.serverHello[elt1].eltValue = $scope.splitted[elt] + ';';
+	// 				if($scope.clientHello[elt1].eltValue == '= 0x0303'){
+	// 					$scope.tlsVersion[1] = 1.3;
 
-					}
-					else $scope.tlsVersion[1] = 1.2;
-				}
-			}
-		}
-		if($scope.tlsVersion[0] == 1.2)
-			alert("Client with TLS prior than version 1.3! Not offered in this app");
-		if($scope.tlsVersion[1] == 1.2)
-			alert("Client with TLS prior than version 1.3! Not offered in this app");
-	}
+	// 				}
+	// 				else $scope.tlsVersion[1] = 1.2;
+	// 			}
+	// 		}
+	// 	}
+	// 	if($scope.tlsVersion[0] == 1.2)
+	// 		alert("Client with TLS prior than version 1.3! Not offered in this app");
+	// 	if($scope.tlsVersion[1] == 1.2)
+	// 		alert("Client with TLS prior than version 1.3! Not offered in this app");
+	// }
 
 
-	$scope.checkRandom =function(){
-		if($scope.tlsVersion[0]==1.3){
-			if($scope.storeElt=='44 4F 57 4E 47 52 44 01')						
-				alert("This value is left for the case where the client is TLS1.2 and the server is TLS1.3.");							
-			if($scope.storeElt=='44 4F 57 4E 47 52 44 00')
-				alert("This value is left for the case where the client is TLS1.1 or below and the server is TLS1.3 or TLS1.2.");
-		}
-		if($scope.tlsVersion[0]==1.2){
-			if($scope.tlsVersion[1]==1.3 && $scope.storeElt!='44 4F 57 4E 47 52 44 01'){
-				alert("When the Client is TLS1.2 and the server TLS1.3, the last 8 byte should be equal to '44 4F 57 4E 47 52 44 01'. Abort with an “illegal_parameter” alert.");
-				alert("Downgrade Attack!!");
-			}
-			if($scope.tlsVersion[1]==1.2){ //1.2 or below
-				if($scope.storeElt=='44 4F 57 4E 47 52 44 01')						
-					alert("This value is left for the case where the client is TLS1.2 and the server is TLS1.3.");							
-				if($scope.storeElt=='44 4F 57 4E 47 52 44 00')
-					alert("This value is left for the case where the client is TLS1.1 or below and the server is TLS1.3 or TLS1.2.");
-			}
-		}
-		if($scope.tlsVersion[0]==1.1){
-			if($scope.tlsVersion[1]==1.3 || $scope.tlsVersion[1]==1.2){
-				if($scope.storeElt!='44 4F 57 4E 47 52 44 00'){
-					alert("When the Client is prior to TLS1.1 and the server TLS1.3 or TLS1.2, the last 8 byte should be equal to '44 4F 57 4E 47 52 44 00'. Abort with an “illegal_parameter” alert.");
-					alert("Downgrade Attack!!");
-				}
-			}
-		}
-	}
+	// $scope.checkRandom =function(){
+	// 	if($scope.tlsVersion[0]==1.3){
+	// 		if($scope.storeElt=='44 4F 57 4E 47 52 44 01')						
+	// 			alert("This value is left for the case where the client is TLS1.2 and the server is TLS1.3.");							
+	// 		if($scope.storeElt=='44 4F 57 4E 47 52 44 00')
+	// 			alert("This value is left for the case where the client is TLS1.1 or below and the server is TLS1.3 or TLS1.2.");
+	// 	}
+	// 	if($scope.tlsVersion[0]==1.2){
+	// 		if($scope.tlsVersion[1]==1.3 && $scope.storeElt!='44 4F 57 4E 47 52 44 01'){
+	// 			alert("When the Client is TLS1.2 and the server TLS1.3, the last 8 byte should be equal to '44 4F 57 4E 47 52 44 01'. Abort with an “illegal_parameter” alert.");
+	// 			alert("Downgrade Attack!!");
+	// 		}
+	// 		if($scope.tlsVersion[1]==1.2){ //1.2 or below
+	// 			if($scope.storeElt=='44 4F 57 4E 47 52 44 01')						
+	// 				alert("This value is left for the case where the client is TLS1.2 and the server is TLS1.3.");							
+	// 			if($scope.storeElt=='44 4F 57 4E 47 52 44 00')
+	// 				alert("This value is left for the case where the client is TLS1.1 or below and the server is TLS1.3 or TLS1.2.");
+	// 		}
+	// 	}
+	// 	if($scope.tlsVersion[0]==1.1){
+	// 		if($scope.tlsVersion[1]==1.3 || $scope.tlsVersion[1]==1.2){
+	// 			if($scope.storeElt!='44 4F 57 4E 47 52 44 00'){
+	// 				alert("When the Client is prior to TLS1.1 and the server TLS1.3 or TLS1.2, the last 8 byte should be equal to '44 4F 57 4E 47 52 44 00'. Abort with an “illegal_parameter” alert.");
+	// 				alert("Downgrade Attack!!");
+	// 			}
+	// 		}
+	// 	}
+	// }
 
 	
 
@@ -1040,10 +1289,10 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 	
 
  	$scope.clientHello = [
- 		{eltType: 'ProtocolVersion', eltName: 'legacy_version', eltValue: '= 0x0303;', delete: 'no', adjustment:'yes', deleted:'no',
- 			info: 'In version prior to TLS1.3, this field was used for version negotiation.</br> In TLS1.3 this field should be equal to <b> 0x0303 </b>, which indicates TLS1.2 and the version preferences are indicated by the client in a later extension parameter (<i>supported_versions)</i> which is mandatory in TLS1.3 havinf 0x0304 as its highest version. </br> ',
- 			adjustM: '"Either = 0x0303 (indicating TLS1.2) or <0x0303 indictating prior versions of TLS1.2<br/> For a client to be recognized as TLS1.3 Client, its legacy_version should be equal to 0x0303.',
- 			adjust: '= 0x0303;< 0x303'
+ 		{eltType: 'ProtocolVersion', eltName: 'legacy_version', eltValue: '= 0x0303', delete: 'no', adjustment:'no', deleted:'no',
+ 			info: 'In version prior to TLS1.3, this field was used for version negotiation.</br> In TLS1.3 this field can only be equal to <b> 0x0303 </b>, which indicates TLS1.2 and the version preferences must be indicated by the client in a later extension parameter (<i>supported_versions)</i> which is mandatory in TLS1.3 having 0x0304 as its highest version. </br> ',
+ 			// adjustM: '"Either = 0x0303 (indicating TLS1.2) or <0x0303 indictating prior versions of TLS1.2<br/> For a client to be recognized as TLS1.3 Client, its legacy_version should be equal to 0x0303.',
+ 			// adjust: '= 0x0303;< 0x303'
  		}, 
  		{eltType: 'Random', delete: 'no', eltName: 'random', eltValue: ';', adjustment:'no', deleted:'no',
  			info: '32 bytes generated by a secure random number generator. </br></br> This random number is used to prevent downgrade attacks.'
@@ -1070,13 +1319,13 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
  		{eltName: 'supported_versions', delete: 'yes', adjustment:'no', deleted:'no',
  			info: 'Indicates which versions of TLS the client supports. It is a list of of supported versions ordered in preference with the most preferred first. <br/>For TLS1.3, 0x0304 (the number of TLS1.3) should be at the top of the list. </br></br> This extension should only be available when the peer supports TLS1.3.'
  		},
- 		{eltType: '', delete: 'yes', adjustment:'yes', eltName: 'supported_groups', eltValue: ';', deleted:'no',
+ 		{eltType: '', delete: 'yes', adjustment:'yes', eltName: 'supported_groups', eltValue: '= ECDHE', deleted:'no',
  		info: 'This extension indicates which named groups the client supports for key exchange. This extension must be given with a <i>key_share</i> extension that will contain the (EC)DHE shares for some or all of the groups.',
  		adjustM: '',
  		adjust1: 'secp256r1(0x0017);secp384r1(0x0018);secp521r1(0x0019);x25519(0x001D);x448(0x001E)',
  		adjust2: 'ffdhe2048(0x0100);ffdhe3072(0x0101);ffdhe4096(0x0102);ffdhe6144(0x0103);ffdhe8192(0x0104)'
  		},
- 		{eltType: '', delete: 'yes', adjustment:'yes', eltName: 'key_share', eltValue: '= (EC)DHE keys', deleted:'no',
+ 		{eltType: '', delete: 'yes', adjustment:'yes', eltName: 'key_share', eltValue: '= ECDHE keys', deleted:'no',
  		info: 'This field contains the endpoints cryptographic parameters. It is a list of offered key share values in descending order of client preference. This allows the encryption of messages after the clientHello and serverHello. <p> In previous versions the messages were sent unencrypted </p>',
  		adjustM: '<p>The client can send this field empty to request group selection from the server. This will yield to a helloRetryRequest, therefore, an additional round-trip.</p> <p> Or, the client can send one or more public keys with an algorithm that he thinks the server supports. Each key share value must correspond to a group offered in the supported_groups and must appear in its same order.',
  		adjust: 'empty;keys'
@@ -1099,29 +1348,29 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
  		// adjustM: 'X.509 being the default. In case the client has no other certificate types remaining to send other than X.509, then this extension must be omitted. ',
  		// adjust: 'RawPublicKey;X.509;Additional certificate types'
  		},
-		{eltType: '', delete: 'yes', adjustment:'yes', eltName: 'psk_key_exchange_modes', eltValue: '= psk_dhe_ke;', deleted:'no',
+ 		{eltType: '', delete: 'yes', adjustment:'no', eltName: 'post_handshake_auth', eltValue: ';', deleted:'yes',
+ 		info: 'When this extension is sent by the client, then it indicates that he is willing to perform post-handshake authentication. When this extension is missing, servers should not send a post-handshake CertificateRequest. This extension value should be of zero length.'
+ 		},
+		{eltType: '', delete: 'yes', adjustment:'yes', eltName: 'psk_key_exchange_modes', eltValue: '= psk_dhe_ke;', deleted:'yes',
  		info: '<p> When PSK is selected, the client must include in its clientHello this extension that indicates the key exchange modes that can be used with PSKs </p>',
  		adjustM: '<ul><li>psk_ke (psk-only key establishment): the server must not supply the key_share extension.</li><li> psk_dhe_ke (psk with EC_DHE): key_share extension must also be supplied</li></ul>',
  		adjust: 'psk_ke;psk_dhe_ke'
  		},
- 		{eltType: '', delete: 'yes', adjustment:'no', eltName: 'post_handshake_auth', eltValue: ';', deleted:'no',
- 		info: 'When this extension is sent by the client, then it indicates that he is willing to perform post-handshake authentication. When this extension is missing, servers should not send a post-handshake CertificateRequest. This extension value should be of zero length.'
- 		},
- 		{eltType: '', delete: 'yes', adjustment:'no', eltName: 'pre_shared_keys', eltValue: ';', deleted:'no',
+ 		{eltType: '', delete: 'yes', adjustment:'no', eltName: 'pre_shared_keys', eltValue: ';', deleted:'yes',
  		info: '<p> if psk is used then the “pre_shared_key” extension is required and must be the last extension in the clientHello. </p>'
  		}
  	];
 
  	$scope.serverHello = [
- 		{eltType: 'ProtocolVersion',  eltName: 'legacy_version', eltValue: '= 0x0303;', delete: 'no', adjustment: 'yes' , deleted:'no',
+ 		{eltType: 'ProtocolVersion',  eltName: 'legacy_version', eltValue: '= 0x0303;', delete: 'no', adjustment: 'no' , deleted:'no',
  			info: 'When this field is equal to 0x0303, it means the server wants to negotiate a version TLS1.3. In this case, <i>supported_version</i> extension must be available representing the highest version number supported by the server.', 
- 			adjustM: '"Either = 0x0303 (indicating TLS1.2) or <0x0303 indictating prior versions of TLS1.2',
- 			adjust: '= 0x0303;< 0x303'
+ 			// adjustM: '"Either = 0x0303 (indicating TLS1.2) or <0x0303 indictating prior versions of TLS1.2',
+ 			// adjust: '= 0x0303;< 0x303'
  		},
- 		{eltType: 'Random', delete: 'no', adjustment:'yes', eltName: 'random', eltValue: ';', deleted:'no',
+ 		{eltType: 'Random', delete: 'no', adjustment:'no', eltName: 'random', eltValue: ';', deleted:'no',
  			info: '32 bytes generated by a secure random number generator. The last 8 bytes MUST be overwritten if negotiating TLS 1.2 or TLS 1.1, but the remaining bytes MUST be random. This structure is generated by the server and MUST be generated independently of the <i>ClientHello.random</i>. </br></br> This random number is used to prevent downgrade attacks.',
- 			adjustM: 'This is to adjust the last 8 bytes of the server\'s random number. </br> If negotiating TLS1.2, then TLS1.3 server’s random number must set their last 8 bytes of their random number to: <br/> 44 4F 57 4E 47 52 44 01 </br>. If negotiating TLS1.1 or below, then TLS1.3 and TLS1.2 servers must set their last 8 bytes of their random number field to: </br> 44 4F 57 4E 47 52 44 00 </br>' ,
- 			adjust: '44 4F 57 4E 47 52 44 01;44 4F 57 4E 47 52 44 00;random'
+ 			// adjustM: 'This is to adjust the last 8 bytes of the server\'s random number. </br> If negotiating TLS1.2, then TLS1.3 server’s random number must set their last 8 bytes of their random number to: <br/> 44 4F 57 4E 47 52 44 01 </br>. If negotiating TLS1.1 or below, then TLS1.3 and TLS1.2 servers must set their last 8 bytes of their random number field to: </br> 44 4F 57 4E 47 52 44 00 </br>' ,
+ 			// adjust: '44 4F 57 4E 47 52 44 01;44 4F 57 4E 47 52 44 00;random'
  		},
  		{eltType: 'opaque', delete: 'no', adjustment:'no', eltName: 'legacy_session_id', eltValue: ';', deleted:'no',
  			info: 'This field is echoed even if the client’s value corresponded to a cached pre-TLS 1.3 session which the server has chosen not to resume. Therefore its value is always the contents of the client’s legacy_session_id field. </br></br> In case it is not echoed the handshake is aborted with an illegal parameter!',
@@ -1140,7 +1389,7 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
  		{eltName: 'supported_versions', delete: 'yes', adjustment:'no', deleted:'no',
  			info: 'Indicates which versions of TLS the server uses. It is a list of of supported versions ordered in preference with the most preferred first. <br/><br/>This extension should only be available when the peer supports TLS1.3.'
  		},
- 		{eltType: '', delete: 'yes', adjustment:'no', eltName: 'pre_shared_keys', eltValue: ';', deleted:'no',
+ 		{eltType: '', delete: 'yes', adjustment:'no', eltName: 'pre_shared_keys', eltValue: ';', deleted:'yes',
  		info: '<p> if psk is used then the “pre_shared_key” extension is required.'
  		},
  		{eltType: '', delete: 'yes', adjustment:'yes', eltName: 'key_share', eltValue: '= ECDHE', deleted:'no',
@@ -1151,15 +1400,15 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
  	];
 
  	$scope.helloRetryRequest = [
-	 	 {eltType: 'ProtocolVersion',  eltName: 'legacy_version', eltValue: '= 0x0303;', delete: 'no', adjustment: 'yes', deleted:'no',
+	 	{eltType: 'ProtocolVersion',  eltName: 'legacy_version', eltValue: '= 0x0303;', delete: 'no', adjustment: 'no' , deleted:'no',
  			info: 'When this field is equal to 0x0303, it means the server wants to negotiate a version TLS1.3. In this case, <i>supported_version</i> extension must be available representing the highest version number supported by the server.', 
- 			adjustM: '"Either = 0x0303 (indicating TLS1.2) or <0x0303 indictating prior versions of TLS1.2',
- 			adjust: '= 0x0303;< 0x303'
+ 			// adjustM: '"Either = 0x0303 (indicating TLS1.2) or <0x0303 indictating prior versions of TLS1.2',
+ 			// adjust: '= 0x0303;< 0x303'
  		},
- 		{eltType: 'Random', delete: 'no', adjustment:'yes', eltName: 'random', eltValue: ';', deleted:'no',
- 			info: '32 bytes generated by a secure random number generator. The last 8 bytes MUST be overwritten if negotiating TLS 1.2 or TLS 1.1, but the remaining bytes MUST be random. This structure is generated by the server and MUST be generated independently of the <i>ClientHello.random</i>. </br></br> This random number is used to prevent downgrade attacks.',
- 			adjustM: 'This is to adjust the last 8 bytes of the server\'s random number. </br> If negotiating TLS1.2, then TLS1.3 server’s random number must set their last 8 bytes of their random number to: <br/> 44 4F 57 4E 47 52 44 01 </br>. If negotiating TLS1.1 or below, then TLS1.3 and TLS1.2 servers must set their last 8 bytes of their random number field to: </br> 44 4F 57 4E 47 52 44 00 </br>' ,
- 			adjust: '44 4F 57 4E 47 52 44 01;44 4F 57 4E 47 52 44 00;random'
+ 		{eltType: 'Random', delete: 'no', adjustment:'no', eltName: 'random', eltValue: ';', deleted:'no',
+ 			info: '32 bytes generated by a secure random number generator. To identify the helloRetryRequest message from a serverHello message, the random number of the helloRetryRequest is always equal to: <p>CF 21 AD 74 E5 9A 61 11 BE 1D 8C 02 1E 65 B8 91<br/>C2 A2 11 16 7A BB 8C 5E 07 9E 09 E2 C8 A8 33 9C</p>',
+ 			// adjustM: 'This is to adjust the last 8 bytes of the server\'s random number. </br> If negotiating TLS1.2, then TLS1.3 server’s random number must set their last 8 bytes of their random number to: <br/> 44 4F 57 4E 47 52 44 01 </br>. If negotiating TLS1.1 or below, then TLS1.3 and TLS1.2 servers must set their last 8 bytes of their random number field to: </br> 44 4F 57 4E 47 52 44 00 </br>' ,
+ 			// adjust: '44 4F 57 4E 47 52 44 01;44 4F 57 4E 47 52 44 00;random'
  		},
  		{eltType: 'opaque', delete: 'yes', adjustment:'yes', eltName: 'legacy_session_id', eltValue: '<0..32>;', deleted:'no',
  			info: 'This field is echoed even if the client’s value corresponded to a cached pre-TLS 1.3 session which the server has chosen not to resume. Therefore its value is always the contents of the client’s legacy_session_id field. </br></br> In case it is not echoed the handshake is aborted with an illegal parameter!',
@@ -1187,10 +1436,10 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
   	];
 
  	$scope.rrClientHello = [
- 		{eltType: 'ProtocolVersion', eltName: 'legacy_version', eltValue: '= 0x0303;', delete: 'no', adjustment:'yes', deleted:'no',
- 			info: 'In version prior to TLS1.3, this field was used for version negotiation.</br> In TLS1.3 this field should be equal to <b> 0x0303 </b>, which indicates TLS1.2 and the version preferences are indicated by the client in a later extension parameter (<i>supported_versions)</i> which is mandatory in TLS1.3 havinf 0x0304 as its highest version. </br> ',
- 			adjustM: '"Either = 0x0303 (indicating TLS1.2) or <0x0303 indictating prior versions of TLS1.2<br/> For a client to be recognized as TLS1.3 Client, its legacy_version should be equal to 0x0303.',
- 			adjust: '= 0x0303;< 0x303'
+ 		{eltType: 'ProtocolVersion', eltName: 'legacy_version', eltValue: '= 0x0303;', delete: 'no', adjustment:'no', deleted:'no',
+ 			info: 'In version prior to TLS1.3, this field was used for version negotiation.</br> In TLS1.3 this field should be equal to <b> 0x0303 </b>, which indicates TLS1.2 and the version preferences are indicated by the client in a later extension parameter (<i>supported_versions)</i> which is mandatory in TLS1.3 having 0x0304 as its highest version. </br> ',
+ 			// adjustM: '"Either = 0x0303 (indicating TLS1.2) or <0x0303 indictating prior versions of TLS1.2<br/> For a client to be recognized as TLS1.3 Client, its legacy_version should be equal to 0x0303.',
+ 			// adjust: '= 0x0303;< 0x303'
  		}, 
  		{eltType: 'Random', delete: 'no', eltName: 'random', eltValue: ';', adjustment:'no', deleted:'no',
  			info: '32 bytes generated by a secure random number generator. </br></br> This random number is used to prevent downgrade attacks.'
