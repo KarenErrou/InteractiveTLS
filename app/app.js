@@ -252,7 +252,7 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 		"ffdhe6144(0x0103)": false,
 		"ffdhe8192(0x0104)": false
 	}
-
+	$scope.key_shareValue = "secp256r1(0x0017)";
 
 	//Server Parameters
 	$scope.clientCert = {
@@ -489,10 +489,6 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 							break;
 
 							case 'Client_certificate_type':
-
-								// if($scope.clientCert[$scope.clientCertServer] ==  false){
-								// 		alert($scope.clientCertServer + " is selected in the server and wasn't offered by the client!! ABORT HANDSHAKE!");
-								// }
 								$scope.alreadyAvailable = false;
 								if($scope.clientCert[$scope.clientCertServer] ==  false){
 									for(var alerts in $scope.alertsList){
@@ -516,9 +512,8 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 								}
 								alreadyAvailable = false;
 
-								//TODO AttentionAlerts
 								if($scope.clientCert['RawPublicKey'] == false && $scope.clientCert['Additional certificate types'] == false){
-									alert("In case the client has no other certificate types remaining to send other than X.509 then this extension must be omitted.");
+									$scope.explainAlert = "In case the client has no other certificate types remaining to send other than X.509 then this extension must be omitted.";
 									$scope.showInfo('chExtensions', $scope.storeidField, 'delete');
 									for(var alerts in $scope.alertsList){
 										$scope.alertsList.splice($scope.alertsList[alerts].title.indexOf("Client Certificate"),1);																			
@@ -527,9 +522,6 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 							break;
 
 							case 'Server_certificate_type':
-								// if($scope.serverCert[$scope.serverCertServer] ==  false){
-								// 		alert($scope.serverCertServer + " is selected in the server and wasn't offered by the client!! ABORT HANDSHAKE!");
-								// }
 								$scope.alreadyAvailable = false;
 								if($scope.serverCert[$scope.serverCertServer] ==  false){
 									for(var alerts in $scope.alertsList){
@@ -556,7 +548,7 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 
 								//TODO AttentionAlerts
 								if($scope.serverCert['RawPublicKey'] == false && $scope.serverCert['Additional certificate types'] == false){
-									alert("In case the client has no other certificate types remaining to send other than X.509 then this extension must be omitted.");
+									$scope.explainAlert = "In case the client has no other certificate types remaining to send other than X.509 then this extension must be omitted.";
 									$scope.showInfo('chExtensions', $scope.storeidField, 'delete');
 									for(var alerts in $scope.alertsList){
 										$scope.alertsList.splice($scope.alertsList[alerts].title.indexOf("Server Certificate"),1);								
@@ -581,46 +573,123 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 			      				ECDHEBoolClient = false;
 								DHEBoolClient = false;
 								keyshare = false;
+								alert = true;
 
+								//Check if supported groups ECDHE?
 								for(var elt3 in $scope.ECDHEClient){
-									if($scope.ECDHEClient[elt3] == true)
-									ECDHEBoolClient = true;
+									if($scope.ECDHEClient[elt3] == true){
+										ECDHEBoolClient = true;
+										$scope.alreadyAvailable = false;
+										if(elt3 == $scope.key_shareValue){
+											for(var alerts in $scope.alertsList){
+												$scope.alertsList.splice($scope.alertsList[alerts].title.indexOf("Key Shares"),1);		
+											}
+											if($scope.keyExMode == 5){
+												if($scope.data.adjust == 'secp256r1(0x0017)' || $scope.data.adjust == 'secp384r1(0x0018)' || $scope.data.adjust == 'secp521r1(0x0019)' || $scope.data.adjust == 'x25519(0x001D)' || $scope.data.adjust == 'x448(0x001E)'){
+													$scope.keyExMode = 0;
+												}
+												else{
+													$scope.keyExMode = 1;
+												}
+											}else if($scope.keyExMode == 4){
+												if($scope.data.adjust == 'secp256r1(0x0017)' || $scope.data.adjust == 'secp384r1(0x0018)' || $scope.data.adjust == 'secp521r1(0x0019)' || $scope.data.adjust == 'x25519(0x001D)' || $scope.data.adjust == 'x448(0x001E)'){
+													$scope.keyExMode = 2;
+												}
+												else{
+													$scope.keyExMode = 3;
+												}
+											}
+											alert = false;	
+										}
+									}
 								}
+								
+								//Check if supported groups DHE?
 								for(var elt3 in $scope.DHEClient){
-									if($scope.DHEClient[elt3]== true)
+									if($scope.DHEClient[elt3]== true){
+										$scope.alreadyAvailable = false;
 										DHEBoolClient = true;
+										if(elt3 == $scope.key_shareValue){
+											for(var alerts in $scope.alertsList){
+												$scope.alertsList.splice($scope.alertsList[alerts].title.indexOf("Key Shares"),1);								
+											}
+											if($scope.keyExMode == 5){
+												if($scope.data.adjust == 'secp256r1(0x0017)' || $scope.data.adjust == 'secp384r1(0x0018)' || $scope.data.adjust == 'secp521r1(0x0019)' || $scope.data.adjust == 'x25519(0x001D)' || $scope.data.adjust == 'x448(0x001E)'){
+													$scope.keyExMode = 0;
+												}
+												else{
+													$scope.keyExMode = 1;
+												}
+											}else if($scope.keyExMode == 4){
+												if($scope.data.adjust == 'secp256r1(0x0017)' || $scope.data.adjust == 'secp384r1(0x0018)' || $scope.data.adjust == 'secp521r1(0x0019)' || $scope.data.adjust == 'x25519(0x001D)' || $scope.data.adjust == 'x448(0x001E)'){
+													$scope.keyExMode = 2;
+												}
+												else{
+													$scope.keyExMode = 3;
+												}
+											}
+											alert = false;	
+										}
+									}
+								}
+
+								if(alert == true){
+									$scope.alreadyAvailable = false;
+									for(var alerts in $scope.alertsList){
+										if($scope.alertsList[alerts].title == "Key Shares"){
+											$scope.alreadyAvailable = true;
+										}
+									}
+									if($scope.alreadyAvailable == false){
+										$scope.alertsList.push({
+								    		title:   "Key Shares", step: 'clientHello',
+		    								description: $scope.data.adjust + " is selected in the server and wasn't offered by the client!! ABORT HANDSHAKE!"
+										});
+									}
+									if($scope.keyExMode == 1 || $scope.keyExMode == 0){
+										$scope.keyExMode = 5;
+									}else if($scope.keyExMode == 2 || $scope.keyExMode == 3){
+										$scope.keyExMode = 4;
+									}
+									$scope.alreadyAvailable = false;
 								}
 
 								for (var elt2 in $scope.chExtensions){
 	        						if($scope.chExtensions[elt2].eltName == "key_share"){
-        								if(ECDHEBoolClient == true){
-											if(DHEBoolClient == true){
-												$scope.supp_groups = 2;
-												$scope.storeidField.eltValue = "= ECDHE + DHE";
-												$scope.chExtensions[elt2].eltValue = "= ECDHE + DHE keys";
-											}
-										else{
+        								if(ECDHEBoolClient == true && DHEBoolClient == true){
+											$scope.supp_groups = 2;
+											$scope.storeidField.eltValue = "= ECDHE + DHE";
+											$scope.chExtensions[elt2].eltValue = "= ECDHE + DHE keys";
+										}
+										else if(ECDHEBoolClient == true && DHEBoolClient == false){
+											$scope.supp_groups = 0;
+											$scope.storeidField.eltValue = "= ECDHE";
+											$scope.chExtensions[elt2].eltValue = "= ECDHE keys";
+										} else if(ECDHEBoolClient == false && DHEBoolClient == true){
+											$scope.supp_groups = 1;
+											$scope.storeidField.eltValue = "= DHE";
+											$scope.chExtensions[elt2].eltValue = "= DHE keys";
+										}else if(ECDHEBoolClient == false && DHEBoolClient == false){												
+											$scope.explainAlert = "Supported_groups empty, default is selected!";
+											$scope.ECDHEClient["secp256r1(0x0017)"] = true;
 											$scope.supp_groups = 0;
 											$scope.storeidField.eltValue = "= ECDHE";
 											$scope.chExtensions[elt2].eltValue = "= ECDHE keys";
 										}
-										} else{
-											if(DHEBoolClient == true){
-												$scope.supp_groups = 1;
-												$scope.storeidField.eltValue = "= DHE";
-												$scope.chExtensions[elt2].eltValue = "= DHE keys";
-											}
-											else {
-												//TODO AttentionAlerts
-												alert("supported_groups sent empty!");
-												$scope.ECDHEClient["secp256r1(0x0017)"] = true;
-												$scope.supp_groups = 0;
-												$scope.storeidField.eltValue = "= ECDHE";
-												$scope.chExtensions[elt2].eltValue = "= ECDHE keys";
-											}
-										}
 									}
 								}
+
+
+								// 	$scope.alreadyAvailable = false;
+								// 	if($scope.supp_groups == 0 || $scope.supp_groups == 2){
+								// 		if($scope.ECDHEClient[$scope.data.adjust] ==  true || $scope.DHEClient[$scope.data.adjust] == true){
+								// 			for(var alerts in $scope.alertsList){
+								// 				$scope.alertsList.splice($scope.alertsList[alerts].title.indexOf("Key Shares"),1);		
+								// 			}
+								// 		}
+								// 	}	
+									
+								// }
 							break;
 							default:
 		            	}
@@ -653,10 +722,6 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 		     //        		break;
 
 		            		case 'cipher_suites':
-		      //       			if($scope.cipherSuitesClient[$scope.cipherSuitesServer] ==  false){
-		      //       				//cpher suite selected by the server must be one from the list chosen by the client
-								// 	alert($scope.cipherSuitesServer + " is selected in the server and wasn't offered by the client!! ABORT HANDSHAKE!");
-								// }			
 								$scope.cipherSuitesServer = $scope.data.adjust;
 
 								$scope.alreadyAvailable = false;
@@ -702,12 +767,7 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 	        	for (var elt1 in $scope.shExtensions){
             		if($scope.storeidField.eltName == $scope.shExtensions[elt1].eltName){
             			switch ($scope.storeidField.eltName){
-							case 'key_share':
-								// if($scope.ECDHEClient[$scope.data.adjust] ==  false || $scope.DHEClient[$scope.data.adjust] == false){
-		      //       				//cpher suite selected by the server must be one from the list chosen by the client
-								// 	alert($scope.data.adjust + " is selected in the server and wasn't offered by the client!! ABORT HANDSHAKE!");
-								// }
-								
+							case 'key_share':								
 								$scope.alreadyAvailable = false;
 								if($scope.ECDHEClient[$scope.data.adjust] ==  false || $scope.DHEClient[$scope.data.adjust] == false){
 									for(var alerts in $scope.alertsList){
@@ -736,7 +796,8 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 								} else{
 									$scope.shExtensions[elt1].eltValue = '= DHE';
 								}
-								break;
+								$scope.key_shareValue = $scope.data.adjust;
+							break;
 						}
 					}
 				}
@@ -771,12 +832,7 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
             	for (var elt1 in $scope.encryptedExtension){
             		if($scope.storeidField.eltName == $scope.encryptedExtension[elt1].eltName){
             			switch ($scope.storeidField.eltName){
-			            	case 'Client_certificate_type':
-
-			     //    			if($scope.clientCert[$scope.data.adjust] ==  false){
-								// 	alert($scope.clientCertServer + " is selected in the server and wasn't offered by the client!! ABORT HANDSHAKE!");
-								// }			
-								
+			            	case 'Client_certificate_type':								
 								$scope.clientCertServer = $scope.data.adjust;
 
 								$scope.alreadyAvailable = false;
@@ -807,9 +863,6 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 
 							case 'Server_certificate_type':
 								$scope.serverCertServer = $scope.data.adjust;
-								// if($scope.serverCert[$scope.data.adjust] ==  false){
-			     //    				alert($scope.serverCertServer + " is selected in the server and wasn't offered by the client!! ABORT HANDSHAKE!");
-								// }	
 
 								$scope.alreadyAvailable = false;
 								if($scope.serverCert[$scope.data.adjust] ==  false){
@@ -862,14 +915,8 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 					// break;
 
 					case 'supported_versions':
-						// if($scope.tlsVersion[0]==1.3){
-							alert("TLS 1.3 CientHello messages always contain 'supported_versions', otherwise, they will be interpreted as TLS 1.2 ClientHello messages.");
-						// }						
-						
-						// if($scope.tlsVersion[0]==1.2){
-						// 	alert("Server and Client will negotiate TLS1.2 <br/> NOT AVAILABLE IN THIS APP <br/> <b>TLS1.3 should be negotiated</b>");
-						// }
-
+						$scope.explainAlert = "TLS 1.3 CientHello messages always contain 'supported_versions', otherwise, they will be interpreted as TLS 1.2 ClientHello messages";
+												
 						$scope.leftBoxTitle = 'supported_versions NOT deleted' ;	
 						for (var elt2 in $scope.chExtensions){
 	        				if($scope.storeidField.eltName == $scope.chExtensions[elt2].eltName){
@@ -885,22 +932,79 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 						for (var elt2 in $scope.chExtensions){
 		        			if($scope.chExtensions[elt2].eltName == 'key_share'){					
 								if($scope.chExtensions[elt2].deleted=="no"){
+									$scope.alreadyAvailable = false;
+
+
 									if($scope.storeidField.deleted == "yes"){
-										alert("Supported groups is not available. Key share shouldn't be available and PSK must be supported.");
-										alert("missing extension");
+									
+										for(var alerts in $scope.alertsList){
+											if($scope.alertsList[alerts].title == "Missing supported_groups extension"){
+												$scope.alreadyAvailable = true;													
+											}
+										}
+										if($scope.alreadyAvailable == false){
+											$scope.alertsList.push({
+									    		title:   "Missing supported_groups extension", step: 'chExtensions',
+			    								description: "Key Share and supported_group should always be available together. Either add supported_groups or, remove key_share and add pre_shared_keys    !! missing extension !!"
+											});
+										}
+										if($scope.keyExMode == 2 || $scope.keyExMode == 3 || $scope.keyExMode == 4 ){
+											$scope.keyExMode = 4; 
+										}
+										else {
+											$scope.keyExMode = 5;
+										}
+									}			
+									else if($scope.storeidField.deleted == "no"){
+										for(var alerts in $scope.alertsList){
+											$scope.alertsList.splice($scope.alertsList[alerts].title.indexOf("Missing supported_groups extension"),1);	
+										}
+										if($scope.keyExMode == 4){
+											if($scope.key_shareValue == 'secp256r1(0x0017)' || $scope.key_shareValue == 'secp384r1(0x0018)' || $scope.key_shareValue == 'secp521r1(0x0019)' || $scope.key_shareValue == 'x25519(0x001D)' || $scope.key_shareValue == 'x448(0x001E)'){
+										 		$scope.keyExMode = 2;
+										 	}else{
+										 		$scope.keyExMode = 3;
+										 	}
+										}
+										else if ($scope.keyExMode == 5){
+											if($scope.key_shareValue == 'secp256r1(0x0017)' || $scope.key_shareValue == 'secp384r1(0x0018)' || $scope.key_shareValue == 'secp521r1(0x0019)' || $scope.key_shareValue == 'x25519(0x001D)' || $scope.key_shareValue == 'x448(0x001E)'){
+										 		$scope.keyExMode = 0;
+										 	}else{
+										 		$scope.keyExMode = 1;
+										 	}
+										}
 									}
+									$scope.alreadyAvailable = false;
+									
 								}
 								else if($scope.chExtensions[elt2].deleted=="yes"){
+									$scope.alreadyAvailable = false;
+
 									if($scope.storeidField.deleted == "no"){
-										alert("Key Share and supported_group should always be available together");
-										alert("missing extension");
+
+									
+										for(var alerts in $scope.alertsList){
+											if($scope.alertsList[alerts].title == "Missing key_share extension"){
+												$scope.alreadyAvailable = true;													
+											}
+										}
+										if($scope.alreadyAvailable == false){
+											$scope.alertsList.push({
+									    		title:   "Missing key_share extension", step: 'chExtensions',
+			    								description: "Key Share and supported_group should always be available together. Either add supported_groups or, remove key_share and add pre_shared_keys    !! missing extension !!"
+											});
+										}
+									}			
+									else if($scope.storeidField.deleted == "yes"){
+										for(var alerts in $scope.alertsList){
+											$scope.alertsList.splice($scope.alertsList[alerts].title.indexOf("Missing key_share extension"),1);	
+										}
 									}
+									$scope.alreadyAvailable = false;
 								}
 							}
-
-							
-							// else if($scope.chExtensions[elt1].eltName == 'pre_shared_keys'){
-							// 	if($scope.chExtensions[elt1].deleted=="yes"){
+							// else if($scope.chExtensions[elt2].eltName == 'pre_shared_keys'){
+							// 	if($scope.chExtensions[elt2].deleted=="yes"){
 							// 		alert("Supported groups is not available. PSK must be supported.");
 							// 		alert("missing extension");
 							// 	}
@@ -933,61 +1037,97 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 								}
 							}
 							else if($scope.chExtensions[elt1].eltName == 'psk_key_exchange_modes'){
+								$scope.alreadyAvailable = false;
 								if($scope.chExtensions[elt1].deleted=='no' && $scope.chExtensions[elt1].eltValue=='= psk_dhe_ke'){
-									alert("When PSK_dhe_ke is selected in psk_key_exchange_modes, then key_share should be included in the extensions")
+									for(var alerts in $scope.alertsList){
+										if($scope.alertsList[alerts].title == "Missing key_share extension"){
+											$scope.alreadyAvailable = true;													
+										}
+									}
+									if($scope.alreadyAvailable == false){
+										$scope.alertsList.push({
+								    		title:   "Missing key_share extension", step: 'chExtensions',
+		    								description: "When PSK_dhe_ke is selected in psk_key_exchange_modes, then key_share should be included in the extensions"
+										});
+									}
+								}			
+								else if($scope.chExtensions[elt1].deleted=='no' && $scope.chExtensions[elt1].eltValue == '= psk_ke'){
+									for(var alerts in $scope.alertsList){
+										$scope.alertsList.splice($scope.alertsList[alerts].title.indexOf("Missing key_share extension"),1);	
+									}
 								}
+								$scope.alreadyAvailable = false;
 							}
 						}
 						
 						if($scope.storeidField.deleted == "no"){
+
+							$scope.alreadyAvailable = false;
 							if(supported_groups == false){
-								alert("Supported groups is not available.");	
-								alert("missing extension");
+							
+								for(var alerts in $scope.alertsList){
+									if($scope.alertsList[alerts].title == "Missing supported_groups extension"){
+										$scope.alreadyAvailable = true;													
+									}
+								}
+								if($scope.alreadyAvailable == false){
+									$scope.alertsList.push({
+							    		title:   "Missing supported_groups extension", step: 'chExtensions',
+	    								description: "Key Share and supported_group should always be available together. Either add supported_groups or, remove key_share and add pre_shared_keys    !! missing extension !!"
+									});
+								}
+							}			
+							else if(supported_groups == true){
+								for(var alerts in $scope.alertsList){
+									$scope.alertsList.splice($scope.alertsList[alerts].title.indexOf("Missing supported_groups extension"),1);	
+								}
 							}
+							$scope.alreadyAvailable = false;
 						}
 
 						if($scope.storeidField.deleted == "yes"){
+
+							$scope.alreadyAvailable = false;
 							if(supported_groups == true){
-								alert("key_share should be available when supported groups is available");
-								alert("missing extension");
+								for(var alerts in $scope.alertsList){
+									if($scope.alertsList[alerts].title == "Missing key_share extension"){
+										$scope.alreadyAvailable = true;													
+									}
+								}
+								if($scope.alreadyAvailable == false){
+									$scope.alertsList.push({
+							    		title:   "Missing key_share extension", step: 'chExtensions',
+	    								description: "Key Share and supported_group should always be available together. Either add supported_groups or, remove key_share and add pre_shared_keys    !! missing extension !!"
+									});
+								}
+							}			
+							else if(supported_groups == false){
+								for(var alerts in $scope.alertsList){
+									$scope.alertsList.splice($scope.alertsList[alerts].title.indexOf("Missing key_share extension"),1);	
+								}
 							}
-							if(pre_shared == false){
-								alert("PSK must be supported.");	
-								alert("missing extension");
-							}
-
-						}
+							$scope.alreadyAvailable = false;
+							if(pre_shared == false && supported_groups == false){
 							
-
-							// if($scope.supportedgroupsKeyshare[0]==true){
-							// 	alert("key_share should be available when supported groups is available");
-							// 	alert("missing extension");
-							// }
-							// for (var elt1 in $scope.chExtensions){
-							// 	if($scope.chExtensions[elt1].eltName == 'supported_groups'){
-							// 		if($scope.chExtensions[elt1].deleted=="no"){
-							// 			alert("key_share should be available when supported groups is available");
-							// 			alert("missing extension");
-							// 		}
-								// else{
-								// 	if($scope.pre_shared_keys[0]==false){
-								// 		alert("ECDHE is not supported since supported groups is not available. PSK must be supported.");
-								// 		alert("missing extension");
-								// 	}
-								// }
-									// else{
-									// 	if($scope.chExtensions[elt1].eltName == 'pre_shared_keys'){
-									// 		if($scope.chExtensions[elt1].deleted=="yes"){
-									// 			alert("Supported groups is not available. PSK must be supported.");	
-									// 			alert("missing extension");
-									// 		}
-									// 	}
-									// }
-							// 	}
-								
-							// }
-
-						// }
+								for(var alerts in $scope.alertsList){
+									if($scope.alertsList[alerts].title == "Missing extensions"){
+										$scope.alreadyAvailable = true;													
+									}
+								}
+								if($scope.alreadyAvailable == false){
+									$scope.alertsList.push({
+							    		title:   "Missing extensions", step: 'chExtensions',
+	    								description: "Either add key_share extensions for (EC)DHE or pre_shared_keys for PSK mode   !! missing extension !!"
+									});
+								}
+							}			
+							else if(pre_shared == true){
+								for(var alerts in $scope.alertsList){
+									$scope.alertsList.splice($scope.alertsList[alerts].title.indexOf("Missing extensions"),1);	
+								}
+							}
+							$scope.alreadyAvailable = false;
+						}					
 					break;
 
 					case 'psk_key_exchange_modes':
@@ -1035,29 +1175,115 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 					
 						if(type=='adjusted'){
 							if($scope.storeidField.eltValue == '= psk_ke'){
+								$scope.alreadyAvailable = false;
 								if(key_share[0] || key_share[1]){
-									alert("psk_ke chosen in psk_key_exchange_modes --> key_share should not be in the extensions");
+									for(var alerts in $scope.alertsList){
+										if($scope.alertsList[alerts].title == "Remove key_share extension"){
+											$scope.alreadyAvailable = true;													
+										}
+									}
+									if($scope.alreadyAvailable == false){
+										$scope.alertsList.push({
+								    		title:   "Remove key_share extension", step: 'chExtensions',
+		    								description: "psk_ke chosen in psk_key_exchange_modes: key_share should not be in the extensions"
+										});
+									}
 								}			
-								
+								else if(key_share[0] == false && key_share[1] == false){
+									for(var alerts in $scope.alertsList){
+										$scope.alertsList.splice($scope.alertsList[alerts].title.indexOf("Remove key_share extension"),1);	
+									}
+								}
+								$scope.alreadyAvailable = false;	
 							}
 							else if($scope.storeidField.eltValue == '= psk_dhe_ke'){
+								$scope.alreadyAvailable = false;
 								if(key_share[0]==false || key_share[1]==false){
-									alert("PSK_dhe_ke chosen in psk_key_exchange_modes --> key_share should be in the extensions");
+									for(var alerts in $scope.alertsList){
+										if($scope.alertsList[alerts].title == "Add key_share extension"){
+											$scope.alreadyAvailable = true;													
+										}
+									}
+									if($scope.alreadyAvailable == false){
+										$scope.alertsList.push({
+								    		title:   "Add key_share extension", step: 'chExtensions',
+		    								description: "PSK_dhe_ke chosen in psk_key_exchange_modes: key_share should be in the extensions"
+										});
+									}
 								}			
+								else if(key_share[0] && key_share[1]){
+									for(var alerts in $scope.alertsList){
+										$scope.alertsList.splice($scope.alertsList[alerts].title.indexOf("Add key_share extension"),1);	
+									}
+								}
+								$scope.alreadyAvailable = false;
 							}
+							
+							$scope.alreadyAvailable = false;
 							if(pre_shared[0] == false){
-								alert("when psk_key_exchange_modes is in the extensions, pre_shared_keys should be there too");
+								for(var alerts in $scope.alertsList){
+									if($scope.alertsList[alerts].title == "Add pre_shared_keys extension"){
+										$scope.alreadyAvailable = true;													
+									}
+								}
+								if($scope.alreadyAvailable == false){
+									$scope.alertsList.push({
+							    		title:   "Add pre_shared_keys extension", step: 'chExtensions',
+	    								description: "When psk_key_exchange_modes is in the extensions, pre_shared_keys should be there too"
+									});
+								}
+							}			
+							else if(pre_shared[0] == true){
+								for(var alerts in $scope.alertsList){
+									$scope.alertsList.splice($scope.alertsList[alerts].title.indexOf("Add pre_shared_keys extension"),1);	
+								}
 							}
+							$scope.alreadyAvailable = false;
 						}
 						else if (type== 'deleted'){
+
+							$scope.alreadyAvailable = false;
 							if(pre_shared[0] == true){
-								alert("when pre_shared_keys is in the extension, psk_key_exchange_modes should be there too");
+								for(var alerts in $scope.alertsList){
+									if($scope.alertsList[alerts].title == "Add psk_key_exchange_modes extension"){
+										$scope.alreadyAvailable = true;													
+									}
+								}
+								if($scope.alreadyAvailable == false){
+									$scope.alertsList.push({
+							    		title:   "Add psk_key_exchange_modes extension", step: 'chExtensions',
+	    								description: "When pre_shared_keys is in the extension, psk_key_exchange_modes should be there too"
+									});
+								}
+							}			
+							else if(pre_shared[0] == false){
+								for(var alerts in $scope.alertsList){
+									$scope.alertsList.splice($scope.alertsList[alerts].title.indexOf("Add psk_key_exchange_modes extension"),1);	
+								}
 							}
+							$scope.alreadyAvailable = false;
 						}
 						else{
+							$scope.alreadyAvailable = false;
 							if(pre_shared[0] == false){
-								alert("when psk_key_exchange_modes is in the extensions, pre_shared_keys should be there too");
+								for(var alerts in $scope.alertsList){
+									if($scope.alertsList[alerts].title == "Add pre_shared_keys extension"){
+										$scope.alreadyAvailable = true;													
+									}
+								}
+								if($scope.alreadyAvailable == false){
+									$scope.alertsList.push({
+							    		title:   "Add pre_shared_keys extension", step: 'chExtensions',
+	    								description: "when psk_key_exchange_modes is in the extensions, pre_shared_keys should be there too"
+									});
+								}
+							}			
+							else if(pre_shared[0] == true){
+								for(var alerts in $scope.alertsList){
+									$scope.alertsList.splice($scope.alertsList[alerts].title.indexOf("Add pre_shared_keys extension"),1);	
+								}
 							}
+							$scope.alreadyAvailable = false;
 						}
 						
 
@@ -1067,17 +1293,94 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 						if (type == 'deleted'){
 							for (var elt1 in $scope.chExtensions){
 								if($scope.chExtensions[elt1].eltName == 'psk_key_exchange_modes'){
-									if($scope.chExtensions[elt1].deleted=="no"){
-										alert("psk_key_exchange_modes should be removed when pre_shared_keys is removed");
+									$scope.alreadyAvailable = false;
+									if($scope.chExtensions[elt1].deleted == 'no'){
+										for(var alerts in $scope.alertsList){
+											if($scope.alertsList[alerts].title == "Remove psk_key_exchange_modes extension"){
+												$scope.alreadyAvailable = true;													
+											}
+										}
+										if($scope.alreadyAvailable == false){
+											$scope.alertsList.push({
+									    		title:   "Remove psk_key_exchange_modes extension", step: 'chExtensions',
+			    								description: "psk_key_exchange_modes should be removed when pre_shared_keys is removed"
+											});
+										}
+									}			
+									else if($scope.chExtensions[elt1].deleted == 'yes'){
+										for(var alerts in $scope.alertsList){
+											$scope.alertsList.splice($scope.alertsList[alerts].title.indexOf("Remove psk_key_exchange_modes extension"),1);	
+										}
 									}
+									$scope.alreadyAvailable = false;
+								
 								}else if($scope.chExtensions[elt1].eltName == 'key_share'){
-									if($scope.chExtensions[elt1].deleted=="yes"){
-										alert("Either key_share or pre_shared_keys should be available in the extensions to negotiate a key exchange mode.");
-									}
-									else{
 
+									$scope.alreadyAvailable = false;
+									if($scope.chExtensions[elt1].deleted=="yes"){
+										for(var alerts in $scope.alertsList){
+											if($scope.alertsList[alerts].title == "Missing extensions"){
+												$scope.alreadyAvailable = true;													
+											}
+										}
+										if($scope.alreadyAvailable == false){
+											$scope.alertsList.push({
+									    		title:   "Missing extensions", step: 'chExtensions',
+			    								description: "Either add key_share extensions for (EC)DHE or pre_shared_keys for PSK mode   !! missing extension !!"
+											});
+										}
+									}			
+									else{
+										for(var alerts in $scope.alertsList){
+											$scope.alertsList.splice($scope.alertsList[alerts].title.indexOf("Missing extensions"),1);	
+										}
 										$scope.keyExMode = 0;
 									}
+									$scope.alreadyAvailable = false;
+								}
+							}
+						}
+						else{
+							for(var alerts in $scope.alertsList){
+								$scope.alertsList.splice($scope.alertsList[alerts].title.indexOf("Add pre_shared_keys extension"),1);	
+							}
+
+							for (var elt1 in $scope.chExtensions){
+								if($scope.chExtensions[elt1].eltName == 'psk_key_exchange_modes'){
+									$scope.alreadyAvailable = false;
+									if($scope.chExtensions[elt1].deleted == 'yes'){
+										for(var alerts in $scope.alertsList){
+											if($scope.alertsList[alerts].title == "Add psk_key_exchange_modes extension"){
+												$scope.alreadyAvailable = true;													
+											}
+										}
+										if($scope.alreadyAvailable == false){
+											$scope.alertsList.push({
+									    		title:   "Add psk_key_exchange_modes extension", step: 'chExtensions',
+			    								description:  "When pre_shared_keys is in the extension, psk_key_exchange_modes should be there too"
+											});
+										}
+									}			
+									else if($scope.chExtensions[elt1].deleted == 'no'){
+										for(var alerts in $scope.alertsList){
+											$scope.alertsList.splice($scope.alertsList[alerts].title.indexOf("Add psk_key_exchange_modes extension"),1);	
+										}
+
+										for (var elt2 in $scope.shExtensions){
+											if($scope.shExtensions[elt2].eltName == 'pre_shared_keys'){
+												if($scope.shExtensions[elt2].deleted == 'no'){
+													if($scope.keyExMode == 0){
+														$scope.keyExMode = 2;
+													} else if($scope.keyExMode == 0){
+														$scope.keyExMode = 0;
+													} else if ($scope.keyExMode == 5){
+														$scope.keyExMode = 4;
+													}
+												}
+											}
+										}
+									}
+									$scope.alreadyAvailable = false;
 								}
 							}
 						}
@@ -1100,13 +1403,28 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 							$scope.early_dataClient = true;
 							for (var elt1 in $scope.chExtensions){
 								if($scope.chExtensions[elt1].eltName == 'pre_shared_keys'){
+									$scope.alreadyAvailable = false;
 									if($scope.chExtensions[elt1].deleted=="yes"){
-										alert("psk mode should be selected when using early data");
-										//CHECK ERROR PSK
-									}
+										for(var alerts in $scope.alertsList){
+											if($scope.alertsList[alerts].title == "Add pre_shared_keys extension"){
+												$scope.alreadyAvailable = true;													
+											}
+										}
+										if($scope.alreadyAvailable == false){
+											$scope.alertsList.push({
+									    		title:   "Add pre_shared_keys extension", step: 'chExtensions',
+			    								description: "psk mode should be selected when using early data"
+											});
+										}
+									}			
 									else{
-										alert("This data is not forward secret.")
+										for(var alerts in $scope.alertsList){
+											$scope.alertsList.splice($scope.alertsList[alerts].title.indexOf("Add pre_shared_keys extension"),1);	
+										}
+										$scope.explainAlert = "Due to early data (0-RTT), the data is not forward secret.";
 									}
+									$scope.alreadyAvailable = false;
+
 								}
 							}
 						}
@@ -1117,13 +1435,13 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 			break;
 
 			case 'serverHello':
-			if(type == 'deleted'){
-				for (var elt1 in $scope.shExtensions){
-	        			if($scope.storeidField.eltName == $scope.shExtensions[elt1].eltName){
-							$scope.shExtensions[elt1].deleted="yes";
+				if(type == 'deleted'){
+					for (var elt1 in $scope.shExtensions){
+		        			if($scope.storeidField.eltName == $scope.shExtensions[elt1].eltName){
+								$scope.shExtensions[elt1].deleted="yes";
+						}
 					}
 				}
-			}
 				switch(fieldUpdated){
 					// case 'legacy_version':
 					// 	$scope.checkRandom();
@@ -1133,19 +1451,134 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 					// 	$scope.checkRandom();
 					// break;
 
+					case 'key_share':
+						if(type == 'deleted'){
+							if($scope.keyExMode == 0 || $scope.keyExMode == 1){
+								$scope.keyExMode = 5;
+							} else if($scope.keyExMode == 2 || $scope.keyExMode == 3){
+								$scope.keyExMode = 4;
+							}
+						}
+						else{
+							if($scope.storeidField.eltValue == '= ECDHE'){
+								if($scope.keyExMode == 1 || $scope.keyExMode == 5){
+									$scope.keyExMode = 0;
+								} else if($scope.keyExMode == 3 || $scope.keyExMode == 4){
+									$scope.keyExMode = 2;
+								}
+							} else if($scope.storeidField.eltValue == '= DHE'){
+								if($scope.keyExMode == 0 || $scope.keyExMode == 5){
+									$scope.keyExMode = 1;
+								} else if($scope.keyExMode == 2 || $scope.keyExMode == 4){
+									$scope.keyExMode = 3;
+								}
+							}
+						}
+					break;
+
+
 					case 'supported_versions':
-						// if($scope.tlsVersion[0]==1.3){
-							alert("TLS 1.3 ServerHello messages always contain 'supported_versions', otherwise, they will be interpreted as TLS 1.2 ClientHello messages.");
-						// }						
-						
-						// if($scope.tlsVersion[0]==1.2){
-						// 	alert("Server and Client will negotiate TLS1.2 <br/> NOT AVAILABLE IN THIS APP <br/> <b>TLS1.3 should be negotiated</b>");
-						// }
+						$scope.explainAlert = "TLS 1.3 ServerHello messages always contain 'supported_versions', otherwise, they will be interpreted as TLS 1.2 ClientHello messages.";
+				
 						$scope.leftBoxTitle = 'supported_versions NOT deleted' ;	
 						$scope.newItem= {eltName: 'supported_versions', delete: 'yes', 
 						info: 'Indicates which versions of TLS it supports.'}
 						$scope.chExtensions.splice(0, 0, $scope.newItem);
 					break;			
+
+
+					case 'pre_shared_keys':
+						if(type == 'deleted'){							for (var elt1 in $scope.shExtensions){
+								if($scope.shExtensions[elt1].eltName == 'key_share'){
+									$scope.alreadyAvailable = false;
+									if($scope.shExtensions[elt1].deleted == 'yes'){
+										for(var alerts in $scope.alertsList){
+											if($scope.alertsList[alerts].title == "Missing extensions ServerHello"){
+												$scope.alreadyAvailable = true;													
+											}
+										}
+										if($scope.alreadyAvailable == false){
+											$scope.alertsList.push({
+									    		title:   "Missing extensions ServerHello", step: 'chExtensions',
+			    								description: "Either add key_share extensions for (EC)DHE or pre_shared_keys for PSK mode   !! missing extension !!"
+											});
+										}
+									}			
+									else if($scope.shExtensions[elt1].deleted == 'no'){
+										if($scope.shExtensions[elt1].eltValue == '= ECDHE'){
+											$scope.keyExMode = 0;
+										}
+										else if($scope.shExtensions[elt1].eltValue == '= DHE'){
+											$scope.keyExMode = 1;
+										}
+									// 	for(var alerts in $scope.alertsList){
+									// 		$scope.alertsList.splice($scope.alertsList[alerts].title.indexOf("Missing extensions ServerHello"),1);	
+									// 	}
+									}
+									
+									$scope.alreadyAvailable = false;
+
+								}
+							}
+						} else{
+							$scope.pre_shared = false;
+							$scope.psk_mode = false;
+							
+							for (var elt1 in $scope.chExtensions){
+								if($scope.chExtensions[elt1].eltName == 'pre_shared_keys'){
+									if($scope.chExtensions[elt1].deleted == 'no'){
+										$scope.pre_shared = true;
+									}
+								}
+								else if($scope.chExtensions[elt1].eltName == 'psk_key_exchange_modes'){
+									if($scope.chExtensions[elt1].deleted == 'no'){
+										$scope.psk_mode = true;
+									}
+								}
+							}
+							
+							$scope.alreadyAvailable = false;
+							
+							if($scope.pre_shared == false || $scope.psk_mode == false){
+								$scope.keyExMode = 5;
+								for(var alerts in $scope.alertsList){
+									if($scope.alertsList[alerts].title == "Remove pre_shared extension ServerHello"){
+										$scope.alreadyAvailable = true;													
+									}
+								}
+								if($scope.alreadyAvailable == false){
+									$scope.alertsList.push({
+							    		title:   "Remove pre_shared extension ServerHello", step: 'chExtensions',
+	    								description: "PSK is not offered by the client in the ClientHello !!"
+									});
+								}
+							}			
+							else if($scope.pre_shared == true && $scope.psk_mode == true){
+								for(var alerts in $scope.alertsList){
+									$scope.alertsList.splice($scope.alertsList[alerts].title.indexOf("Remove pre_shared extension ServerHello"),1);	
+								}
+								for (var elt1 in $scope.shExtensions){
+									if($scope.shExtensions[elt1].eltName == 'key_share'){
+										if($scope.shExtensions[elt1].deleted == 'yes'){
+											$scope.keyExMode = 4;
+										}
+										else{
+											if($scope.shExtensions[elt1].eltValue == '= ECDHE'){
+												$scope.keyExMode = 2;
+											}
+											else if($scope.shExtensions[elt1].eltValue == '= DHE'){
+												$scope.keyExMode = 3;
+											}
+										}
+									}
+								}
+							}
+							$scope.alreadyAvailable = false;
+							
+							
+						}
+
+					break;
 					default:
 				}
 			break;
@@ -1218,67 +1651,6 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 		}
 	};
 
-	// $scope.adjustVersion= function(step, elt1, elt){
-	// 	if(step == 'clientHello'){
-	// 		for (var elt in $scope.splitted){
-	// 			// alert($scope.splitted[elt]);
-	// 			if($scope.data.adjust == $scope.splitted[elt]){
-	// 				$scope.clientHello[elt1].eltValue = $scope.splitted[elt] + ';';
-	// 				if($scope.clientHello[elt1].eltValue == '= 0x0303;'){
-	// 					$scope.tlsVersion[0] = 1.3;
-
-	// 				}
-	// 				else $scope.tlsVersion[0] = 1.2;
-	// 			}
-	// 		}
-	// 	}
-	// 	else if (step == 'serverHello'){
-	// 		for (var elt in $scope.splitted){
-	// 			if($scope.data.adjust == $scope.splitted[elt]){
-	// 				$scope.serverHello[elt1].eltValue = $scope.splitted[elt] + ';';
-	// 				if($scope.clientHello[elt1].eltValue == '= 0x0303'){
-	// 					$scope.tlsVersion[1] = 1.3;
-
-	// 				}
-	// 				else $scope.tlsVersion[1] = 1.2;
-	// 			}
-	// 		}
-	// 	}
-	// 	if($scope.tlsVersion[0] == 1.2)
-	// 		alert("Client with TLS prior than version 1.3! Not offered in this app");
-	// 	if($scope.tlsVersion[1] == 1.2)
-	// 		alert("Client with TLS prior than version 1.3! Not offered in this app");
-	// }
-
-
-	// $scope.checkRandom =function(){
-	// 	if($scope.tlsVersion[0]==1.3){
-	// 		if($scope.storeElt=='44 4F 57 4E 47 52 44 01')						
-	// 			alert("This value is left for the case where the client is TLS1.2 and the server is TLS1.3.");							
-	// 		if($scope.storeElt=='44 4F 57 4E 47 52 44 00')
-	// 			alert("This value is left for the case where the client is TLS1.1 or below and the server is TLS1.3 or TLS1.2.");
-	// 	}
-	// 	if($scope.tlsVersion[0]==1.2){
-	// 		if($scope.tlsVersion[1]==1.3 && $scope.storeElt!='44 4F 57 4E 47 52 44 01'){
-	// 			alert("When the Client is TLS1.2 and the server TLS1.3, the last 8 byte should be equal to '44 4F 57 4E 47 52 44 01'. Abort with an “illegal_parameter” alert.");
-	// 			alert("Downgrade Attack!!");
-	// 		}
-	// 		if($scope.tlsVersion[1]==1.2){ //1.2 or below
-	// 			if($scope.storeElt=='44 4F 57 4E 47 52 44 01')						
-	// 				alert("This value is left for the case where the client is TLS1.2 and the server is TLS1.3.");							
-	// 			if($scope.storeElt=='44 4F 57 4E 47 52 44 00')
-	// 				alert("This value is left for the case where the client is TLS1.1 or below and the server is TLS1.3 or TLS1.2.");
-	// 		}
-	// 	}
-	// 	if($scope.tlsVersion[0]==1.1){
-	// 		if($scope.tlsVersion[1]==1.3 || $scope.tlsVersion[1]==1.2){
-	// 			if($scope.storeElt!='44 4F 57 4E 47 52 44 00'){
-	// 				alert("When the Client is prior to TLS1.1 and the server TLS1.3 or TLS1.2, the last 8 byte should be equal to '44 4F 57 4E 47 52 44 00'. Abort with an “illegal_parameter” alert.");
-	// 				alert("Downgrade Attack!!");
-	// 			}
-	// 		}
-	// 	}
-	// }
 
 	
 
