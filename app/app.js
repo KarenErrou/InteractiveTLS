@@ -193,7 +193,8 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 
 	$scope.adjusting = false;
 	$scope.data = {adjust: 'test'};
-	
+	$scope.sigalgoClient = true;
+	$scope.sigalgoServer = true;
 	$scope.storeidStep;
 	$scope.storidField;
 	$scope.adjusted;
@@ -221,6 +222,36 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 	$scope.cipherSuitesServer= "TLS_AES_128_GCM_SHA256";
 	$scope.cipherSuitesHelloRetryRequest= "TLS_AES_128_GCM_SHA256";
 
+	$scope.signatureClient = {
+		"RSASSA-PKCS1-v15": true, 
+		"ECDSA": true,
+		"RSASSA-PSS RSAE": false,
+		"EdDSA": false, 
+		"RSASSA-PSS": false
+	}
+	$scope.signature_certClient = {
+		"RSASSA-PKCS1-v15": true, 
+		"ECDSA": true,
+		"RSASSA-PSS RSAE": false,
+		"EdDSA": false, 
+		"RSASSA-PSS": false
+	}
+
+	$scope.signatureServer = {
+		"RSASSA-PKCS1-v15": true, 
+		"ECDSA": true,
+		"RSASSA-PSS RSAE": false,
+		"EdDSA": false, 
+		"RSASSA-PSS": false
+	}
+	$scope.signature_certServer = {
+		"RSASSA-PKCS1-v15": true, 
+		"ECDSA": true,
+		"RSASSA-PSS RSAE": false,
+		"EdDSA": false, 
+		"RSASSA-PSS": false
+	}
+
 
 	$scope.ECDHEClient = {
 		"secp256r1(0x0017)": true, 
@@ -229,7 +260,6 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 		"x25519(0x001D)": false, 
 		"x448(0x001E)": false
 	}
-
 	$scope.DHEClient = {
 		"ffdhe2048(0x0100)": false, 	
 		"ffdhe3072(0x0101)": false, 
@@ -237,6 +267,7 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 		"ffdhe6144(0x0103)": false,
 		"ffdhe8192(0x0104)": false
 	}
+
 	$scope.ECDHEServer = {
 		"secp256r1(0x0017)": true, 
 		"secp384r1(0x0018)": true,
@@ -244,7 +275,6 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 		"x25519(0x001D)": false, 
 		"x448(0x001E)": false
 	}
-
 	$scope.DHEServer = {
 		"ffdhe2048(0x0100)": false, 	
 		"ffdhe3072(0x0101)": false, 
@@ -260,14 +290,13 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 		"X.509" : true,
 		"Additional certificate types" : true
 	};
-	$scope.clientCertServer= "X.509";
+	$scope.certServer = {client: "X.509", server: "X.509"} ;
 
 	$scope.serverCert = {
 		"RawPublicKey" : true,
 		"X.509" : true,
 		"Additional certificate types" : true
 	};
-	$scope.serverCertServer= "X.509";
 
 
 	$scope.showInfo = function (idStep, idField, LeftBoxType){ 
@@ -299,22 +328,26 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 			$scope.adjusting= true;
 			
 			$scope.supported_groups = [false,false];
+			$scope.checkboxsign_algo = [false,false];
+			$scope.checkboxsign_algo_cert = [false,false];
 			$scope.checkboxCipherSuites = false;
 			$scope.checkboxClientCert = false;
 			$scope.checkboxServerCert = false;
+			$scope.radioClientCertServer = false;	
+			$scope.radioServerCertServer = false;	
 			$scope.key_share = false;
+			$scope.checkbox = true;	
 			
 
 			if(idField.eltName == 'cipher_suites' && idStep == 'clientHello'){
-				$scope.checkbox = true;
 				$scope.checkboxCipherSuites = true;
 			}
 			else if (idField.eltName == 'Client_certificate_type' && idStep == 'chExtensions' ){
-				$scope.checkbox = true;	
+				// $scope.checkbox = true;	
 				$scope.checkboxClientCert = true;
 			}
 			else if (idField.eltName == 'Server_certificate_type' && idStep == 'chExtensions' ){
-				$scope.checkbox = true;	
+				// $scope.checkbox = true;	
 				$scope.checkboxServerCert = true;
 			}
 			else if (idField.eltName == 'supported_groups' && idStep == 'chExtensions' ){
@@ -326,9 +359,29 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 			else if (idField.eltName == 'key_share' && idStep == 'shExtensions' ){
 				$scope.key_share = true;	
 			}
+			else if (idField.eltName == 'signature_algorithms' && idStep == 'chExtensions' ){
+				$scope.checkboxsign_algo[0] = true;	
+			}
+			else if (idField.eltName == 'signature_algorithms' && idStep == 'certificateRequest' ){
+				$scope.checkboxsign_algo[1] = true;	
+			}
+			else if (idField.eltName == 'signature_algorithms_cert' && idStep == 'chExtensions' ){
+				$scope.checkboxsign_algo_cert[0] = true;	
+			}
+			else if (idField.eltName == 'signature_algorithms_cert' && idStep == 'certificateRequest' ){
+				$scope.checkboxsign_algo_cert[1] = true;	
+			}
 			else{
 				$scope.checkbox = false;
-			}			
+				if (idField.eltName == 'Client_certificate_type' && idStep == 'encryptedExtension' ){
+					$scope.radioClientCertServer = true;	
+				}
+				if (idField.eltName == 'Server_certificate_type' && idStep == 'encryptedExtension' ){
+					$scope.radioServerCertServer = true;	
+				}
+			}
+
+
 			if($scope.supported_groups[0] == true || $scope.supported_groups[1] == true || $scope.key_share == true){
 				if(idField.adjustM){$scope.adjustMessage = idField.adjustM;}
 				var str1 = idField.adjust1;
@@ -419,10 +472,39 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 				// $scope.shExtensions = $scope.shExtensions.filter(item => item.eltName !== $scope.storeidField.eltName);
 				$scope.updateNextSteps('encryptedExtension',$scope.storeidField.eltName,'deleted');
 			break;
+
+			case 'certificateRequest':
+				for (var elt1 in $scope.certificateRequest){
+    				if($scope.storeidField.eltName == $scope.certificateRequest[elt1].eltName){
+						$scope.certificateRequest[elt1].deleted = 'yes';
+					}
+				}
+				// $scope.shExtensions = $scope.shExtensions.filter(item => item.eltName !== $scope.storeidField.eltName);
+				$scope.updateNextSteps('certificateRequest',$scope.storeidField.eltName,'deleted');
+			break;
 			default:
 		}
 	};
-	
+
+	$scope.addAlert = function(title,description){
+		$scope.alreadyAvailable = false;
+		for(var alerts in $scope.alertsList){
+			if($scope.alertsList[alerts].title == title){
+				$scope.alreadyAvailable = true;
+			}
+		}
+		if($scope.alreadyAvailable == false){
+			$scope.alertsList.push({
+			    title:   title, 
+				description: description
+			});
+		}
+	}
+	$scope.removeAlert = function(title){
+		for(var alerts in $scope.alertsList){
+			$scope.alertsList.splice($scope.alertsList[alerts].title.indexOf(title),1);										
+		}
+	}
 
 	$scope.nowAdjust = function(){		
 		switch ($scope.storeidStep) {
@@ -437,28 +519,30 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 
 
 							case 'cipher_suites':
-							 	$scope.alreadyAvailable = false;
+							 	// $scope.alreadyAvailable = false;
 								if($scope.cipherSuitesClient[$scope.cipherSuitesServer] ==  false){
-									for(var alerts in $scope.alertsList){
-										if($scope.alertsList[alerts].title == "Cipher Suites"){
-											$scope.alreadyAvailable = true;
-										}
-									}
-									if($scope.alreadyAvailable == false){
-										$scope.alertsList.push({
-								    		title:   "Cipher Suites", step: 'clientHello',
-		    								description: $scope.cipherSuitesServer + " is selected in the server and wasn't offered by the client    !!  ABORT HANDSHAKE !! "
-										});
-									}
+									$scope.addAlert("Cipher Suites", $scope.cipherSuitesServer + " is selected in the server and wasn't offered by the client    !!  ABORT HANDSHAKE !! ")
+									// for(var alerts in $scope.alertsList){
+									// 	if($scope.alertsList[alerts].title == "Cipher Suites"){
+									// 		$scope.alreadyAvailable = true;
+									// 	}
+									// }
+									// if($scope.alreadyAvailable == false){
+									// 	$scope.alertsList.push({
+								 //    		title:   "Cipher Suites", step: 'clientHello',
+		    			// 					description: $scope.cipherSuitesServer + " is selected in the server and wasn't offered by the client    !!  ABORT HANDSHAKE !! "
+									// 	});
+									// }
 
 								}			
 
 								else if($scope.cipherSuitesClient[$scope.cipherSuitesServer] ==  true){
-									for(var alerts in $scope.alertsList){
-										$scope.alertsList.splice($scope.alertsList[alerts].title.indexOf("Cipher Suites"),1);										
-									}
+									$scope.removeAlert("Cipher Suites");
+									// for(var alerts in $scope.alertsList){
+									// 	$scope.alertsList.splice($scope.alertsList[alerts].title.indexOf("Cipher Suites"),1);										
+									// }
 								}
-								alreadyAvailable = false;
+								// alreadyAvailable = false;
 							break;		            		
 							default:
 		            	}
@@ -490,7 +574,7 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 
 							case 'Client_certificate_type':
 								$scope.alreadyAvailable = false;
-								if($scope.clientCert[$scope.clientCertServer] ==  false){
+								if($scope.clientCert[$scope.certServer.client] ==  false){
 									for(var alerts in $scope.alertsList){
 										if($scope.alertsList[alerts].title ==  "Client Certificate"){
 											$scope.alreadyAvailable = true;
@@ -499,13 +583,13 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 									if($scope.alreadyAvailable == false){
 										$scope.alertsList.push({
 								    		title:   "Client Certificate", step: 'chExtensions',
-		    								description: $scope.clientCertServer + " is selected in the server and wasn't offered by the client    !!  ABORT HANDSHAKE !! "
+		    								description: $scope.certServer.client + " is selected in the server and wasn't offered by the client    !!  ABORT HANDSHAKE !! "
 										});
 									}
 
 								}			
 
-								else if($scope.clientCert[$scope.clientCertServer] ==  true ){
+								else if($scope.clientCert[$scope.certServer.client] ==  true ){
 									for(var alerts in $scope.alertsList){
 										$scope.alertsList.splice($scope.alertsList[alerts].title.indexOf("Client Certificate"),1);										
 									}
@@ -523,7 +607,7 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 
 							case 'Server_certificate_type':
 								$scope.alreadyAvailable = false;
-								if($scope.serverCert[$scope.serverCertServer] ==  false){
+								if($scope.serverCert[$scope.certServer.server] ==  false){
 									for(var alerts in $scope.alertsList){
 										if($scope.alertsList[alerts].title == "Server Certificate"){
 											$scope.alreadyAvailable = true;
@@ -533,13 +617,13 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 									if($scope.alreadyAvailable == false){
 										$scope.alertsList.push({
 								    		title:   "Server Certificate", step: 'chExtensions',
-		    								description: $scope.serverCertServer + " is selected in the server and wasn't offered by the client    !!  ABORT HANDSHAKE !! "
+		    								description: $scope.certServer.server + " is selected in the server and wasn't offered by the client    !!  ABORT HANDSHAKE !! "
 										});
 									}
 
 								}			
 
-								else if($scope.serverCert[$scope.serverCertServer] ==  true ){
+								else if($scope.serverCert[$scope.certServer.server] ==  true ){
 									for(var alerts in $scope.alertsList){
 										$scope.alertsList.splice($scope.alertsList[alerts].title.indexOf("Server Certificate"),1);		
 									}
@@ -650,6 +734,7 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 										$scope.keyExMode = 5;
 									}else if($scope.keyExMode == 2 || $scope.keyExMode == 3){
 										$scope.keyExMode = 4;
+
 									}
 									$scope.alreadyAvailable = false;
 								}
@@ -833,10 +918,10 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
             		if($scope.storeidField.eltName == $scope.encryptedExtension[elt1].eltName){
             			switch ($scope.storeidField.eltName){
 			            	case 'Client_certificate_type':								
-								$scope.clientCertServer = $scope.data.adjust;
+								// $scope.clientCertServer = $scope.data.adjust;
 
 								$scope.alreadyAvailable = false;
-								if($scope.clientCert[$scope.data.adjust] ==  false){
+								if($scope.clientCert[$scope.certServer.client] ==  false){
 									for(var alerts in $scope.alertsList){
 										if($scope.alertsList[alerts].title == "Client Certificate"){
 											$scope.alreadyAvailable = true;
@@ -846,13 +931,13 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 									if($scope.alreadyAvailable == false){
 										$scope.alertsList.push({
 								    		title:   "Client Certificate", step: 'chExtensions',
-		    								description: $scope.clientCertServer + " is selected in the server and wasn't offered by the client    !!  ABORT HANDSHAKE !! "
+		    								description: $scope.certServer.client + " is selected in the server and wasn't offered by the client    !!  ABORT HANDSHAKE !! "
 										});
 									}
 
 								}			
 
-								else if($scope.clientCert[$scope.data.adjust] ==  true){
+								else if($scope.clientCert[$scope.certServer.client] ==  true){
 									for(var alerts in $scope.alertsList){
 										$scope.alertsList.splice($scope.alertsList[alerts].title.indexOf("Client Certificate"),1);		
 									}
@@ -862,10 +947,10 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 							break;	
 
 							case 'Server_certificate_type':
-								$scope.serverCertServer = $scope.data.adjust;
+								// $scope.serverCertServer = $scope.data.adjust;
 
 								$scope.alreadyAvailable = false;
-								if($scope.serverCert[$scope.data.adjust] ==  false){
+								if($scope.serverCert[$scope.certServer.server] ==  false){
 									for(var alerts in $scope.alertsList){
 										if($scope.alertsList[alerts].title == "Server Certificate"){
 											$scope.alreadyAvailable = true;
@@ -875,13 +960,13 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 									if($scope.alreadyAvailable == false){
 										$scope.alertsList.push({
 								    		title:   "Server Certificate", step: 'chExtensions',
-		    								description: $scope.serverCertServer + " is selected in the server and wasn't offered by the client    !!  ABORT HANDSHAKE !! "
+		    								description: $scope.certServer.server + " is selected in the server and wasn't offered by the client    !!  ABORT HANDSHAKE !! "
 										});
 									}
 
 								}			
 
-								else if($scope.serverCert[$scope.data.adjust] ==  true){
+								else if($scope.serverCert[$scope.certServer.server] ==  true){
 									for(var alerts in $scope.alertsList){
 										$scope.alertsList.splice($scope.alertsList[alerts].title.indexOf("Server Certificate"),1);		
 									}
@@ -933,10 +1018,7 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 		        			if($scope.chExtensions[elt2].eltName == 'key_share'){					
 								if($scope.chExtensions[elt2].deleted=="no"){
 									$scope.alreadyAvailable = false;
-
-
 									if($scope.storeidField.deleted == "yes"){
-									
 										for(var alerts in $scope.alertsList){
 											if($scope.alertsList[alerts].title == "Missing supported_groups extension"){
 												$scope.alreadyAvailable = true;													
@@ -950,6 +1032,27 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 										}
 										if($scope.keyExMode == 2 || $scope.keyExMode == 3 || $scope.keyExMode == 4 ){
 											$scope.keyExMode = 4; 
+											for(var alerts in $scope.alertsList){
+												$scope.alertsList.splice($scope.alertsList[alerts].title.indexOf("Add signature_algorithms extension"),1);	
+											}
+											for (var elt3 in $scope.chExtensions){
+												if($scope.chExtensions[elt3].eltName == 'signature_algorithms'){
+													$scope.alreadyAvailable = false;
+													if($scope.chExtensions[elt3].deleted=="no"){
+														for(var alerts in $scope.alertsList){
+															if($scope.alertsList[alerts].title == "Remove signature_algorithms extension"){
+																$scope.alreadyAvailable = true;													
+															}
+														}
+														if($scope.alreadyAvailable == false){
+															$scope.alertsList.push({
+										    					title:   "Remove signature_algorithms extension", step: 'chExtensions',
+							    								description: "Server authentication is not needed with PSK key exchange mode."
+															});
+														}	
+													}
+												}
+											}
 										}
 										else {
 											$scope.keyExMode = 5;
@@ -973,8 +1076,29 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 										 		$scope.keyExMode = 1;
 										 	}
 										}
+										for(var alerts in $scope.alertsList){
+											$scope.alertsList.splice($scope.alertsList[alerts].title.indexOf("Remove signature_algorithms extension"),1);	
+										}
+										for (var elt3 in $scope.chExtensions){
+											if($scope.chExtensions[elt3].eltName == 'signature_algorithms'){
+												$scope.alreadyAvailable = false;
+												if($scope.chExtensions[elt3].deleted=="yes"){
+													for(var alerts in $scope.alertsList){
+														if($scope.alertsList[alerts].title == "Add signature_algorithms extension"){
+															$scope.alreadyAvailable = true;													
+														}
+													}
+													if($scope.alreadyAvailable == false){
+														$scope.alertsList.push({
+												    		title:   "Add signature_algorithms extension", step: 'chExtensions',
+						    								description: "When (EC)DHE key exchange mode is used, the client must request authentication from the server by including the signature_algorithms extension."
+														});
+													}
+												}
+											}
+										}
+										$scope.alreadyAvailable = false;
 									}
-									$scope.alreadyAvailable = false;
 									
 								}
 								else if($scope.chExtensions[elt2].deleted=="yes"){
@@ -1002,17 +1126,14 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 									}
 									$scope.alreadyAvailable = false;
 								}
-							}
-							// else if($scope.chExtensions[elt2].eltName == 'pre_shared_keys'){
+							}							
+						}
+						// else if($scope.chExtensions[elt2].eltName == 'pre_shared_keys'){
 							// 	if($scope.chExtensions[elt2].deleted=="yes"){
 							// 		alert("Supported groups is not available. PSK must be supported.");
 							// 		alert("missing extension");
 							// 	}
 							// }
-						}
-
-						
-
 					break;			
 
 					case 'key_share':
@@ -1335,6 +1456,27 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 											$scope.alertsList.splice($scope.alertsList[alerts].title.indexOf("Missing extensions"),1);	
 										}
 										$scope.keyExMode = 0;
+										for(var alerts in $scope.alertsList){
+											$scope.alertsList.splice($scope.alertsList[alerts].title.indexOf("Remove signature_algorithms extension"),1);	
+										}
+										for (var elt3 in $scope.chExtensions){
+											if($scope.chExtensions[elt3].eltName == 'signature_algorithms'){
+												$scope.alreadyAvailable = false;
+												if($scope.chExtensions[elt3].deleted=="yes"){
+													for(var alerts in $scope.alertsList){
+														if($scope.alertsList[alerts].title == "Add signature_algorithms extension"){
+															$scope.alreadyAvailable = true;													
+														}
+													}
+													if($scope.alreadyAvailable == false){
+														$scope.alertsList.push({
+												    		title:   "Add signature_algorithms extension", step: 'chExtensions',
+						    								description: "When (EC)DHE key exchange mode is used, the client must request authentication from the server by including the signature_algorithms extension."
+														});
+													}
+												}
+											}
+										}
 									}
 									$scope.alreadyAvailable = false;
 								}
@@ -1371,10 +1513,77 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 												if($scope.shExtensions[elt2].deleted == 'no'){
 													if($scope.keyExMode == 0){
 														$scope.keyExMode = 2;
+														for(var alerts in $scope.alertsList){
+															$scope.alertsList.splice($scope.alertsList[alerts].title.indexOf("Remove signature_algorithms extension"),1);	
+														}
+														for (var elt3 in $scope.chExtensions){
+															if($scope.chExtensions[elt3].eltName == 'signature_algorithms'){
+																$scope.alreadyAvailable = false;
+																if($scope.chExtensions[elt3].deleted=="yes"){
+																	for(var alerts in $scope.alertsList){
+																		if($scope.alertsList[alerts].title == "Add signature_algorithms extension"){
+																			$scope.alreadyAvailable = true;													
+																		}
+																	}
+																	if($scope.alreadyAvailable == false){
+																		$scope.alertsList.push({
+																    		title:   "Add signature_algorithms extension", step: 'chExtensions',
+										    								description: "When (EC)DHE key exchange mode is used, the client must request authentication from the server by including the signature_algorithms extension."
+																		});
+																	}
+																}
+															}
+														}
+
 													} else if($scope.keyExMode == 0){
 														$scope.keyExMode = 0;
+
+														for(var alerts in $scope.alertsList){
+															$scope.alertsList.splice($scope.alertsList[alerts].title.indexOf("Remove signature_algorithms extension"),1);	
+														}
+														for (var elt3 in $scope.chExtensions){
+															if($scope.chExtensions[elt3].eltName == 'signature_algorithms'){
+																$scope.alreadyAvailable = false;
+																if($scope.chExtensions[elt3].deleted=="yes"){
+																	for(var alerts in $scope.alertsList){
+																		if($scope.alertsList[alerts].title == "Add signature_algorithms extension"){
+																			$scope.alreadyAvailable = true;	
+																		}												
+																	}
+																	if($scope.alreadyAvailable == false){
+																		$scope.alertsList.push({
+																    		title:   "Add signature_algorithms extension", step: 'chExtensions',
+										    								description: "When (EC)DHE key exchange mode is used, the client must request authentication from the server by including the signature_algorithms extension."
+																		});
+																	}
+																}
+															}
+														}
 													} else if ($scope.keyExMode == 5){
 														$scope.keyExMode = 4;
+
+														for(var alerts in $scope.alertsList){
+															$scope.alertsList.splice($scope.alertsList[alerts].title.indexOf("Add signature_algorithms extension"),1);	
+														}
+														for (var elt3 in $scope.chExtensions){
+															if($scope.chExtensions[elt3].eltName == 'signature_algorithms'){
+																$scope.alreadyAvailable = false;
+																if($scope.chExtensions[elt3].deleted=="no"){
+																	for(var alerts in $scope.alertsList){
+																		if($scope.alertsList[alerts].title == "Remove signature_algorithms extension"){
+																			$scope.alreadyAvailable = true;													
+																		}
+																	}
+																	if($scope.alreadyAvailable == false){
+																		$scope.alertsList.push({
+													    					title:   "Remove signature_algorithms extension", step: 'chExtensions',
+										    								description: "Server authentication is not needed with PSK key exchange mode."
+																		});
+																	}	
+																}
+
+															}
+														}
 													}
 												}
 											}
@@ -1428,7 +1637,83 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 								}
 							}
 						}
-						break;
+					break;
+					case 'signature_algorithms_cert':
+						if (type == 'deleted'){
+							for (var elt1 in $scope.chExtensions){
+								if($scope.chExtensions[elt1].eltName == 'signature_algorithms'){
+									$scope.alreadyAvailable = false;
+									if($scope.chExtensions[elt1].deleted=="yes" && ($scope.keyExMode == 0 || $scope.keyExMode==1)){
+										for(var alerts in $scope.alertsList){
+											if($scope.alertsList[alerts].title == "Add signature_algorithms extension"){
+												$scope.alreadyAvailable = true;													
+											}
+										}
+										if($scope.alreadyAvailable == false){
+											$scope.alertsList.push({
+									    		title:   "Add signature_algorithms extension", step: 'chExtensions',
+			    								description: "When (EC)DHE key exchange mode is used, the client must request authentication from the server by including the signature_algorithms extension."
+											});
+										}
+									}		
+									else if($scope.chExtensions[elt1].deleted=="no" && ($scope.keyExMode == 0 || $scope.keyExMode==1)){
+										for(var alerts in $scope.alertsList){
+											$scope.alertsList.splice($scope.alertsList[alerts].title.indexOf("Add signature_algorithms extension"),1);	
+										}
+										$scope.explainAlert = "When <i>signature_algorithms_cert</i> is not given, then <i>signature_algorithms</i> also applies to signatures in the certificateVerify message.";
+									}
+									$scope.alreadyAvailable = false;
+								}
+							}
+						}
+					break;
+					case 'signature_algorithms':
+						if (type == 'deleted'){
+							$scope.sigalgoClient = false;
+							$scope.alreadyAvailable = false;
+							if($scope.keyExMode == 0 || $scope.keyExMode==1){
+								for(var alerts in $scope.alertsList){
+									if($scope.alertsList[alerts].title == "Add signature_algorithms extension"){
+										$scope.alreadyAvailable = true;													
+									}
+								}
+								if($scope.alreadyAvailable == false){
+									$scope.alertsList.push({
+							    		title:   "Add signature_algorithms extension", step: 'chExtensions',
+	    								description: "When (EC)DHE key exchange mode is used, the client must request authentication from the server by including the signature_algorithms extension."
+									});
+								}
+							}		
+							else if($scope.keyExMode == 4){
+								for(var alerts in $scope.alertsList){
+									$scope.alertsList.splice($scope.alertsList[alerts].title.indexOf("Remove signature_algorithms extension"),1);	
+								}
+							}
+							$scope.alreadyAvailable = false;
+						}
+						else{
+							$scope.sigalgoClient = true;
+
+							$scope.alreadyAvailable = false;
+							if($scope.keyExMode == 4){
+								for(var alerts in $scope.alertsList){
+									if($scope.alertsList[alerts].title == "Remove signature_algorithms extension"){
+										$scope.alreadyAvailable = true;													
+									}
+								}
+								if($scope.alreadyAvailable == false){
+									$scope.alertsList.push({
+							    		title:   "Remove signature_algorithms extension", step: 'chExtensions',
+	    								description: "Server authentication is not needed with PSK key exchange mode."
+									});
+								}		
+							} else if($scope.keyExMode != 5){
+								for(var alerts in $scope.alertsList){
+									$scope.alertsList.splice($scope.alertsList[alerts].title.indexOf("Add signature_algorithms extension"),1);	
+								}
+							}
+						}
+					break;
 					default:
 				}
 				
@@ -1455,8 +1740,23 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 						if(type == 'deleted'){
 							if($scope.keyExMode == 0 || $scope.keyExMode == 1){
 								$scope.keyExMode = 5;
+								for(var alerts in $scope.alertsList){
+									if($scope.alertsList[alerts].title == "Missing extensions ServerHello"){
+										$scope.alreadyAvailable = true;													
+									}
+								}
+								if($scope.alreadyAvailable == false){
+									$scope.alertsList.push({
+							    		title:   "Missing extensions ServerHello", step: 'chExtensions',
+	    								description: "Either add key_share extensions for (EC)DHE or pre_shared_keys for PSK mode   !! missing extension !!"
+									});
+								}
+
 							} else if($scope.keyExMode == 2 || $scope.keyExMode == 3){
 								$scope.keyExMode = 4;
+								for(var alerts in $scope.alertsList){
+									$scope.alertsList.splice($scope.alertsList[alerts].title.indexOf("Missing extensions ServerHello"),1);	
+								}
 							}
 						}
 						else{
@@ -1473,6 +1773,9 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 									$scope.keyExMode = 3;
 								}
 							}
+							for(var alerts in $scope.alertsList){
+								$scope.alertsList.splice($scope.alertsList[alerts].title.indexOf("Missing extensions ServerHello"),1);	
+							}
 						}
 					break;
 
@@ -1488,7 +1791,8 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 
 
 					case 'pre_shared_keys':
-						if(type == 'deleted'){							for (var elt1 in $scope.shExtensions){
+						if(type == 'deleted'){							
+							for (var elt1 in $scope.shExtensions){
 								if($scope.shExtensions[elt1].eltName == 'key_share'){
 									$scope.alreadyAvailable = false;
 									if($scope.shExtensions[elt1].deleted == 'yes'){
@@ -1645,6 +1949,24 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 						}
 					}
 				}
+
+				switch(fieldUpdated){
+
+					case 'signature_algorithms':
+						if(type == 'deleted'){
+							$scope.sigalgoServer = false;
+						}
+						else{
+							$scope.sigalgoServer = true;
+						}
+					break;
+
+					case 'signature_algorithms_cert':
+						if(type == 'deleted'){
+							$scope.explainAlert = "When <i>signature_algorithms_cert</i> is not given, then <i>signature_algorithms</i> also applies to signatures in the certificateVerify message.";
+						}
+					break;
+				}
 			break;
 
 			default:
@@ -1722,6 +2044,14 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
  		},
  		{eltType: '', delete: 'yes', adjustment:'no', eltName: 'post_handshake_auth', eltValue: ';', deleted:'yes',
  		info: 'When this extension is sent by the client, then it indicates that he is willing to perform post-handshake authentication. When this extension is missing, servers should not send a post-handshake CertificateRequest. This extension value should be of zero length.'
+ 		},
+ 		{eltType: '', delete: 'yes', adjustment:'yes', eltName: 'signature_algorithms', eltValue: ';', deleted:'no',
+ 		info: '<p>Indicating  what  algorithms  can  be  used  in  digital  signatures  appearing  in the server certificates message</p> <p>When signature_algorithms_cert extension is not given, then signature_algorithms also applies to signatures in certificateVerify.</p>',
+ 		adjust: 'RSASSA-PKCS1-v15;ECDSA;RSASSA-PSS  RSAE;EdDSA;RSASSA-PSS',
+ 		},
+ 		{eltType: '', delete: 'yes', adjustment:'yes', eltName: 'signature_algorithms_cert', eltValue: ';', deleted:'no',
+ 		info: '<p>Indicating  what  algorithms  can  be  used  in  digital  signatures  appearing  in the server certificateVerify message</p> ',
+ 		adjust: 'RSASSA-PKCS1-v15;ECDSA;RSASSA-PSS  RSAE;EdDSA;RSASSA-PSS',
  		},
 		{eltType: '', delete: 'yes', adjustment:'yes', eltName: 'psk_key_exchange_modes', eltValue: '= psk_dhe_ke;', deleted:'yes',
  		info: '<p> When PSK is selected, the client must include in its clientHello this extension that indicates the key exchange modes that can be used with PSKs </p>',
@@ -1862,6 +2192,13 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
  		},
  		{eltType: '', delete: 'yes', adjustment:'no', eltName: 'Certificate Authorities', eltValue: ';', deleted:'yes',
  		info: 'In  this  extension  the  server  may  indicate the certificate authorities (CAs) that he supports.  The data of thisfield is a list of distinguished names of CAs.'
+ 		},{eltType: '', delete: 'yes', adjustment:'yes', eltName: 'signature_algorithms', eltValue: ';', deleted:'no',
+ 		info: '<p>Indicating  what  algorithms  can  be  used  in  digital  signatures  appearing  in the client certificates message</p> <p>When signature_algorithms_cert extension is not given, then signature_algorithms also applies to signatures in certificateVerify.</p>',
+ 		adjust: 'RSASSA-PKCS1-v15;ECDSA;RSASSA-PSS  RSAE;EdDSA;RSASSA-PSS',
+ 		},
+ 		{eltType: '', delete: 'yes', adjustment:'yes', eltName: 'signature_algorithms_cert', eltValue: ';', deleted:'no',
+ 		info: '<p>Indicating  what  algorithms  can  be  used  in  digital  signatures  appearing  in the client certificateVerify message</p> ',
+ 		adjust: 'RSASSA-PKCS1-v15;ECDSA;RSASSA-PSS  RSAE;EdDSA;RSASSA-PSS',
  		}
  	];
 

@@ -14,9 +14,21 @@
         <form >
             <span ng-repeat="n in splitted" ng-if='supported_groups[0]== false && supported_groups[1]== false && key_share== false'>
                 <label ng-if='checkbox == false'>
-                    <input  type="radio"  ng-model="data.adjust" value="{{n}}" ng-change='nowAdjust()'>
-                    {{n}}
-                    </br>
+                    <span ng-if='radioClientCertServer == true'>
+                        <input  type="radio" ng-model="certServer.client" value="{{n}}" ng-change='nowAdjust()'>
+                        {{n}}
+                        </br>
+                    </span>
+                    <span ng-if='radioServerCertServer == true'>
+                        <input  type="radio" ng-model="certServer.server" value="{{n}}" ng-change='nowAdjust()'>
+                        {{n}}
+                        </br>
+                    </span>
+                     <span ng-if='radioServerCertServer == false && radioClientCertServer == false'>
+                        <input  type="radio" ng-model="data.adjust" value="{{n}}" ng-change='nowAdjust()'>
+                        {{n}}
+                        </br>
+                    </span>
                 </label>
                 <label ng-if='checkbox == true' >
                     <span ng-if='checkboxCipherSuites == true'>
@@ -31,9 +43,28 @@
                         <input  type="checkbox"  ng-model="serverCert[n]" ng-change='nowAdjust()'>
                         {{n}}
                     </span>
+                    <span ng-if='checkboxsign_algo[0] == true'>
+                        <input  type="checkbox"  ng-model="signatureClient[n]" ng-change='nowAdjust()'>
+                        {{n}}
+                    </span>
+                    <span ng-if='checkboxsign_algo_cert[0] == true'>
+                        <input  type="checkbox"  ng-model="signature_certClient[n]" ng-change='nowAdjust()'>
+                        {{n}}
+                    </span>
+                     <span ng-if='checkboxsign_algo[1] == true'>
+                        <input  type="checkbox"  ng-model="signatureServer[n]" ng-change='nowAdjust()'>
+                        {{n}}
+                    </span>
+                    <span ng-if='checkboxsign_algo_cert[1] == true'>
+                        <input  type="checkbox"  ng-model="signature_certServer[n]" ng-change='nowAdjust()'>
+                        {{n}}
+                    </span>
                     <br/>  
                 </label>
             </span>
+
+
+
 
             <span ng-if='supported_groups[0]== true && key_share== false||supported_groups[1]== true && key_share== false'>
                 <p><b>Elliptic Curve Groups (ECDHE):</b></p>

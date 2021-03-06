@@ -1,7 +1,7 @@
 <div class="content">
     <div class="row">
         
-        <div class="col-lg-3 col-lg-3 col-lg-3" >
+        <div class="col-lg-3 col-md-3 col-sm-3" >
           
         </div>
 
@@ -25,11 +25,12 @@
     </div>
 
     <div class="row">
-        <div class="col-lg-3 col-lg-3 col-lg-3" >
-            <div ng-include="'views/leftBox.html'"></div>
+        <div class="col-lg-3 col-md-3 col-sm-3 " >
+            <div ng-include="'views/leftBox.html'" class="sticky-top"></div>
         </div>
 
-        <div class="col-lg-6 col-lg-6 col-lg-6">
+
+        <div class="col-lg-6 col-lg-6 col-lg-6 ">
             <div class="peers">
                     <div class="peerP1">Client</div>
                     <div class="peerP2">Server</div>
@@ -49,7 +50,7 @@
                 
        
         <div class="col-lg-3 col-lg-3 col-lg-3">
-            <div ng-if="error == true">
+            <div ng-if="error == true" class="sticky-top"  style="padding-top:1%">
                 <span ng-repeat="alerts in alertsList"  on-click="showAlert()">
                     <div class="threadAlert">
                         <div style="font-size:24px;">Alert!</div>
@@ -59,7 +60,7 @@
                 </span> 
             </div><br/>
 
-            <div ng-if="explainAlert != empty">
+            <div ng-if="explainAlert != empty" class="sticky-top" style="padding-top:1%"> 
                 <div class="explainAlert">
                     <div style="font-size:24px;">Explanation:</div><br/>
                     <div ng-bind-html="explainAlert"  >

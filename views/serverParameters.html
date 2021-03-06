@@ -19,6 +19,7 @@
         <div ng-if="keyExchange[0] == 'helloRetryRequest'" class="circleServer" ng-model="step" id="serverParameters"> 5</div> 
         <div ng-if="keyExchange[0] == 'serverHello'" class="circleServer" ng-model="step" id="serverParameters"> 3</div>
         <h3>Encrypted Extension</h3>
+        <p> (This message is encrypted) </p> <br/>
         <span ng-repeat="n in encryptedExtension" ng-if="n.deleted=='no'">
             <div style="display: inline-block;">
                 {{n.eltType}}  {{n.eltName}} {{n.eltValue}}
@@ -81,7 +82,7 @@
         <div class="circleServer" ng-if="keyExchange[0] == 'helloRetryRequest'" ng-model="step" id="serverParameters"> 6</div> 
         <div class="circleServer" ng-if="keyExchange[0] == 'serverHello'" ng-model="step" id="serverParameters"> 4</div> 
         <h3>Certificate Request</h3>
-        
+        <p> (This message is encrypted) </p> <br/>
         <span ng-repeat="n in certificateRequest">
             <div ng-if="n.eltName == 'certificate_request_context'">
                 <div style="display: inline-block;">
