@@ -226,17 +226,17 @@
         <div ng-if="keyExchange[0] == 'serverHello'" class="circleClient" ng-model="step" id="authentication"> 9</div> 
         <h3>Certificate Verify</h3>
         <p> (This message is encrypted) </p> <br/>
-        <span ng-repeat="n in certificateVerifClient" ng-if="n.deleted=='no'">
+        <span ng-repeat="n in certificateVerifyClient" ng-if="n.deleted=='no'">
             <div style="display: inline-block;">
                 {{n.eltType}}  {{n.eltName}} {{n.eltValue}}
-                <div ng-if="n.delete == 'yes'" class="deleteButton" ng-click="showInfo('certificateVerifClient', n, 'delete')">x</div>
-                <div ng-if="n.adjustment == 'yes'" class="adjustButton" ng-click="showInfo('certificateVerifClient', n, 'adjust')">+</div>
-                <div class="infoButton" ng-click="showInfo('certificateVerifClient', n, 'info')">i</div>
+                <div ng-if="n.delete == 'yes'" class="deleteButton" ng-click="showInfo('certificateVerifyClient', n, 'delete')">x</div>
+                <div ng-if="n.adjustment == 'yes'" class="adjustButton" ng-click="showInfo('certificateVerifyClient', n, 'adjust')">+</div>
+                <div class="infoButton" ng-click="showInfo('certificateVerifyClient', n, 'info')">i</div>
             </div>
             </br>        
         </span>
 
-        <button ng-if="addList[10] == false || listAdd.length ==0" style="background-color: green; color:white;" ng-click="add('certificateVerifClient',10)">
+        <button ng-if="addList[10] == false || listAdd.length ==0" style="background-color: green; color:white;" ng-click="add('certificateVerifyClient',10)">
             Add
         </button>
         <div ng-if="addList[10] == true && listAdd.length==0">
@@ -250,7 +250,7 @@
             </input>
             <br/>
             </span>
-            <button style="background-color: green; color:white;" ng-click="addAdjust('certificateVerifClient')">
+            <button style="background-color: green; color:white;" ng-click="addAdjust('certificateVerifyClient')">
                 Adjust
             </button>
         </form></br>  
