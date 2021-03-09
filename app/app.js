@@ -22,7 +22,6 @@ myTLSApp.config(['$routeProvider', function($routeProvider){
 
 }]);
 
-// myTLSApp.controller('KEController', ['$scope', '$http', function($scope, $http){}]);
 myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http){
 	$scope.error = true;
 	$scope.step = 1.0;
@@ -486,7 +485,7 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 		}
 	};
 
-	$scope.addAlert = function(title,description){
+	$scope.addAlert = function(title,description, type){
 		$scope.alreadyAvailable = false;
 		for(var alerts in $scope.alertsList){
 			if($scope.alertsList[alerts].title == title){
@@ -495,7 +494,7 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 		}
 		if($scope.alreadyAvailable == false){
 			$scope.alertsList.push({
-			    title:   title, 
+			    title:   title, type: "Integrity",
 				description: description
 			});
 		}
@@ -515,7 +514,7 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 
 							case 'cipher_suites':
 								if($scope.cipherSuitesClient[$scope.cipherSuitesServer] ==  false){
-									$scope.addAlert("Cipher Suites", $scope.cipherSuitesServer + " is selected in the server and wasn't offered by the client    !!  ABORT HANDSHAKE !! ")
+									$scope.addAlert("Cipher Suites", $scope.cipherSuitesServer + " is selected in the server and wasn't offered by the client    !!  ABORT HANDSHAKE !! ");
 								}			
 
 								else if($scope.cipherSuitesClient[$scope.cipherSuitesServer] ==  true){

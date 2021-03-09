@@ -6,7 +6,7 @@
         </div>
 
         <div class="col-lg-6 col-lg-6 col-lg-6">
-            <div id="mode"  >  
+            <div id="mode" >  
                 Current key exchange mode: 
                 <span ng-if="keyExMode == 0">ECDHE</span>
                 <span ng-if="keyExMode == 1">DHE</span>
@@ -50,17 +50,17 @@
                 
        
         <div class="col-lg-3 col-lg-3 col-lg-3">
-            <div ng-if="error == true" class="sticky-top"  style="padding-top:1%">
+            <div id="alertClass" ng-if="error == true" class="sticky-top"  style="padding-top:1%">
                 <span ng-repeat="alerts in alertsList"  on-click="showAlert()">
                     <div class="threadAlert">
-                        <div style="font-size:24px;">Alert!</div>
-                        <div style="font-size:24px;">{{alerts.title}}</div><br/>
+                        <div style="font-size:24px;">Alert</div>
+                        <div style="font-size:22px;">{{alerts.title}}</div><br/>
                         {{alerts.description}}
                     </div>
                 </span> 
             </div><br/>
 
-            <div ng-if="explainAlert != empty" class="sticky-top" style="padding-top:1%"> 
+            <div ng-if="explainAlert != empty" style="padding-top:1%"> 
                 <div class="explainAlert">
                     <div style="font-size:24px;">Explanation:</div><br/>
                     <div ng-bind-html="explainAlert"  >

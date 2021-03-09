@@ -19,6 +19,7 @@
         <div  ng-if="keyExchange[0] == 'serverHello'" class="circleServer" ng-model="step" id="authentication"> 5</div> 
         <h3>Certificate </h3>
         <p> (This message is encrypted) </p> <br/>
+        <span id="repeat">
         <span ng-repeat="n in certificate" ng-if="n.deleted=='no'">
             <div style="display: inline-block;">
                 {{n.eltType}}  {{n.eltName}} {{n.eltValue}}
@@ -28,25 +29,27 @@
             </div>
             </br>        
         </span>
-
-        <button ng-if="addList[6] == false || listAdd.length ==0" style="background-color: green; color:white;" ng-click="add('certificate',6)">
+        </span>
+        <button ng-if="addList[6] == false || listAdd.length ==0" id="addButton" ng-click="add('certificate',6)">
             Add
         </button>
         <div ng-if="addList[6] == true && listAdd.length==0">
             Nothing to add 
         </div>
-
-        <form ng-if="addList[6] == true && listAdd.length >0">
+        <div  id="adjustForm" ng-if="addList[6] == true && listAdd.length >0"> 
+        <form >
             <span ng-repeat="(m,n) in listAdd">
             <input type="checkbox"  ng-model="listAddSelect[n]" >
                 {{n}}
             </input>
             <br/>
             </span>
-            <button style="background-color: green; color:white;" ng-click="addAdjust('certificate')">
+            <button style="background-color: green; color:white; margin-top:5px;" ng-click="addAdjust('certificate')">
                 Adjust
             </button>
-        </form></br>  
+        </form>
+        </div>
+        </br>  
         <button ng-show='step == 6' ng-click="incrementStep(step,'normal')" id="authenticationButton">
             Next Step
         </button>
@@ -75,6 +78,7 @@
         <div ng-if="keyExchange[0] == 'serverHello'" class="circleServer" ng-model="step" id="authentication"> 6</div> 
         <h3>Certificate Verify</h3>
         <p> (This message is encrypted) </p> <br/>
+        <span id="repeat">
         <span ng-repeat="n in certificateVerify" ng-if="n.deleted=='no'">
             <div style="display: inline-block;">
                 {{n.eltType}}  {{n.eltName}} {{n.eltValue}}
@@ -84,25 +88,26 @@
             </div>
             </br>        
         </span>
-
-        <button ng-if="addList[7] == false || listAdd.length ==0" style="background-color: green; color:white;" ng-click="add('certificateVerify',7)">
+        </span>
+        <button ng-if="addList[7] == false || listAdd.length ==0" id="addButton" ng-click="add('certificateVerify',7)">
             Add
         </button>
         <div ng-if="addList[7] == true && listAdd.length==0">
             Nothing to add 
         </div>
-
-        <form ng-if="addList[7] == true && listAdd.length >0">
+        <div  id="adjustForm" ng-if="addList[7] == true && listAdd.length >0"> 
+        <form >
             <span ng-repeat="(m,n) in listAdd">
             <input type="checkbox"  ng-model="listAddSelect[n]" >
                 {{n}}
             </input>
             <br/>
             </span>
-            <button style="background-color: green; color:white;" ng-click="addAdjust('certificateVerify')">
+            <button style="background-color: green; color:white; margin-top:5px;" ng-click="addAdjust('certificateVerify')">
                 Adjust
             </button>
-        </form></br>  
+        </form>
+        </div></br>  
         <button ng-show='step == 7' ng-click="incrementStep(step,'normal')" id="authenticationButton">
             Next Step
         </button>
@@ -170,6 +175,7 @@
         <div  ng-if="keyExchange[0] == 'serverHello'" class="circleClient" ng-model="step" id="authentication"> 5</div> 
         <h3>Certificate </h3>
         <p> (This message is encrypted) </p> <br/>
+        <span id="repeat">
         <span ng-repeat="n in certificateClient" ng-if="n.deleted=='no'">
             <div style="display: inline-block;">
                 {{n.eltType}}  {{n.eltName}} {{n.eltValue}}
@@ -179,25 +185,26 @@
             </div>
             </br>        
         </span>
-
-        <button ng-if="addList[9] == false || listAdd.length ==0" style="background-color: green; color:white;" ng-click="add('certificateClient',9)">
+        </span>
+        <button ng-if="addList[9] == false || listAdd.length ==0" id="addButton" ng-click="add('certificateClient',9)">
             Add
         </button>
         <div ng-if="addList[9] == true && listAdd.length==0">
             Nothing to add 
         </div>
-
-        <form ng-if="addList[9] == true && listAdd.length >0">
+        <div  id="adjustForm" ng-if="addList[9] == true && listAdd.length >0"> 
+        <form >
             <span ng-repeat="(m,n) in listAdd">
             <input type="checkbox"  ng-model="listAddSelect[n]" >
                 {{n}}
             </input>
             <br/>
             </span>
-            <button style="background-color: green; color:white;" ng-click="addAdjust('certificateClient')">
+            <button style="background-color: green; color:white; margin-top:5px;" ng-click="addAdjust('certificateClient')">
                 Adjust
             </button>
-        </form></br>  
+        </form>
+        </div></br>  
         <button ng-show='step == 9' ng-click="incrementStep(step,'normal')" id="authenticationButton">
             Next Step
         </button>
@@ -226,6 +233,7 @@
         <div ng-if="keyExchange[0] == 'serverHello'" class="circleClient" ng-model="step" id="authentication"> 9</div> 
         <h3>Certificate Verify</h3>
         <p> (This message is encrypted) </p> <br/>
+        <span id="repeat">
         <span ng-repeat="n in certificateVerifyClient" ng-if="n.deleted=='no'">
             <div style="display: inline-block;">
                 {{n.eltType}}  {{n.eltName}} {{n.eltValue}}
@@ -235,25 +243,26 @@
             </div>
             </br>        
         </span>
-
-        <button ng-if="addList[10] == false || listAdd.length ==0" style="background-color: green; color:white;" ng-click="add('certificateVerifyClient',10)">
+        </span>
+        <button ng-if="addList[10] == false || listAdd.length ==0" id="addButton" ng-click="add('certificateVerifyClient',10)">
             Add
         </button>
         <div ng-if="addList[10] == true && listAdd.length==0">
             Nothing to add 
         </div>
-
-        <form ng-if="addList[10] == true && listAdd.length >0">
+        <div  id="adjustForm" ng-if="addList[10] == true && listAdd.length >0"> 
+        <form >
             <span ng-repeat="(m,n) in listAdd">
             <input type="checkbox"  ng-model="listAddSelect[n]" >
                 {{n}}
             </input>
             <br/>
             </span>
-            <button style="background-color: green; color:white;" ng-click="addAdjust('certificateVerifyClient')">
+            <button style="background-color: green; color:white; margin-top:5px;" ng-click="addAdjust('certificateVerifyClient')">
                 Adjust
             </button>
-        </form></br>  
+        </form>
+        </div></br>  
         <button ng-show='step == 10' ng-click="incrementStep(step,'normal')" id="authenticationButton">
             Next Step
         </button>
