@@ -85,15 +85,47 @@ main{
   border-radius: 10%;
 }
 
+.peerP3{
+  display: inline-block;
+  padding: 10px;
+  margin-right:46%;
+  border: 2px solid;
+  text-align: center;
+  font-size:25px;
+  position: absolute;
+  right:0;
+  border-color: red; 
+  text-align: center;
+  background-color: #ffffff;
+  z-index: 15;
+  border-radius: 10%;
+}
+
+
 
 .lignP1 {
-  position: sticky;
+  position: relative;
   border: 3px solid;
   border-width: 0 3px 0 3px;
-  height: 100%;
+  /*height: 100%;*/
   border-color: #2471A3;
   padding-top: 100px;
-  
+  /*height:100%;*/
+}
+
+
+.lignP3{  
+  border: 3px solid;
+    width: 50%;
+    position: inherit;
+    border-width: 0 3px 0 0px;
+    height: 100%;
+    border-color: red;
+    top: 0px;
+  }
+
+#attacker{
+  border-color: red !important;
 }
 
 .keyExchange{
@@ -199,6 +231,10 @@ main{
   text-align: left;
 }
 
+.stepAttackerR{
+  position:relative;
+}
+
 #keyExchange{
   border-color: #99ace6;
 }
@@ -258,6 +294,18 @@ main{
   display: inline-block;
 }
 
+.stepAttackerRContent{
+  position: absolute;
+  border: 3px solid;
+  margin-right: 10px;
+  border-radius: 5%;
+  margin-left: 10px;
+  right:100%;
+  padding: 18px;
+  padding-top: 0px;
+  font-size:16px;
+  display: inline-block;
+}
 
 .stepServer{
   position:relative;

@@ -34,7 +34,7 @@
         </br>  
        
 
-        <button ng-if="addList[4] == false || listAdd.length ==0" id="addButton" ng-click="add('encryptedExtension',4)">
+        <button ng-if="addList[4] == false || listAdd.length ==0" id="addButton" ng-click="add(encryptedExtension,4)">
             Add
         </button>
         <div ng-if="addList[4] == true && listAdd.length==0">
@@ -43,12 +43,12 @@
         <div  id="adjustForm" ng-if="addList[4] == true && listAdd.length >0"> 
         <form>
             <span ng-repeat="(m,n) in listAdd">
-            <input type="checkbox"  ng-model="listAddSelect[n]" >
-                {{n}}
+            <input type="radio"  ng-model="data.add" value="{{n}}">
+                    {{n}}
             </input>
             <br/>
             </span>
-            <button style="background-color: green; color:white; margin-top:5px;" ng-click="addAdjust('encryptedExtension')">
+            <button style="background-color: green; color:white; margin-top:5px;" ng-click="addAdjust1('encryptedExtension',encryptedExtension)">
                 Adjust
             </button>
         </form>
@@ -57,7 +57,10 @@
          <button ng-show='step == 4' ng-click="incrementStep(step,'normal')" id="serverParametersButton" >
             Next Step
         </button>
+
+        
     </div>
+    <span ng-if= "step>4" style="font-size:100px; color: #ff9f80;"> &larr; </span>
 </div>
 <!--------------- Certificate Request ------------------>   
 <div class="stepServer" ng-if="keyExchange[1] == 'certificateRequest'"> 
@@ -90,7 +93,7 @@
         <h3>Certificate Request</h3>
         <p> (This message is encrypted) </p> <br/>
         <span id="repeat">
-        <span ng-repeat="n in certificateRequest">
+        <span ng-repeat="n in certificateRequest" ng-if="n.deleted=='no'">
             <div ng-if="n.eltName == 'certificate_request_context'">
                 <div style="display: inline-block;">
                     {{n.eltType}}  {{n.eltName}} {{n.eltValue}}
@@ -111,7 +114,7 @@
         </br>  
        
 
-        <button ng-if="addList[5] == false || listAdd.length ==0" id="addButton" ng-click="add('certificateRequest',5)">
+        <button ng-if="addList[5] == false || listAdd.length ==0" id="addButton" ng-click="add(certificateRequest,5)">
             Add
         </button>
         <div ng-if="addList[5] == true && listAdd.length==0">
@@ -120,22 +123,24 @@
         <div id="adjustForm" ng-if="addList[5] == true && listAdd.length >0"> 
         <form >
             <span ng-repeat="(m,n) in listAdd">
-            <input type="checkbox"  ng-model="listAddSelect[n]" >
-                {{n}}
+            <input type="radio"  ng-model="data.add" value="{{n}}">
+                    {{n}}
             </input>
             <br/>
             </span>
-            <button style="background-color: green; color:white; margin-top:5px;" ng-click="addAdjust('certificateRequest')">
+            <button style="background-color: green; color:white; margin-top:5px;" ng-click="addAdjust1('certificateRequest',certificateRequest)">
                 Adjust
             </button>
         </form>
         </div>
         <br/>
-         <button ng-show='step == 5' ng-click="incrementStep(step,'normal')" id="serverParametersButton" >
+         <button ng-show='step == 5' ng-click="incrementStep(step,'cert')" id="serverParametersButton" >
             Next Step
         </button>
+
     </div>
 
+    <span ng-if= "step>5" style="font-size:100px; color: #ff9f80;"> &larr; </span>
 
 
 </div>

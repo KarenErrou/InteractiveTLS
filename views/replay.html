@@ -1,0 +1,146 @@
+<div class="content">
+    
+    <div class="row" style="display: block !important;">
+        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" >
+            
+        </div>
+
+
+        <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+
+                
+            <div class="peers">
+                    <div class="peerP1">Client</div>
+                    <div class="peerP3">Attacker</div>
+                    <div class="peerP2">Server</div>
+            </div>
+          
+            <div class="lignP1">
+                <!-- CLIENTHELLO -->
+                <div class="stepClient" >
+                    
+                    <div class="stepClientContent" id="keyExchange">    
+                       <div class="circleClient"  id="keyExchange"> 1 </div> 
+                        <h3>0-RTT key exchange messages</h3>
+                        <br/>
+                    </div>
+
+                    <span style="font-size:100px; color: #99ace6" > &rarr;   </span>
+                </div>
+                
+                <div class="stepClient" >
+                    
+                    <div class="stepClientContent" id="keyExchange">    
+                       <div class="circleClient"  id="keyExchange"> 2 </div> 
+                        <h3>0-RTT data </h3>
+                        <i> request </i>
+                        <br/>
+                    </div>
+
+                    <span style="font-size:100px; color: #99ace6" > &rarr;   </span>
+                </div>
+                
+                <div class="stepServer"> 
+                    process <i> request </i> -
+                </div>
+                
+                <div class="stepServer"> 
+                    <div class="stepServerContent" id="keyExchange">
+                       <div class="circleServer" id="keyExchange"> 3 </div> 
+                       <h3>accept 0-RTT</h3>
+                    </div>
+
+                    <span style="font-size:70px;  color:red; position: absolute; right:50%; padding-top: 30px;"> X   </span>
+                    <span style="font-size:100px; color: #99ace6" > &larr;   </span>
+                </div>
+
+                <div class="stepServer"> 
+                    <div class="stepServerContent" id="keyExchange">
+                       <div class="circleServer" id="keyExchange"> 4 </div> 
+                       <h3>key-exchange response messages</h3>
+                    </div>
+
+                    <span style="font-size:70px;  color:red; position: absolute; right:50%; padding-top: 30px;"> X   </span>
+                    <span style="font-size:100px; color: #99ace6" > &larr;   </span>
+                </div>
+                
+                <br/>
+
+                
+                <div class="lignP3"> 
+                    <div class="stepAttackerRContent" style="position: relative; left:100%" id="attacker">    
+                       <div class="circleClient"  id="attacker"> 5 </div> 
+                        <br/>
+                        <h3> replay 0-RTT key-exchange messages </h3>
+                    </div>
+                    <span style="font-size:100px; color:red; position: relative; left:100%"> &rarr; </span>
+                </div> 
+
+                <div class="lignP3"> 
+                    <div class="stepAttackerRContent" style="position: relative; left:100%" id="attacker">    
+                       <div class="circleClient"  id="attacker"> 6 </div> 
+                        <br/>
+                        <h3> replay 0-RTT data</h3>
+                        <i> request </i>
+                    </div>
+                    <span style="font-size:100px; color:red; position: relative; left:100%"> &rarr; </span>
+                </div> 
+                
+                 <div class="stepServer"> 
+                    reject after state loss  <br/> for security reasons -
+                </div>
+                
+                
+                <div class="stepServer"> 
+                    <div class="stepServerContent" id="keyExchange">
+                       <div class="circleServer" id="keyExchange"> 7 </div> 
+                       <h3>reject 0-RTT</h3>
+                    </div>
+
+                    <span style="font-size:100px; color: #99ace6" > &larr;   </span>
+                </div>
+                
+                <div class="stepServer"> 
+                    <div class="stepServerContent" id="keyExchange">
+                       <div class="circleServer" id="keyExchange"> 8 </div> 
+                       <h3>key-exchange response messages</h3>
+                    </div>
+
+                    <span style="font-size:100px; color: #99ace6" > &larr;   </span>
+                </div>
+
+                <div class="stepClient" >
+                    <div class="stepClientContent" id="keyExchange">    
+                       <div class="circleClient"  id="keyExchange"> 9 </div> 
+                        <h3>final key exchange messages </h3>
+                        <br/>
+                    </div>
+
+                    <span style="font-size:100px; color: #99ace6" > &rarr;   </span>
+                </div>
+
+                <div class="stepClient" >
+                    <div class="stepClientContent" id="keyExchange">    
+                       <div class="circleClient"  id="keyExchange"> 10 </div> 
+                        <h3>resend data </h3>
+                        <i>request</i> under final key
+                        <br/>
+                    </div>
+
+                    <span style="font-size:100px; color: #99ace6" > &rarr;   </span>
+                </div>
+
+
+                <div class="stepServer"> 
+                    process <i> request</i> <br/>
+                    (for the second time) -
+                </div>
+                
+            </div>
+        </div>
+
+        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+            
+        </div>
+    </div>
+</div>
