@@ -101,7 +101,11 @@ main{
   border-radius: 10%;
 }
 
-
+.message{
+  font-size:20px;
+  padding:20px;
+  padding-top: 50px;
+}
 
 .lignP1 {
   position: relative;
@@ -126,6 +130,7 @@ main{
 
 #attacker{
   border-color: red !important;
+  margin-top:5px;
 }
 
 .keyExchange{
@@ -294,8 +299,8 @@ main{
   display: inline-block;
 }
 
-.stepAttackerRContent{
-  position: absolute;
+.stepAttackerDContent{
+  position: relative;
   border: 3px solid;
   margin-right: 10px;
   border-radius: 5%;
@@ -305,6 +310,24 @@ main{
   padding-top: 0px;
   font-size:16px;
   display: inline-block;
+  left:30%;
+}
+
+.stepAttackerRContent{
+  position: relative; 
+  border: 3px solid;
+  border-radius: 5%;
+  margin-right: 10px;
+  margin-left: 10px;
+  margin-top:5px;
+  right:100%;
+  padding: 18px;
+  padding-top: 0px;
+  font-size:16px;
+  display: inline-block;
+  border-color: red !important;
+
+  left:50%
 }
 
 .stepServer{
