@@ -8,26 +8,26 @@
 
         <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
 
-            <button ng-click="downgradeAnimate()">Animate</button> 
+            <button class="animate bouncy" ng-click="downgradeAnimate()">Animate</button> 
 
-            <div class="peers">
-                    <div class="peerP1" style="border-color:orange">Client</div>
+             <div class="peers">
+                    <div class="peerP1" class="peerP2" style="border-color:#2E86C1;" >Client</div>
                     <div class="peerP3">Attacker</div>
-                    <div class="peerP2" style="border-color: green;">Server</div>
+                    <div class="peerP2" style="border-color:#16A085;" >Server</div>
             </div>
           
-            <div class="lignP1">
+           
+            <div class="lignP1"  style=" border-right-color: #16A085; border-left-color: #2E86C1;"  >
                 <!-- CLIENTHELLO -->
 
                 <div class="stepClient" >
-                    <div style="width:50%; display:inline-block; position:relative;" id= "clientHello1">
-                    <div class="stepClientContent" style="border-color:orange">    
-                        <div class="circleClient"  style="border-color:orange"> 1 </div> 
+                    <div style="width:50%; display:inline-block; position:relative;" >
+                    <div class="stepClientContent" style="border-color:#2E86C1; color:#000;" id= "clientHello1">    
+                        <div class="circleClient" ng-if="animate" style="border-color: #2E86C1"  > 1 </div> 
                         <h3>ClientHello</h3>
                         TLS 1.3
-                        <br/>
                     </div>
-
+                    <span ng-if="animate" style="font-size:70px; color: #2E86C1" > &rarr;   </span>
                     </div>
 
                     <!--<span style="font-size:100px; color: #99ace6; left:12%; position:absolute;" > &rarr; </span>-->
@@ -37,43 +37,48 @@
                 
                 
                 <br/>
-                <div class="stepAttackerR" id= "attacker1">
+                <div class="stepAttackerR" >
                  <!-- <div class="lignP3" >  -->
-                        <div class="stepAttackerDContent"  id="attacker">
-                           <div class="circleClient"  id="attacker"> 2 </div> 
-                            <br/><h3>
-                            Close TCP session
-                            </h3>
-                        </div>
-                        <!--<span style="font-size:100px; color:red; position: relative; left:40%"> &larr; </span> -->
-                    </div> 
+                    <div class="stepAttackerDContent" style="border-color: red; color:red;" id= "attacker1">
+                       <div class="circleClient" ng-if="animate" style="border-color: red" > 2 </div> 
+                        <h3>
+                        Close TCP session
+                        </h3>
+                    </div>
+                    <!--<span style="font-size:100px; color:red; position: relative; left:40%"> &larr; </span> -->
+                </div> 
+
                 <!-- </div>    -->
                 <div class="message" id="message1">!! Client retries back with lower version !!</div>
 
                 <br/>
                 <div class="stepClient" >
-                    <div style="width:50%; display:inline-block; position:relative;" id= "clientHello2">
-                        <div class="stepClientContent" style="border-color:orange">    
-                           <div class="circleClient"  style="border-color:orange"> 3</div> 
+                    <div style="width:100%; display:inline-block; position:relative;">
+                        <div class="stepClientContent" id= "clientHello2"  style="border-color:#2E86C1; color:#000;">    
+                           <div class="circleClient" ng-if="animate" style="border-color: #2E86C1"  > 3</div> 
                             <h3>ClientHello</h3>
                             TLS 1.2
-                            <br/>
                         </div>
+
+                        <span ng-if="animate" style="font-size:70px; color: #2E86C1" > &rarr;   </span>
                     </div>
                     <!--<span style="font-size:100px; color: #99ace6" > &rarr;   </span>-->
                 </div>
                 
                 <!-- SERVERHELLO -->
                 <div class="stepServer"> 
-                    <div style="width:50%; display:inline-block; position:relative;" id= "serverHello1">
-                        <div class="stepServerContent" style="border-color:green;">
-                           <div class="circleServer"  style="border-color:green;"> 4 </div> 
+                    <div style="width:100%; display:inline-block; position:relative;">
+
+                    <span ng-if="animate" style="font-size:70px; color: #16A085" > &larr;   </span>
+                        <div class="stepServerContent" id= "serverHello1" style="border-color:#16A085; color:#000;">
+                           <div class="circleServer" ng-if="animate" style="border-color: #16A085"  > 4 </div> 
                            <h3>Server Hello</h3>
                             TLS 1.2
                             <br/>
                             Random = 24bytes || 0x 44 4f 57 4E 47 52 44 01
                             <br/>
                         </div>
+
                     </div>
 
                     <!-- <span style="font-size:100px; color: #99ace6" > &larr;   </span> -->
@@ -82,13 +87,16 @@
                 <div class="message" id="message2">!! Server Hello with random number finishing with 0x 44 4f 57 4E 47 52 44 01 means that it is a TLS1.3 server but is negotiating TLS1.2 !!</div>
 
                 <div class="stepClient" >
-                    <div style="width:50%; display:inline-block; position:relative;" id= "clientHello3">
-                        <div class="stepClientContent" style="border-color:orange"> 
-                           <div class="circleClient"  style="border-color:orange"> ! </div> 
+                    <div style="width:100%; display:inline-block; position:relative;"  >
+                        <div class="stepClientContent" id= "clientHello3"  style="border-color:#2E86C1; color:#000;"> 
+                           <div class="circleClient" ng-if="animate" style="border-color: #2E86C1" > ! </div> 
                             <h3>! Illegal parameter alert !</h3>
                             ABORT HANDSHAKE
                         </div>
+
+                        <span ng-if="animate" style="font-size:70px; color: #2E86C1" > &rarr;   </span>
                     </div>
+
                     <!-- <span style="font-size:100px; color: #99ace6" > &rarr;   </span> -->
                 </div>
             </div>

@@ -1745,7 +1745,9 @@ myTLSApp.controller('MissingTerms', function ($scope) {
 //ANIMATIONS
 myTLSApp.controller('Replay', ['$scope', '$http', function($scope, $http){
 	var id = null;
+	$scope.animate = true;
 	$scope.replayAnimate= function() {
+		$scope.animate = false;
   		var client1 = document.getElementById("step1");   
   		var client2 = document.getElementById("step2");
   		var server1 = document.getElementById("step3");
@@ -1760,31 +1762,51 @@ myTLSApp.controller('Replay', ['$scope', '$http', function($scope, $http){
   		var message1 = document.getElementById("message1");   
   		var message2 = document.getElementById("message2"); 
   		var message3 = document.getElementById("message3"); 
-  	
+
+  		// transparent to hide
+		$scope.showHideElem = function(elem, color){
+ 		  	elem.style.borderColor  = color;
+ 		  	if(color=='transparent')
+  				elem.style.color  = color;
+  			else   	
+  				elem.style.color  = 'black';
+		}
+
   		attacker_stop1.style.color = 'transparent';
   		attacker_stop2.style.color = 'transparent';
-  		client2.style.left  = '220%';
-  		server1.style.right  = '220%';
-  		server2.style.right  = '220%';
-  		server3.style.right  = '220%';
-  		server4.style.right  = '220%';
-  		client3.style.left  = '220%';
-  		client4.style.left  = '220%';
-  		attacker1.style.left  = '220%';
-  		attacker2.style.left  = '220%';
+  		$scope.showHideElem(client2,'transparent');
+  		$scope.showHideElem(server1,'transparent');  	
+  		$scope.showHideElem(server2,'transparent');
+  		$scope.showHideElem(server3,'transparent');
+  		$scope.showHideElem(server4,'transparent');
+  		$scope.showHideElem(client3,'transparent');
+  		$scope.showHideElem(client4,'transparent');
+  		
+  		
+  		$scope.showHideElem(attacker1,'transparent');
+  		$scope.showHideElem(attacker2,'transparent');
+  		
   		message1.style.color = "transparent";
   		message2.style.color = "transparent";
   		message3.style.color = "transparent";
 
+  		function percentwidth(elem){
+ 		   var pa= elem.offsetParent || elem;
+    		return ((elem.offsetWidth/pa.offsetWidth)*100).toFixed(1);
+
+		}
+
   		clearInterval(id);
   		id = setInterval(step1, 40);
   		var pos = 0;
+  		var width = 0;
 
   		function step1() {
-    		if (pos == 70) {
+  			width = parseInt(percentwidth(client1));
+    		if (pos == (98-width)) {
       			clearInterval(id);
   				pos = 0;
-  				client2.style.left  = '0%';
+  				$scope.showHideElem(client2,'#2E86C1');	
   				id = setInterval(step2, 40);
     		} else {
       			pos++; 
@@ -1792,10 +1814,11 @@ myTLSApp.controller('Replay', ['$scope', '$http', function($scope, $http){
     		}
   		}
   		function step2(){
-  			if (pos == 85) {
+  			width = parseInt(percentwidth(client2));
+  			if (pos == (98-width)) {
       			clearInterval(id);
       			pos = 0;
-  				server1.style.right  = '0%';
+  				$scope.showHideElem(server1,'#16A085');		
 				message1.style.color = "black";
       			id = setInterval(step3, 40);
     		} else {
@@ -1804,10 +1827,11 @@ myTLSApp.controller('Replay', ['$scope', '$http', function($scope, $http){
     		}
   		}
   		function step3(){
-  			if (pos == 40){
+  			var width = parseInt(percentwidth(server1));
+  			if (pos == (100 - width)){
       			clearInterval(id);
       			pos = 0;
-  				server2.style.right  = '0%';
+  				$scope.showHideElem(server2,'#16A085');		  	
   				attacker_stop1.style.color  = 'red';
       			id = setInterval(step4, 40);
     		} else {
@@ -1816,10 +1840,11 @@ myTLSApp.controller('Replay', ['$scope', '$http', function($scope, $http){
     		}
   		}
   		function step4(){
-  			if (pos == 30) {
+  			width = parseInt(percentwidth(server2));
+    		if (pos == (98-width)) {
       			clearInterval(id);
       			pos = 50;
-  				attacker1.style.left  = '50%';
+  				$scope.showHideElem(attacker1,'red');	
   				attacker_stop2.style.color  = 'red';
       			id = setInterval(step5, 40);
     		} else {
@@ -1828,10 +1853,11 @@ myTLSApp.controller('Replay', ['$scope', '$http', function($scope, $http){
     		}
   		}
   		function step5(){
-  			if (pos == 70) {
+  			width = parseInt(percentwidth(attacker1));
+    		if (pos == (98-width)) {
       			clearInterval(id);
       			pos = 50;
-  				attacker2.style.left  = '50%';
+  				$scope.showHideElem(attacker2,'red');	
       			id = setInterval(step6, 40);
     		} else {
       			pos++; 
@@ -1839,11 +1865,12 @@ myTLSApp.controller('Replay', ['$scope', '$http', function($scope, $http){
     		}
   		}
   		function step6(){
-  			if (pos == 86) {
+  			width = parseInt(percentwidth(attacker2));
+    		if (pos == (98-width)) {
       			clearInterval(id);
       			pos = 0;
+  				$scope.showHideElem(server3,'#16A085');	
 				message2.style.color = "black";
-  				server3.style.right  = '0%';
       			id = setInterval(step7, 40);
     		} else {
       			pos++; 
@@ -1851,10 +1878,11 @@ myTLSApp.controller('Replay', ['$scope', '$http', function($scope, $http){
     		}
   		}
   		function step7(){
-  			if (pos == 86) {
+  			width = parseInt(percentwidth(server3));
+    		if (pos == (98-width)) {
       			clearInterval(id);
       			pos = 0;
-  				server4.style.right  = '0%';
+  				$scope.showHideElem(server4,'#16A085');
       			id = setInterval(step8, 40);
     		} else {
       			pos++; 
@@ -1862,10 +1890,11 @@ myTLSApp.controller('Replay', ['$scope', '$http', function($scope, $http){
     		}
   		}
   		function step8(){
-  			if (pos == 68) {
+  			width = parseInt(percentwidth(server4));
+    		if (pos == (98-width)) {
       			clearInterval(id);
       			pos = 0;
-  				client3.style.left  = '0%';
+  				$scope.showHideElem(client3,'#2E86C1');
       			id = setInterval(step9, 40);
     		} else {
       			pos++; 
@@ -1873,10 +1902,11 @@ myTLSApp.controller('Replay', ['$scope', '$http', function($scope, $http){
     		}
   		}
   		function step9(){
-  			if (pos == 72) {
+  			width = parseInt(percentwidth(client3));
+    		if (pos == (98-width)) {
       			clearInterval(id);
       			pos = 0;
-  				client4.style.left  = '0%';
+  				$scope.showHideElem(client4,'#2E86C1');
       			id = setInterval(step10, 40);
     		} else {
       			pos++; 
@@ -1884,7 +1914,8 @@ myTLSApp.controller('Replay', ['$scope', '$http', function($scope, $http){
     		}
   		}
   		function step10(){
-  			if (pos == 83) {
+  			width = parseInt(percentwidth(client4));
+    		if (pos == (98-width)) {
       			clearInterval(id);
       			pos = 0;
 				message3.style.color = "black";
@@ -1898,7 +1929,9 @@ myTLSApp.controller('Replay', ['$scope', '$http', function($scope, $http){
 
 myTLSApp.controller('Downgrade', ['$scope', '$http', function($scope, $http){
 	var id = null;
+	$scope.animate = true;
 	$scope.downgradeAnimate= function() {
+		$scope.animate = false;
   		var clientHello1 = document.getElementById("clientHello1");   
   		var clientHello_stop1 = document.getElementById("clientHello_stop1");
   		var attacker1 = document.getElementById("attacker1");
@@ -1908,23 +1941,44 @@ myTLSApp.controller('Downgrade', ['$scope', '$http', function($scope, $http){
   		var message1 = document.getElementById("message1");   
   		var message2 = document.getElementById("message2"); 
   		
+  		$scope.showHideElem = function(elem, color){
+ 		  	elem.style.borderColor  = color;
+ 		  	if(color=='transparent')
+  				elem.style.color  = color;
+  			else   	
+  				elem.style.color  = 'black';
+		}
+  		
+		$scope.showHideElem(attacker1,'transparent');
+		$scope.showHideElem(clientHello2,'transparent');
+		$scope.showHideElem(serverHello1,'transparent');
+		$scope.showHideElem(clientHello3,'transparent');
+  		// attacker1.style.right  = '220%';
+  		// clientHello2.style.right  = '220%';
+  		// serverHello1.style.right  = '220%';
+  		// clientHello3.style.left  = '220%';
+
   		clientHello_stop1.style.color = 'transparent';
-  		attacker1.style.right  = '220%';
-  		clientHello2.style.right  = '220%';
-  		serverHello1.style.right  = '220%';
-  		clientHello3.style.left  = '220%';
   		message1.style.color = "transparent";
   		message2.style.color = "transparent";
+
+  		function percentwidth(elem){
+ 		  	var pa= elem.offsetParent || elem;
+    		return ((elem.offsetWidth/pa.offsetWidth)*100).toFixed(1);
+		}
   		
   		clearInterval(id);
   		id = setInterval(step1, 40);
   		var pos = 0;
   		function step1() {
-    		if (pos == 40) {
+  			width = parseInt(percentwidth(clientHello1));
+    		if (pos == (98-width)) {
+    		// if (pos == 40) {
       			clearInterval(id);
   				clientHello_stop1.style.color = 'red';
-  				pos = 0;
-  				attacker1.style.right  = '0%';
+  				pos = 50;
+  				$scope.showHideElem(attacker1,'red');
+  				// attacker1.style.left  = '0%';
   				id = setInterval(step2, 40);
     		} else {
       			pos++; 
@@ -1932,22 +1986,27 @@ myTLSApp.controller('Downgrade', ['$scope', '$http', function($scope, $http){
     		}
   		}
   		function step2(){
-  			if (pos == 30) {
+    		if (pos == (0)) {
+  			// if (pos == 30) {
       			clearInterval(id);
       			pos = 0;
-  				clientHello2.style.right  = '0%';
+      			$scope.showHideElem(clientHello2,'#2E86C1');
+  				// clientHello2.style.right  = '0%';
 				message1.style.color = "black";
       			id = setInterval(step3, 40);
     		} else {
-      			pos++; 
-      			attacker1.style.right = pos + '%'; 
+      			pos--; 
+      			attacker1.style.left = pos + '%'; 
     		}
   		}
   		function step3(){
-  			if (pos == 85) {
+  			width = parseInt(percentwidth(clientHello2));
+    		if (pos == (98-width)) {
+  			// if (pos == 85) {
       			clearInterval(id);
       			pos = 0;
-  				serverHello1.style.right  = '0%';
+      			$scope.showHideElem(serverHello1,'#16A085');
+  				// serverHello1.style.right  = '0%';
       			id = setInterval(step4, 40);
     		} else {
       			pos++; 
@@ -1955,10 +2014,13 @@ myTLSApp.controller('Downgrade', ['$scope', '$http', function($scope, $http){
     		}
   		}
   		function step4(){
-  			if (pos == 70) {
+  			width = parseInt(percentwidth(serverHello1));
+    		if (pos == (98-width)) {
+  			// if (pos == 70) {
       			clearInterval(id);
       			pos = 0;
-  				clientHello3.style.left  = '0%';
+      			$scope.showHideElem(clientHello3,'#2E86C1');
+  				// clientHello3.style.left  = '0%';
 				message2.style.color = "black";
       			id = setInterval(alert1, 40);
     		} else {
@@ -1967,7 +2029,9 @@ myTLSApp.controller('Downgrade', ['$scope', '$http', function($scope, $http){
     		}
   		}
   		function alert1(){
-  			if (pos == 75) {
+  			width = parseInt(percentwidth(clientHello3));
+    		if (pos == (98-width)) {
+  			// if (pos == 75) {
       			clearInterval(id);
     		} else {
       			pos++; 

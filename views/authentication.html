@@ -14,6 +14,7 @@
     </div>
 
 
+    <span ng-if= "step>6  && sigalgoClient == true" style="font-size:100px; color: #16A085;"> &larr; </span>
     <div class="stepServerContent" id="authentication" ng-if= "step>=6 && sigalgoClient == true">
          <div  ng-if="keyExchange[0] == 'helloRetryRequest'" class="circleServer" ng-model="step" id="authentication"> 7</div>
         <div  ng-if="keyExchange[0] == 'serverHello'" class="circleServer" ng-model="step" id="authentication"> 5</div> 
@@ -44,7 +45,7 @@
             </input>
             <br/>
             </span>
-            <button style="background-color: green; color:white; margin-top:5px;" ng-click="addAdjust1('certificate',certificate)">
+            <button  id="addButton" style="background-color: green; color:white; margin-top:5px;" ng-click="addAdjust1('certificate',certificate)">
                 Adjust
             </button>
         </form>
@@ -55,7 +56,6 @@
         </button>
     </div>
 
-    <span ng-if= "step>6  && sigalgoClient == true" style="font-size:100px; color: red;"> &larr; </span>
 </div>
 
 
@@ -75,6 +75,7 @@
     </div>
 
 
+    <span ng-if= "step>7  && sigalgoClient == true" style="font-size:100px; color: #16A085;"> &larr; </span>
     <div class="stepServerContent" id="authentication" ng-if= "step>=7 && sigalgoClient == true">
         <div ng-if="keyExchange[0] == 'helloRetryRequest'" class="circleServer" ng-model="step" id="authentication"> 8</div>
         <div ng-if="keyExchange[0] == 'serverHello'" class="circleServer" ng-model="step" id="authentication"> 6</div> 
@@ -105,7 +106,7 @@
             </input>
             <br/>
             </span>
-            <button style="background-color: green; color:white; margin-top:5px;" ng-click="addAdjust1('certificateVerify',certificateVerify)">
+            <button id="addButton" style="background-color: green; color:white; margin-top:5px;" ng-click="addAdjust1('certificateVerify',certificateVerify)">
                 Adjust
             </button>
         </form>
@@ -114,7 +115,6 @@
             Next Step
         </button>
     </div>
-    <span ng-if= "step>7  && sigalgoClient == true" style="font-size:100px; color: red;"> &larr; </span>
 </div>
 
 <!--------------- Finished ------------------>   
@@ -129,6 +129,7 @@
         <p>This message is essential for providing authentication of both the handshake and the computed keys.</p> -->
     </div>
 
+    <span ng-if= "step>8" style="font-size:100px; color: #16A085;"> &larr; </span>
 
     <div class="stepServerContent" id="authentication" ng-if= "step>=8">
         <div ng-if="keyExchange[0] == 'helloRetryRequest'" class="circleServer" ng-model="step" id="authentication"> 9</div>
@@ -146,7 +147,6 @@
             Next Step
         </button>
     </div>
-    <span ng-if= "step>8" style="font-size:100px; color: red;"> &larr; </span>
 </div>
 
 <!----------------------- EARLY DATA ---------------->
@@ -204,7 +204,7 @@
             </input>
             <br/>
             </span>
-            <button style="background-color: green; color:white; margin-top:5px;" ng-click="addAdjust1('certificateClient',certificateClient)">
+            <button id="addButton" style="background-color: green; color:white; margin-top:5px;" ng-click="addAdjust1('certificateClient',certificateClient)">
                 Adjust
             </button>
         </form>
@@ -214,7 +214,7 @@
         </button>
     </div>
 
-    <span ng-if= "step>9  && sigalgoServer == true" style="font-size:100px; color: red;"> &rarr; </span>
+    <span ng-if= "step>9  && sigalgoServer == true" style="font-size:100px; color: #16A085;"> &rarr; </span>
 </div>
 
 
@@ -264,7 +264,7 @@
             </input>
             <br/>
             </span>
-            <button style="background-color: green; color:white; margin-top:5px;" ng-click="addAdjust1('certificateVerifyClient',certificateVerifyClient)">
+            <button id="addButton" style="background-color: green; color:white; margin-top:5px;" ng-click="addAdjust1('certificateVerifyClient',certificateVerifyClient)">
                 Adjust
             </button>
         </form>
@@ -273,7 +273,7 @@
             Next Step
         </button>
     </div>
-    <span ng-if= "step>10  && sigalgoServer == true" style="font-size:100px; color: red;"> &rarr; </span>
+    <span ng-if= "step>10  && sigalgoServer == true" style="font-size:100px; color: #16A085;"> &rarr; </span>
 </div>
 
 
@@ -299,21 +299,28 @@
         <p>It provides key confirmation, binds the endpoint’s identity to the exchanged keys, and authenticates the handshake in PSK mode </p>
         <p>Recipients of this message should verify its correctness and termination the handshake with a “decrypt_error” alert in case it is incorrect.</p>
         <p>This message is essential for providing authentication of both the handshake and the computed keys.</p>
+         <button ng-show='step == 11' ng-click="incrementStep(step,'normal')" id="authenticationButton">
+            Next Step
+        </button>
     </div>
+
+    <span ng-if= "step>=12" style="font-size:100px; color: #16A085;"> &rarr; </span>
 </div>
 
 <div>
-    <div class="stepClient">
+    <div ng-if= "step>=12" class="stepClient">
         <div  class="stepClientContent" style="background-color:#2471A3; color: #fff;">
             <h3>Application Data</h3>    
         </div>
+        <span style="font-size:100px; color: #2471A3;"> &rarr; </span>
     </div>
 </div>
 </div>
-    <div class="stepServer">
+    <div ng-if= "step>=12" class="stepServer">
+
+        <span style="font-size:100px; color: #2471A3;"> &larr; </span>
         <div  class="stepServerContent" style="background-color:#2471A3; color: #fff;">
             <h3>Application Data</h3>    
         </div>
     </div>
-    <span ng-if= "step>=11" style="font-size:100px; color: red;"> &rarr; </span>
 </div>

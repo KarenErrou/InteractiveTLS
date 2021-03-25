@@ -41,7 +41,7 @@
                 </input>
                 <br/>
             </span>
-            <button style="background-color: green; color:white; margin-top:5px;" ng-click="addAdjust1('clientHello',chExtensions)">
+            <button id="addButton"  style="background-color: green; color:white; margin-top:5px;" ng-click="addAdjust1('clientHello',chExtensions)">
                 Adjust
             </button>
         </form>
@@ -61,7 +61,7 @@
         
     </div>
 
-        <span ng-if="step > 1.0" style="font-size:100px; color: #99ace6;"> &rarr; </span>
+        <span ng-if="step > 1.0" style="font-size:100px; color: #2E86C1;"> &rarr; </span>
 </div>    
 
 
@@ -85,7 +85,7 @@
             </br>
         </span>
     </div>
-
+    <span ng-if="keyExchange[0] == 'helloRetryRequest' && step>2.5" style="font-size:100px; color: #2E86C1;"> &larr; </span>
     <div class="stepServerContent" id="keyExchange" ng-if="keyExchange[0] == 'helloRetryRequest' && step>=2">
         <div class="circleServer" id="keyExchange"> 2</div> 
         <h3>Hello Retry Request</h3>
@@ -131,7 +131,7 @@
                 <br/>
                 </span>
 
-                <button style="background-color: green; color:white;" ng-click="addAdjust1('helloRetryRequest', hrrExtensions)">
+                <button  id="addButton" style="background-color: green; color:white;" ng-click="addAdjust1('helloRetryRequest', hrrExtensions)">
                     Adjust
                 </button>
             </form>
@@ -142,7 +142,7 @@
         </button>    
     </div>
 
-    <span ng-if="keyExchange[0] == 'helloRetryRequest' && step>2.5" style="font-size:100px; color: #99ace6;"> &larr; </span>   
+      
 </div>
 
 
@@ -194,7 +194,7 @@
             </input>
             <br/>
             </span>
-            <button style="background-color: green; color:white; margin-top:5px;" ng-click="addAdjust1('rrClientHello',rrClientHello)">
+            <button id="addButton" style="background-color: green; color:white; margin-top:5px;" ng-click="addAdjust1('rrClientHello',rrClientHello)">
                 Adjust
             </button>
         </form>
@@ -207,7 +207,7 @@
 
     </div>
 
-        <span ng-if="step>2.5" style="font-size:100px; color: #99ace6;"> &rarr; </span>
+        <span ng-if="step>2.5" style="font-size:100px; color: #2E86C1;"> &rarr; </span>
 </div>
 
 <!----------------------- EARLY DATA ---------------->
@@ -240,6 +240,8 @@
             </br>
         </span>
     </div>
+
+    <span ng-if="step>3.0" style="font-size:100px; color: #2E86C1;"> &larr; </span>
     <div class="stepServerContent" id="keyExchange" ng-if="step>=3.0">
         <div ng-if="keyExchange[0] == 'helloRetryRequest'" class="circleServer"  id="keyExchange">4</div> 
         <div ng-if="keyExchange[0] == 'serverHello'" class="circleServer" id="keyExchange"> 2</div> 
@@ -282,7 +284,7 @@
             </input>
             <br/>
             </span>
-            <button style="background-color: green; color:white; margin-top:5px;" ng-click="addAdjust1('serverHello',shExtensions)">
+            <button id="addButton" style="background-color: green; color:white; margin-top:5px;" ng-click="addAdjust1('serverHello',shExtensions)">
                 Adjust
             </button>
         </form> 
@@ -294,6 +296,5 @@
         </button>
     </div>
 
-    <span ng-if="step>3.0" style="font-size:100px; color: #99ace6;"> &larr; </span>
 </div>
 

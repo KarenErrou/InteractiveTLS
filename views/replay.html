@@ -7,35 +7,35 @@
 
 
         <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
-            <button ng-click="replayAnimate()">Animate</button> 
+
+            <button class="animate bouncy" ng-click="replayAnimate()">Animate</button> 
                 
             <div class="peers">
-                    <div class="peerP1">Client</div>
+                    <div class="peerP1" class="peerP2" style="border-color:#2E86C1;" >Client</div>
                     <div class="peerP3">Attacker</div>
-                    <div class="peerP2">Server</div>
+                    <div class="peerP2" style="border-color:#16A085;" >Server</div>
             </div>
           
-            <div class="lignP1">
+            <div class="lignP1"  style=" border-right-color: #16A085; border-left-color: #2E86C1;"  >
                 <!-- CLIENTHELLO -->
                 <div class="stepClient" >
-                    <div style="width:50%; display:inline-block; position:relative;" id= "step1">
-                        <div class="stepClientContent" id="keyExchange">    
-                           <div class="circleClient"  id="keyExchange"> 1 </div> 
+                    <div style="width:100%; display:inline-block; position:relative;" >
+                        <div class="stepClientContent" id= "step1" style="border-color:#2E86C1; color:#000;">    
+                           <div class="circleClient"  ng-if="animate" style="border-color: #2E86C1"> 1 </div> 
                             <h3>0-RTT key exchange messages</h3>
-                            <br/>
                         </div>
+                       <span ng-if="animate" style="font-size:70px; color: #2E86C1" > &rarr;   </span>
                     </div>
-                    <!-- <span style="font-size:100px; color: #99ace6" > &rarr;   </span> -->
                 </div>
                 
                 <div class="stepClient" >
-                    <div style="width:50%; display:inline-block; position:relative;" id= "step2">
-                        <div class="stepClientContent" id="keyExchange">    
-                           <div class="circleClient"  id="keyExchange"> 2 </div> 
+                    <div style="width:100%; display:inline-block; position:relative;" >
+                        <div class="stepClientContent" id="step2" style="border-color:#2E86C1; color:#000;">    
+                           <div class="circleClient"  ng-if="animate" style="border-color: #2E86C1"> 2 </div> 
                             <h3>0-RTT data </h3>
                             <i> request </i>
-                            <br/>
                         </div>
+                       <span ng-if="animate" style="font-size:70px; color: #2E86C1" > &rarr;   </span>
                     </div>
                     <!-- <span style="font-size:100px; color: #99ace6" > &rarr;   </span> -->
                 </div>
@@ -45,20 +45,25 @@
                 </div>
                 
                 <div class="stepServer"> 
-                    <div style="width:50%; display:inline-block; position:relative;" id= "step3">
-                        <div class="stepServerContent" id="keyExchange">
-                           <div class="circleServer" id="keyExchange"> 3 </div> 
+                    <div style="width:50%; display:inline-block; position:relative;" >
+
+                       <span ng-if="animate" style="font-size:70px; color: #16A085" > &larr;   </span>
+                        <div class="stepServerContent" id= "step3" style="border-color:#16A085; color:#16A085;">
+                          <div class="circleServer"  ng-if="animate" style="border-color: #16A085"> 3 </div> 
                            <h3>accept 0-RTT</h3>
                         </div>
                     </div>
                     <span id="attacker_stop1" style="font-size:70px;  color:red; position: absolute; right:50%; padding-top: 30px;"> X   </span>
+
                     <!-- <span style="font-size:100px; color: #99ace6" > &larr;   </span> -->
                 </div>
 
                 <div class="stepServer"> 
-                    <div style="width:50%; display:inline-block; position:relative;" id= "step4">
-                        <div class="stepServerContent" id="keyExchange">
-                           <div class="circleServer" id="keyExchange"> 4 </div> 
+                    <div style="width:50%; display:inline-block; position:relative;" >
+
+                       <span ng-if="animate" style="font-size:70px; color: #16A085" > &larr;   </span>
+                        <div class="stepServerContent" id= "step4" style="border-color:#16A085; color:#16A085;">
+                           <div class="circleServer" ng-if="animate" style="border-color: #16A085"> 4 </div> 
                            <h3>key-exchange response messages</h3>
                         </div>
                     </div>
@@ -70,18 +75,17 @@
 
                 
                 <div class="stepAttackerR" > 
-                    <div class="stepAttackerRContent" id="attacker1">    
-                       <div class="circleClient"  id="attacker"> 5 </div> 
-                        <br/>
+                    <div class="stepAttackerRContent" id="attacker1" style="border-color:red; color:red;">    
+                       <div class="circleClient" ng-if="animate" style="border-color: red"> 5 </div> 
                         <h3> replay<br/> 0-RTT key-exchange messages </h3>
                     </div>
+                </div>
+
                     <!-- <span style="font-size:100px; color:red; position: relative; left:100%"> &rarr; </span>-->
-                </div> 
 
                 <div class="stepAttackerR" > 
-                    <div class="stepAttackerRContent" id="attacker2">    
-                       <div class="circleClient"  id="attacker"> 6 </div> 
-                        <br/>
+                    <div class="stepAttackerRContent" id="attacker2" style="border-color:red; color:red;">    
+                       <div class="circleClient" ng-if="animate" style="border-color: red"> 6 </div> 
                         <h3> replay<br/> 0-RTT data</h3>
                         <i> request </i>
                     </div>
@@ -89,14 +93,16 @@
                 </div> 
                 
                 <div class="stepServer" id="message2" style="font-size:20px; margin:20px 0px"> 
-                    reject after state loss  <br/> for security reasons -
+                    reject after state loss  -
                 </div>
                 
                 
                 <div class="stepServer"> 
-                    <div style="width:50%; display:inline-block; position:relative;" id= "step7">
-                    <div class="stepServerContent" id="keyExchange">
-                       <div class="circleServer" id="keyExchange"> 7 </div> 
+                   <div style="width:100%; display:inline-block; position:relative;" >
+                    <span ng-if="animate" style="font-size:70px; color: #16A085" > &larr;   </span>
+
+                    <div class="stepServerContent" id="step7" style="border-color:#16A085; color:#16A085;">
+                       <div class="circleServer"  ng-if="animate" style="border-color: #16A085"> 7 </div> 
                        <h3>reject 0-RTT</h3>
                     </div>
 
@@ -104,9 +110,11 @@
                 </div>
                 
                 <div class="stepServer"> 
-                    <div style="width:50%; display:inline-block; position:relative;" id= "step8">
-                        <div class="stepServerContent" id="keyExchange">
-                           <div class="circleServer" id="keyExchange"> 8 </div> 
+                   <div style="width:100%; display:inline-block; position:relative;" >
+                    <span ng-if="animate" style="font-size:70px; color: #16A085" > &larr;   </span>
+
+                        <div class="stepServerContent" id="step8" style="border-color:#16A085; color:#16A085;">
+                           <div class="circleServer"  ng-if="animate" style="border-color: #16A085" > 8 </div> 
                            <h3>key-exchange response messages</h3>
                         </div>
                     </div>
@@ -114,31 +122,31 @@
                 </div>
 
                 <div class="stepClient" >
-                    <div style="width:50%; display:inline-block; position:relative;" id= "step9">
-                        <div class="stepClientContent" id="keyExchange">    
-                           <div class="circleClient"  id="keyExchange"> 9 </div> 
+                      <div style="width:100%; display:inline-block; position:relative;" >
+                        <div class="stepClientContent" id="step9" style="border-color:#2E86C1; color:#2E86C1;">   
+                           <div class="circleClient"  ng-if="animate" style="border-color: #2E86C1"> 9 </div> 
                             <h3>final key exchange messages </h3>
-                            <br/>
                         </div>
+                        <span ng-if="animate" style="font-size:70px; color: #2E86C1" > &rarr;   </span>
                     </div>
                     <!-- <span style="font-size:100px; color: #99ace6" > &rarr;   </span>-->
                 </div>
 
                 <div class="stepClient" >
-                    <div style="width:50%; display:inline-block; position:relative;" id= "step10">
-                        <div class="stepClientContent" id="keyExchange">    
-                           <div class="circleClient"  id="keyExchange"> 10 </div> 
+                    <div style="width:100%; display:inline-block; position:relative;" >
+                        <div class="stepClientContent" id="step10" style="border-color:#2E86C1; color:#2E86C1;">    
+                           <div class="circleClient" ng-if="animate" style="border-color: #2E86C1"> 10 </div> 
                             <h3>resend data </h3>
                             <i>request</i> under final key
-                            <br/>
                         </div>
+                        <span ng-if="animate" style="font-size:70px; color: #2E86C1" > &rarr;   </span>
                     </div>
                     <!-- <span style="font-size:100px; color: #99ace6" > &rarr;   </span>-->
                 </div>
 
 
                 <div class="stepServer" id="message3" style="font-size:20px; margin:20px 0px"> 
-                    process <i> request</i>  <br/>
+                    process <i> request</i> &nbsp; &nbsp; <br/>
                     (for the second time) -
                 </div>
                 
