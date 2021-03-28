@@ -6,7 +6,10 @@
         </div>
 
         <div class="col-lg-6 col-lg-6 col-lg-6">
+
             <div id="mode" >  
+            <span ng-if="step==1"> Not yet selected: The server chooses the exchange key mode. <br/></span>
+            <span ng-if="keyExMode == 4 || keyExMode == 3 || keyExMode == 2">When PSK mode selected, an earlier connection was done where a key was negotiated to be used in future connections <br/></span>
                 Current key exchange mode: 
                 <span ng-if="keyExMode == 0">ECDHE</span>
                 <span ng-if="keyExMode == 1">DHE</span>
@@ -61,7 +64,7 @@
             </div><br/>
             <div id="alertClass" ng-if="error == true"  style="padding-top:1%">
                 <span ng-repeat="alerts in alertsList"  on-click="showAlert()">
-                    <div class="threadAlert">
+                    <div class="threadAlert" ng-if="alerts.stop <= step">
                         <div style="font-size:24px;">  Alert :</div>
                         <div style="font-size:22px;"><i> {{alerts.title}} </i></div><br/>
                         <span style=" color:#4d0000;" > {{alerts.description}}</span>

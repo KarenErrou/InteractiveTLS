@@ -392,6 +392,10 @@ button#authenticationButton:hover{
   color:#16A085;
 }
 
+.navbar-dark .navbar-toggler {
+    color: rgba(255,255,255,1) !important;
+    border-color: rgba(255,255,255,1) !important;
+}
 
 .stepClientContent{
   border: 3px solid;
@@ -404,6 +408,7 @@ button#authenticationButton:hover{
   font-size:16px;
   display: inline-block;
   position: inherit;
+  width:50%;
 }
 
 .stepAttackerDContent{
@@ -416,7 +421,7 @@ button#authenticationButton:hover{
   padding-top: 0px;
   font-size:16px;
   display: inline-block;
-  left:50%;
+  right:50%;
 }
 
 .stepAttackerRContent{
@@ -451,6 +456,7 @@ button#authenticationButton:hover{
   display: inline-block;
   margin-right: 10px;
   position: inherit;
+  width:50%;
 }
 
 .circleClient {
