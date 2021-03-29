@@ -1,26 +1,24 @@
 <div class="content">
-	<p> Some of the terms in the step are missing. Here is in explanation which term is missing and why for each step </p>
+	<p style="font-size:20px;"> Some of the terms in the step are missing. Here is in explanation which term is missing and why for each step </p>
 	<br/>
 <div>
 	<p>
-		<h4 style="color:#2E86C1"> Key Exchange </h4>
-		<uib-accordion  >
-    	<div uib-accordion-group id="keyExchange" heading="ClientHello" style="border-radius: 2%">
+		<h3 style="color:#2E86C1; "> Key Exchange </h3>
+		<uib-accordion >
+    	<div uib-accordion-group id="keyExchange" heading="ClientHello" style="border-radius: 2em;border:2px solid;border-color:#2E86C1;">
     		<p><span style="color:#e70000">Deletion:</span>
       		All terms not in the extension are is mendatory and cannot be deleted from the terms sent to the server</p>
       		<ul>
       			<br/>
 
-            <li><p><b>legacy_version</b></p>
-              <p><span style="color:#009200">Adjustment:</span>
-              In version prior to TLS1.3, this field was used for version negotiation.</br> In TLS1.3 this field should be equal to <b> 0x0303 </b>, which indicates TLS1.2 and the version preferences are indicated by the client in a later extension parameter (<i>supported_versions)</i> which is mandatory in TLS1.3 having 0x0304 as its highest version. </p>
+          <!--   <li><p><b>legacy_version:</b></p>
+              <p>In version prior to TLS1.3, this field was used for version negotiation.</br> In TLS1.3 this field should be equal to <b> 0x0303 </b>, which indicates TLS1.2 and the version preferences are indicated by the client in a later extension parameter (<i>supported_versions)</i> which is mandatory in TLS1.3 having 0x0304 as its highest version. 
             </li>
 
             <br/>
-      			
-      			<li><p><b>random</b></p>
-      				<p><span style="color:#009200">Adjustment:</span>
-      				Since random is a random number generated, there's no options to choose from.</p>
+      			 -->
+      			<li><p><b>random:</b></p>
+      				<!-- <p>	Since random is a random number generated, there's no options to choose from.</p> -->
               <p> If the client is TLS1.2 and the server TLS1.3 this value should be equal to: 44 4F 57 4E 47 52 44 01 <br/>
               If the client is TLS1.1 or below and the server is TLS1.3 or TLS1.2 this value should be equal to: 44 4F 57 4E 47 52 44 00 </p>
       			</li>
@@ -28,33 +26,25 @@
       			</br>
 
       			<li><p><b>legacy_session_id</b></p>
-      				<p><span style="color:#009200">Adjustment:</span></p>
       				<p><u>If Client TLS1.3 and Server TLS1.2 or below:</u></br>In compatibility mode: this field must be non-empty so a client not offering a pre-TLS1.3 session must generate a new 32-byte value. This value need not be random but should be unpredictable to avoid implementations fixating on a specific value (also known as ossification). Otherwise, it MUST be set as a zero-length vector (i.e., a zero-valued single byte length field). </p> <p><u>If Client TLS1.2 and Server TLS1.3:</u> </br>When a client has a cached session ID that is set by a pre-TLS1.3 server then this field should be set to that value </p> <p><u>If Client TLS1.2 and Server TLS1.2 or below: </u> </br> When a client has a cached session ID that is set by a pre-TLS1.3 server then this field should be set to that value. </p> <p> <u> If Client TLS1.1 or below and Server TLS1.3 or TLS1.2: </u> </br> When a client has a cached session ID that is set by a pre-TLS1.3 server then this field should be set to that value.</p>
       			</li>
 
       			</br>
 
       			<li><p><b>legacy_compression_methods</b></p>
-      				<p><span style="color:#009200">Adjustment:</span> This vector should contain exactly one byte set to zero that represents "null" in the previous versions of TLS. In case any other value is received, this leads to a abortion of the handshake with an "illegal_parameter" alert. Potentially a man in the middle attack. </p>
+      				<p> This vector should contain exactly one byte set to zero that represents "null" in the previous versions of TLS. In case any other value is received, this leads to a abortion of the handshake with an "illegal_parameter" alert. Potentially a man in the middle attack. </p>
       			</li>
 
       			<br/>
             <li><p><b>supported_versions</b></p>
-              <p><span style="color:#009200">Adjustment:</span> This extension is used by the client to indicate what versions of TLS he supports. It consists of a list of the version supported order in an descending order of preference.
+              <p> This extension is used by the client to indicate what versions of TLS he supports. It consists of a list of the version supported order in an descending order of preference.
               In TLS1.3, the supported_version extension should always be available and having as highest value 0x0304 that indicates version TLS1.3. 
             </p>
             <p> Since only TLS1.3 is available in this application, the adjustment of this list is disabled.</p>
             </li>
             <br/>
-            <li><p><b>post_handshake_auth</b></p>
-              <p><span style="color:#009200">Adjustment:</span> This extension value should be of zero length.
-              <p> When this extension is provided in the clientHello, the server can at any time after the handshake completion,  request client authentication. The request is done by sending a certificateRequest message. In this case, the client should respond with the appropriate authentication messages.</p>
-              <p> In other words, if the client decides the certificate, certificateVerify, and finished messages. If the client on the other hand wants to decline, then he must send a certificate message not containing any certificate, followed by Finished message. </p>
-            </li>
-            <br/>
-
             <li><p><b>Certificate Authorities</b></p>
-              <p><span style="color:#009200">Adjustment:</span>   The data of thisfield is a list of distinguished names of CAs </p>
+              <p> The data of this field is a list of distinguished names of CAs </p>
             </li>
             <br/>
       		</ul>
@@ -68,26 +58,28 @@
       			<li><p><b>Padding:</b></p>
       				<p>This extension data is an arbitrary number of zero bytes. This field is available so it can be used to pad a ClientHello to a desired size. This sometimes helps  avoiding implementation bugs that are caused by ClientHello sizes.</p>
       			</li>
-
+             <li><p><b>post_handshake_auth</b></p>
+              <p> This extension value should be of zero length.
+              <p> When this extension is provided in the clientHello, the server can at any time after the handshake completion,  request client authentication. The request is done by sending a certificateRequest message. In this case, the client should respond with the appropriate authentication messages.</p>
+              <p> In other words, if the client decides the certificate, certificateVerify, and finished messages. If the client on the other hand wants to decline, then he must send a certificate message not containing any certificate, followed by Finished message. </p>
+            </li>
       		</ul>
     	</div>
     	
-    	<div uib-accordion-group id="keyExchange" heading="ServerHello & HelloRetryRequest"  style="border-radius: 2%">
+    	<div uib-accordion-group id="keyExchange" heading="ServerHello & HelloRetryRequest"  style="border-radius: 2em;border:2px solid;border-color:#2E86C1;">
       		<p><span style="color:#e70000">Deletion:</span>
       		All terms not in the extension are is mendatory and cannot be deleted from the terms sent to the server</p>
       			<ul>
       			</br>
 
             <li><p><b>legacy_version</b></p>
-              <p><span style="color:#009200">Adjustment:</span>
-              In version prior to TLS1.3, this field was used for version negotiation.</br> In TLS1.3 this field should be equal to <b> 0x0303 </b>, which indicates TLS1.2 and the version preferences are indicated by the server in a later extension parameter (<i>supported_versions</i>) which is mandatory in TLS1.3 having 0x0304 as its highest version. </p>
+              <p> In version prior to TLS1.3, this field was used for version negotiation.</br> In TLS1.3 this field should be equal to <b> 0x0303 </b>, which indicates TLS1.2 and the version preferences are indicated by the server in a later extension parameter (<i>supported_versions</i>) which is mandatory in TLS1.3 having 0x0304 as its highest version. </p>
             </li>
 
             <br/>
 
             <li><p><b>random (ServerHello)</b></p>
-              <p><span style="color:#009200">Adjustment:</span>
-              In version prior to TLS1.3, this field was used for version negotiation.</br> In TLS1.3 this field should be equal to <b> 0x0303 </b>, which indicates TLS1.2 and the version preferences are indicated by the server in a later extension parameter (<i>supported_versions)</i> which is mandatory in TLS1.3 having 0x0304 as its highest version. </p>
+              <p> In version prior to TLS1.3, this field was used for version negotiation.</br> In TLS1.3 this field should be equal to <b> 0x0303 </b>, which indicates TLS1.2 and the version preferences are indicated by the server in a later extension parameter (<i>supported_versions)</i> which is mandatory in TLS1.3 having 0x0304 as its highest version. </p>
               <p> If the client is TLS1.2 and the server TLS1.3 this value should be equal to: 44 4F 57 4E 47 52 44 01 <br/>
              If the client is TLS1.1 or below and the server is TLS1.3 or TLS1.2 this value should be equal to: 44 4F 57 4E 47 52 44 00 </p>
             </li>
@@ -95,27 +87,25 @@
             <br/>
 
             <li><p><b>random (HelloRetryRequest)</b></p>
-              <p><span style="color:#009200">Adjustment:</span>
-              To identify the helloRetryRequest message from a serverHello message, the random number of the helloRetryRequest is always equal to: <p>CF 21 AD 74 E5 9A 61 11 BE 1D 8C 02 1E 65 B8 91<br/>C2 A2 11 16 7A BB 8C 5E 07 9E 09 E2 C8 A8 33 9C</p></p>
+              <p>To identify the helloRetryRequest message from a serverHello message, the random number of the helloRetryRequest is always equal to: <p>CF 21 AD 74 E5 9A 61 11 BE 1D 8C 02 1E 65 B8 91<br/>C2 A2 11 16 7A BB 8C 5E 07 9E 09 E2 C8 A8 33 9C</p></p>
             </li>
 
             <br/>
 
       			<li><p><b>legacy_session_id</b></p>
-      				<p><span style="color:#009200">Adjustment:</span></p>
       				<p><u>If Client TLS1.3 and Server TLS1.2 or below:</u></br>In compatibility mode: this field must be non-empty so a client not offering a pre-TLS1.3 session must generate a new 32-byte value. This value need not be random but should be unpredictable to avoid implementations fixating on a specific value (also known as ossification). Otherwise, it MUST be set as a zero-length vector (i.e., a zero-valued single byte length field). </p>
       				<p><u>If Client TLS1.2 or below</u> </br>When a client has a cached session ID that is set by a pre-TLS1.3 server then this field should be set to that value </p> 
       			</li>
 
             <br/>
       			<li><p><b>legacy_compression_methods</b></p>
-      				<p><span style="color:#009200">Adjustment:</span> This vector should contain exactly one byte set to zero that represents "null" in the previous versions of TLS. In case any other value is received, this leads to a abortion of the handshake with an "illegal_parameter" alert. Potentially a man in the middle attack. </p>
+      				<p> This vector should contain exactly one byte set to zero that represents "null" in the previous versions of TLS. In case any other value is received, this leads to a abortion of the handshake with an "illegal_parameter" alert. Potentially a man in the middle attack. </p>
       			</li>
 
             <br/>
 
             <li><p><b>supported_versions</b></p>
-              <p><span style="color:#009200">Adjustment:</span> This extension is used by the server to indicate what versions of TLS he supports. It consists of a list of the version supported order in an descending order of preference.
+              <p> This extension is used by the server to indicate what versions of TLS he supports. It consists of a list of the version supported order in an descending order of preference.
               In TLS1.3, the supported_version extension should always be available and having as highest value 0x0304 that indicates version TLS1.3. 
             </p>
             <p> Since only TLS1.3 is available in this application, the adjustment of this list is disabled.</p>
@@ -142,10 +132,10 @@
 	</p>
 	</br>
   <p>
-		<h4 style="color:#F39C12"> Server Parameters</h4>
+		<h3 style="color:#F39C12"> Server Parameters</h3>
 		<uib-accordion >
 
-		<div uib-accordion-group id="serverParameters" heading="Encrypted Extensions"  style="border-radius: 2%">
+		<div uib-accordion-group id="serverParameters" heading="Encrypted Extensions" style="border-radius: 2em;border:2px solid;border-color:#F39C12;" >
 			
     			<p><b>To facilitate the user experience, some extensions were not included:</p>
     			
@@ -189,20 +179,16 @@
 
 		</div>
     
-    	<div uib-accordion-group id="serverParameters" heading="Certificate Request"  style="border-radius: 2%" >
+    	<div uib-accordion-group id="serverParameters" heading="Certificate Request" style="border-radius: 2em;border:2px solid;border-color:#F39C12;" >
       		<ul> 
             <li><p><b>certificate_request_context</b></p>
-              <p><span style="color:#009200">Adjustment:</span> If this field is not used in the post-handshakeauthentication exchanges, it must always be of zero length.
+              <p> If this field is not used in the post-handshake authentication exchanges, it must always be of zero length.
              </p>
-          
-
-              <p><span style="color:#e70000">Deletion:</span>
-              Since it is not an extension this field is always mandatory.</p>
             </li>
             <br/>
 
             <li><p><b>Certificate Authorities</b></p>
-              <p><span style="color:#009200">Adjustment:</span>   The data of thisfield is a list of distinguished names of CAs </p>
+              <p> The data of thisfield is a list of distinguished names of CAs </p>
             </li>
 
           </ul>
@@ -211,20 +197,23 @@
 	</p>
 </br>
 <p>
-    <h4 style="color:#16A085"> Authentication </h4>
+    <h3 style="color:#16A085"> Authentication </h3>
     <uib-accordion >
 
-      <div uib-accordion-group id="authentication" heading="Certificate"  style="border-radius: 2%">
+      <div uib-accordion-group id="authentication" heading="Certificate" style="border-radius: 2em;border:2px solid;border-color:#16A085;">
 
       </div>
       
-      <div uib-accordion-group id="authentication" heading="Certificate Verify"  style="border-radius: 2%" >
-authentication      </div>
+      <div uib-accordion-group id="authentication" heading="Certificate Verify" style="border-radius: 2em;border:2px solid;border-color:#16A085;">
+  
+     </div>
 
     </uib-accordion> 
   </p>
 </div>
 
-	
-	
+<!-- 	status_request:  CH, CR, CT
+  use_srtp: CH, EE
+  oid_filters: CR
+  signed_certificate_timestamp: CH, CR, CT -->
 </div>

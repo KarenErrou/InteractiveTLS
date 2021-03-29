@@ -5,11 +5,15 @@
             
         </div>
 
-
         <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+            <div style="background-color: #EBEDEF; width: fit-content; margin: 20px; padding: 20px; border-radius: 2em;"> 
+                <span style="font-size:23px;">Animate &nbsp;&nbsp; </span>
+                <button class="animate bouncy" ng-click="animateSpeed(0.5)">Speed x0.5</button> 
+                <button class="animate bouncy" style="animation-delay: 0.25s;" ng-click="animateSpeed(1.0)">Speed x1.0</button> 
+                <button class="animate bouncy" style="animation-delay: 0.5s;" ng-click="animateSpeed(1.5)">Speed x1.5</button> 
+        </div>
+                    <br/><br/><br/>
 
-            <button class="animate bouncy" ng-click="replayAnimate()">Animate</button> 
-                
             <div class="peers">
                     <div class="peerP1" class="peerP2" style="border-color:#2E86C1;" >Client</div>
                     <div class="peerP3">Attacker</div>
@@ -53,7 +57,7 @@
                            <h3>accept 0-RTT</h3>
                         </div>
                     </div>
-                    <span id="attacker_stop1" style="font-size:70px;  color:red; position: absolute; right:50%; padding-top: 30px;"> X   </span>
+                    <span id="attacker_stop1" style="font-size:70px;  color:#E74C3C; position: absolute; right:50%; padding-top: 30px;"> X  </span>
 
                     <!-- <span style="font-size:100px; color: #99ace6" > &larr;   </span> -->
                 </div>
@@ -67,7 +71,7 @@
                            <h3>key-exchange response messages</h3>
                         </div>
                     </div>
-                    <span id="attacker_stop2" style="font-size:70px;  color:red; position: absolute; right:50%; padding-top: 30px;"> X   </span>
+                    <span id="attacker_stop2" style="font-size:70px;  color:#0000; position: absolute; right:50%; padding-top: 30px;"> X   </span>
                     <!-- <span style="font-size:100px; color: #99ace6" > &larr;   </span>-->
                 </div>
                 
@@ -75,8 +79,8 @@
 
                 
                 <div class="stepAttackerR" > 
-                    <div class="stepAttackerRContent" id="attacker1" style="border-color:red; color:red;">    
-                       <div class="circleClient" ng-if="animate" style="border-color: red"> 5 </div> 
+                    <div class="stepAttackerRContent" id="attacker1" style="border-color:#E74C3C; color:#000;">    
+                       <div class="circleClient" ng-if="animate" style="border-color: #E74C3C"> 5 </div> 
                         <h3> replay<br/> 0-RTT key-exchange messages </h3>
                     </div>
                 </div>
@@ -84,8 +88,8 @@
                     <!-- <span style="font-size:100px; color:red; position: relative; left:100%"> &rarr; </span>-->
 
                 <div class="stepAttackerR" > 
-                    <div class="stepAttackerRContent" id="attacker2" style="border-color:red; color:red;">    
-                       <div class="circleClient" ng-if="animate" style="border-color: red"> 6 </div> 
+                    <div class="stepAttackerRContent" id="attacker2" style="border-color:#E74C3C; color:#000;">    
+                       <div class="circleClient" ng-if="animate" style="border-color: #E74C3C"> 6 </div> 
                         <h3> replay<br/> 0-RTT data</h3>
                         <i> request </i>
                     </div>

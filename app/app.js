@@ -41,9 +41,20 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 		increment = true;
 
 		for(var alerts in $scope.alertsList){
+			var element = document.getElementById("thread");
 			if ($scope.alertsList[alerts].stop == step){
 				increment = false;
 				$scope.keyExMode = 5;
+				// thread.style.animation= "scaleAlert 0.2s ease";
+								 // -> removing the class
+				  element.classList.remove("thread");
+				  
+				  // -> triggering reflow /* The actual magic */
+				  // without this it wouldn't work. Try uncommenting the line and the transition won't be retriggered.
+				  element.offsetWidth = element.offsetWidth;
+				  
+				  // -> and re-adding the class
+				  element.classList.add("thread");
 			}
 		}
 		//initialise 
@@ -1485,9 +1496,6 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
  		{eltType: 'opaque', delete: 'no', adjustment:'no', eltName: 'legacy_compression_methods', eltValue: ';', deleted:'no',
  			info: 'Versions of TLS before 1.3 supported compression with the list of supported compression methods being sent in this field. </br> In TLS 1.3, this vector MUST contain exactly one byte set to zero, which corresponds to the "null" compression method in prior versions of TLS.</br>'
  			+'If it is not the case, and the server receives a non 0 value, then the server must abort the handshake with an "illegal_parameter" alert.'
- 		},
- 		{eltType: '', delete: 'yes', adjustment:'no', eltName: 'Certificate Authorities', eltValue: ';', deleted:'yes',
- 		info: 'In  this  extension  the  client  may  indicate the certificate authorities (CAs) that he supports.  The data of thisfield is a list of distinguished names of CAs.'
  		}
  	];
 
@@ -1518,9 +1526,6 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
  		},
  		{eltType: '', delete: 'yes', adjustment:'no', eltName: 'early_data', eltValue: ';', deleted:'yes',
  			info: '<p>  </p>'
- 		},
- 		{eltType: '', delete: 'yes', adjustment:'no', eltName: 'post_handshake_auth', eltValue: ';', deleted:'yes',
- 			info: 'When this extension is sent by the client, then it indicates that he is willing to perform post-handshake authentication. When this extension is missing, servers should not send a post-handshake CertificateRequest. This extension value should be of zero length.'
  		},
  		{eltType: '', delete: 'yes', adjustment:'yes', eltName: 'signature_algorithms', eltValue: ';', deleted:'no',
 	 		info: '<p>Indicating  what  algorithms  can  be  used  in  digital  signatures  appearing  in the server certificates message</p> <p>When signature_algorithms_cert extension is not given, then signature_algorithms also applies to signatures in certificateVerify.</p>',
@@ -1647,12 +1652,10 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
  	];
 
  	$scope.certificateRequest = [
-	 	{eltType: '', delete: 'no', adjustment:'no', eltName: 'certificate_request_context', eltValue: ';', deleted:'yes',
- 			info: ' Identifier for the certificate re-quest and will be echoed in the client’sCertificatemessage later on. It must be unique within the scope of this connection, preventing replay of the client CertificateVerify messages.'
+	 	{eltType: '', delete: 'no', adjustment:'no', eltName: 'certificate_request_context', eltValue: ';', deleted:'no',
+ 			info: ' Identifier for the certificate request. This message must be echoed later in the client’s Certificate message. It must be unique within the scope of this connection, preventing replay of the client CertificateVerify messages.'
  		},
- 		{eltType: '', delete: 'yes', adjustment:'no', eltName: 'Certificate Authorities', eltValue: ';', deleted:'yes',
- 			info: 'In  this  extension  the  server  may  indicate the certificate authorities (CAs) that he supports.  The data of thisfield is a list of distinguished names of CAs.'
- 		},{eltType: '', delete: 'yes', adjustment:'yes', eltName: 'signature_algorithms', eltValue: ';', deleted:'no',
+ 		{eltType: '', delete: 'no', adjustment:'yes', eltName: 'signature_algorithms', eltValue: ';', deleted:'no',
 	 		info: '<p>Indicating  what  algorithms  can  be  used  in  digital  signatures  appearing  in the client certificates message</p> <p>When signature_algorithms_cert extension is not given, then signature_algorithms also applies to signatures in certificateVerify.</p>',
 	 		adjust: 'RSASSA-PKCS1-v15;ECDSA;RSASSA-PSS  RSAE;EdDSA;RSASSA-PSS',
  		},
@@ -1669,10 +1672,29 @@ myTLSApp.controller('MissingTerms', function ($scope) {
   $scope.oneAtATime = true;
 });
 
+
 //ANIMATIONS
 myTLSApp.controller('Replay', ['$scope', '$http', function($scope, $http){
 	var id = null;
 	$scope.animate = true;
+
+	$scope.speed = 60;
+
+	$scope.animateSpeed = function(speed){
+		if(speed == 0.5){
+			$scope.speed = 100;
+			$scope.replayAnimate();
+		}
+		else if(speed == 1.0){
+			$scope.speed = 60;
+			$scope.replayAnimate();
+		}
+		else if(speed == 1.5){
+			$scope.speed = 30;
+			$scope.replayAnimate();
+		}
+	}
+
 	$scope.replayAnimate= function() {
 		$scope.animate = false;
   		var client1 = document.getElementById("step1");   
@@ -1709,7 +1731,6 @@ myTLSApp.controller('Replay', ['$scope', '$http', function($scope, $http){
   		$scope.showHideElem(client3,'transparent');
   		$scope.showHideElem(client4,'transparent');
   		
-  		
   		$scope.showHideElem(attacker1,'transparent');
   		$scope.showHideElem(attacker2,'transparent');
   		
@@ -1718,13 +1739,12 @@ myTLSApp.controller('Replay', ['$scope', '$http', function($scope, $http){
   		message3.style.color = "transparent";
 
   		function percentwidth(elem){
- 		   var pa= elem.offsetParent || elem;
+ 		    var pa= elem.offsetParent || elem;
     		return ((elem.offsetWidth/pa.offsetWidth)*100).toFixed(1);
-
 		}
 
   		clearInterval(id);
-  		id = setInterval(step1, 40);
+  		id = setInterval(step1, $scope.speed);
   		var pos = 0;
   		var width = 0;
 
@@ -1734,7 +1754,7 @@ myTLSApp.controller('Replay', ['$scope', '$http', function($scope, $http){
       			clearInterval(id);
   				pos = 0;
   				$scope.showHideElem(client2,'#2E86C1');	
-  				id = setInterval(step2, 40);
+  				id = setInterval(step2, $scope.speed);
     		} else {
       			pos++; 
       			client1.style.left = pos + '%'; 
@@ -1747,7 +1767,7 @@ myTLSApp.controller('Replay', ['$scope', '$http', function($scope, $http){
       			pos = 0;
   				$scope.showHideElem(server1,'#16A085');		
 				message1.style.color = "black";
-      			id = setInterval(step3, 40);
+      			id = setInterval(step3, $scope.speed);
     		} else {
       			pos++; 
       			client2.style.left = pos + '%'; 
@@ -1760,7 +1780,7 @@ myTLSApp.controller('Replay', ['$scope', '$http', function($scope, $http){
       			pos = 0;
   				$scope.showHideElem(server2,'#16A085');		  	
   				attacker_stop1.style.color  = 'red';
-      			id = setInterval(step4, 40);
+      			id = setInterval(step4, $scope.speed);
     		} else {
       			pos++; 
       			server1.style.right = pos + '%'; 
@@ -1773,7 +1793,7 @@ myTLSApp.controller('Replay', ['$scope', '$http', function($scope, $http){
       			pos = 50;
   				$scope.showHideElem(attacker1,'red');	
   				attacker_stop2.style.color  = 'red';
-      			id = setInterval(step5, 40);
+      			id = setInterval(step5, $scope.speed);
     		} else {
       			pos++; 
       			server2.style.right = pos + '%'; 
@@ -1785,7 +1805,7 @@ myTLSApp.controller('Replay', ['$scope', '$http', function($scope, $http){
       			clearInterval(id);
       			pos = 50;
   				$scope.showHideElem(attacker2,'red');	
-      			id = setInterval(step6, 40);
+      			id = setInterval(step6, $scope.speed);
     		} else {
       			pos++; 
       			attacker1.style.left = pos + '%'; 
@@ -1798,7 +1818,7 @@ myTLSApp.controller('Replay', ['$scope', '$http', function($scope, $http){
       			pos = 0;
   				$scope.showHideElem(server3,'#16A085');	
 				message2.style.color = "black";
-      			id = setInterval(step7, 40);
+      			id = setInterval(step7, $scope.speed);
     		} else {
       			pos++; 
       			attacker2.style.left = pos + '%'; 
@@ -1810,7 +1830,7 @@ myTLSApp.controller('Replay', ['$scope', '$http', function($scope, $http){
       			clearInterval(id);
       			pos = 0;
   				$scope.showHideElem(server4,'#16A085');
-      			id = setInterval(step8, 40);
+      			id = setInterval(step8, $scope.speed);
     		} else {
       			pos++; 
       			server3.style.right = pos + '%'; 
@@ -1822,7 +1842,7 @@ myTLSApp.controller('Replay', ['$scope', '$http', function($scope, $http){
       			clearInterval(id);
       			pos = 0;
   				$scope.showHideElem(client3,'#2E86C1');
-      			id = setInterval(step9, 40);
+      			id = setInterval(step9, $scope.speed);
     		} else {
       			pos++; 
       			server4.style.right = pos + '%'; 
@@ -1834,7 +1854,7 @@ myTLSApp.controller('Replay', ['$scope', '$http', function($scope, $http){
       			clearInterval(id);
       			pos = 0;
   				$scope.showHideElem(client4,'#2E86C1');
-      			id = setInterval(step10, 40);
+      			id = setInterval(step10, $scope.speed);
     		} else {
       			pos++; 
       			client3.style.left = pos + '%'; 
@@ -1857,6 +1877,22 @@ myTLSApp.controller('Replay', ['$scope', '$http', function($scope, $http){
 myTLSApp.controller('Downgrade', ['$scope', '$http', function($scope, $http){
 	var id = null;
 	$scope.animate = true;
+
+	$scope.speed = 60;
+	$scope.animateSpeed = function(speed){
+		if(speed == "0.5"){			
+			$scope.speed = 100;
+			$scope.downgradeAnimate();
+		}
+		else if(speed == "1.0"){
+			$scope.speed = 60;
+			$scope.downgradeAnimate();
+		}
+		else if(speed == "1.5"){
+			$scope.speed = 30;
+			$scope.downgradeAnimate();
+		}
+	}
 	$scope.downgradeAnimate= function() {
 		$scope.animate = false;
   		var clientHello1 = document.getElementById("clientHello1");   
@@ -1891,7 +1927,7 @@ myTLSApp.controller('Downgrade', ['$scope', '$http', function($scope, $http){
 		}
   		
   		clearInterval(id);
-  		id = setInterval(step1, 40);
+  		id = setInterval(step1, $scope.speed);
   		var pos = 0;
   		function step1() {
   			width = parseInt(percentwidth(clientHello1));
@@ -1900,7 +1936,7 @@ myTLSApp.controller('Downgrade', ['$scope', '$http', function($scope, $http){
   				clientHello_stop1.style.color = 'red';
   				pos = 50;
   				$scope.showHideElem(attacker1,'red');
-  				id = setInterval(step2, 40);
+  				id = setInterval(step2, $scope.speed);
     		} else {
       			pos++; 
       			clientHello1.style.left = pos + '%'; 
@@ -1913,7 +1949,7 @@ myTLSApp.controller('Downgrade', ['$scope', '$http', function($scope, $http){
       			pos = 0;
       			$scope.showHideElem(clientHello2,'#2E86C1');
 				message1.style.color = "black";
-      			id = setInterval(step3, 40);
+      			id = setInterval(step3, $scope.speed);
     		} else {
       			pos++; 
       			attacker1.style.right = pos + '%'; 
@@ -1925,7 +1961,7 @@ myTLSApp.controller('Downgrade', ['$scope', '$http', function($scope, $http){
       			clearInterval(id);
       			pos = 0;
       			$scope.showHideElem(serverHello1,'#16A085');
-      			id = setInterval(step4, 40);
+      			id = setInterval(step4, $scope.speed);
     		} else {
       			pos++; 
       			clientHello2.style.left = pos + '%'; 
@@ -1939,7 +1975,7 @@ myTLSApp.controller('Downgrade', ['$scope', '$http', function($scope, $http){
       			pos = 0;
       			$scope.showHideElem(clientHello3,'#2E86C1');
 				message2.style.color = "black";
-      			id = setInterval(alert1, 40);
+      			id = setInterval(alert1, $scope.speed);
     		} else {
       			pos++; 
       			serverHello1.style.right = pos + '%'; 

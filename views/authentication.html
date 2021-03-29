@@ -1,13 +1,15 @@
 
 <!--------------- Certificate ------------------>   
 <div class="stepServer"> 
-	<div class="stepServerContent" id="authentication" ng-if="step<6 && sigalgoClient == true" style="background-color: #E5E7E9;">
+	<div class="stepServerContent" id="authentication" ng-if="step<6 && sigalgoClient == true" style="width:50%; background-color: #E5E7E9;">
         <div  ng-if="keyExchange[0] == 'helloRetryRequest'" class="circleServer" ng-model="step" id="authentication"> 7</div>
         <div  ng-if="keyExchange[0] == 'serverHello'" class="circleServer" ng-model="step" id="authentication"> 5</div>
         <h3>Certificate</h3>
         <p> (This message is encrypted) </p> <br/>
         <div>This message contains the certificate to be used for authentication and any supporting certificate in the chain.   </div><br/>
         <div style="display: inline-block;">
+            certificate_request_context 
+            <div class="infoButton" ng-click="showInfo('certificate_request_context', {eltName: 'certificate_request_context', info: 'This message should be of zero length since it is the server's Certificate and not the clients. It is intended to prevent replay of the client Certificate Verify message and therefore is only used in the case of the client's authencation..' }, 'info')">i</div><br/>
             certificate_list 
             <div class="infoButton" ng-click="showInfo('certificate', {eltName: 'certficate_list', info: '<i>certificate_list</i> is a sequence of certificates that can be either of type X509 or RawPublicKey.  The first certificate must be the sender’s certificate, then each following certificate directly certify the one preceding it.' }, 'info')">i</div>
         </div>  
@@ -15,13 +17,15 @@
 
 <!-- 
     <span ng-if= "step>6  && sigalgoClient == true" style="font-size:100px; color: #16A085;"> &larr; </span> -->
-    <div class="stepServerContent" id="authentication" ng-if= "step>=6 && sigalgoClient == true">
+    <div class="stepServerContent" id="authentication" ng-if= "step>=6 && sigalgoClient == true" style="width:50%;">
         <div  ng-if="keyExchange[0] == 'helloRetryRequest'" class="circleServer" ng-model="step" id="authentication"> 7</div>
         <div  ng-if="keyExchange[0] == 'serverHello'" class="circleServer" ng-model="step" id="authentication"> 5</div> 
         <h3>Certificate</h3>
         <p> (This message is encrypted) </p> <br/>
         <div>This message contains the certificate to be used for authentication and any supporting certificate in the chain.   </div><br/>
         <div style="display: inline-block;">
+            certificate_request_context 
+            <div class="infoButton" ng-click="showInfo('certificate_request_context', {eltName: 'certificate_request_context', info: 'This message should be of zero length since it is the server's Certificate and not the clients. It is intended to prevent replay of the client Certificate Verify message and therefore is only used in the case of the client's authencation..' }, 'info')">i</div><br/>
             certificate_list 
             <div class="infoButton" ng-click="showInfo('certificate', {eltName: 'certficate_list', info: '<i>certificate_list</i> is a sequence of certificates that can be either of type X509 or RawPublicKey.  The first certificate must be the sender’s certificate, then each following certificate directly certify the one preceding it.' }, 'info')">i</div>
         </div>  
@@ -38,7 +42,7 @@
 
 <!--------------- Certificate Vertify ------------------>   
 <div class="stepServer"> 
-    <div class="stepServerContent" id="authentication" ng-if="step<7 && sigalgoClient == true" style="background-color: #E5E7E9;">
+    <div class="stepServerContent" id="authentication" ng-if="step<7 && sigalgoClient == true" style="width:50%; background-color: #E5E7E9;">
         <div ng-if="keyExchange[0] == 'helloRetryRequest'" class="circleServer" ng-model="step" id="authentication"> 8</div>
         <div ng-if="keyExchange[0] == 'serverHello'" class="circleServer" ng-model="step" id="authentication"> 6</div>
         <h3>Certificate Verify</h3>
@@ -49,7 +53,7 @@
 
 
     <!-- <span ng-if= "step>7  && sigalgoClient == true" style="font-size:100px; color: #16A085;"> &larr; </span> -->
-    <div class="stepServerContent" id="authentication" ng-if= "step>=7 && sigalgoClient == true">
+    <div class="stepServerContent" id="authentication" ng-if= "step>=7 && sigalgoClient == true" style="width:50%;">
         <div ng-if="keyExchange[0] == 'helloRetryRequest'" class="circleServer" ng-model="step" id="authentication"> 8</div>
         <div ng-if="keyExchange[0] == 'serverHello'" class="circleServer" ng-model="step" id="authentication"> 6</div> 
         <h3>Certificate Verify</h3>
@@ -65,7 +69,7 @@
 
 <!--------------- Finished ------------------>   
 <div class="stepServer"> 
-    <div class="stepServerContent" id="authentication" ng-if="step<8" style="background-color: #E5E7E9;">
+    <div class="stepServerContent" id="authentication" ng-if="step<8" style="background-color: #E5E7E9; width:50%;">
         <div ng-if="keyExchange[0] == 'helloRetryRequest'" class="circleServer" ng-model="step" id="authentication"> 9</div>
         <div ng-if="keyExchange[0] == 'serverHello'" class="circleServer" ng-model="step" id="authentication"> 7</div>
         <h3>Finished</h3>
@@ -77,7 +81,7 @@
 
     <span ng-if= "step>8" style="font-size:100px; color: #16A085;"> &larr; </span>
 
-    <div class="stepServerContent" id="authentication" ng-if= "step>=8">
+    <div class="stepServerContent" id="authentication" ng-if= "step>=8" style="width:50%;">
         <div ng-if="keyExchange[0] == 'helloRetryRequest'" class="circleServer" ng-model="step" id="authentication"> 9</div>
         <div ng-if="keyExchange[0] == 'serverHello'" class="circleServer" ng-model="step" id="authentication"> 7</div>
         <h3>Finished</h3>
@@ -94,7 +98,7 @@
 
 <!----------------------- EARLY DATA ---------------->
 <div ng-if="keyExMode == 2 || keyExMode == 3 || keyExMode == 4" class="stepServer">
-    <div class="stepServerContent" style="background-color:#2471A3; color: #fff;">
+    <div class="stepServerContent" style="background-color:#2471A3; color: #fff; width:50%;">
         <h3>Application Data</h3>    
         PSK mode: the client can send earlier application data.    
     </div>
@@ -104,26 +108,30 @@
 <!------------------ CLIENT ------------------->
 
 <div class="stepClient"> 
-    <div class="stepClientContent" id="authentication" ng-if="step<9 && sigalgoServer == true" style="background-color: #E5E7E9;">
+    <div class="stepClientContent" id="authentication" ng-if="step<9 && sigalgoServer == true" style="background-color: #E5E7E9; width:50%;">
         <div  ng-if="keyExchange[0] == 'helloRetryRequest'" class="circleClient" ng-model="step" id="authentication"> 10</div>
         <div  ng-if="keyExchange[0] == 'serverHello'" class="circleClient" ng-model="step" id="authentication"> 8</div>
         <h3>Certificate</h3>
         <p> (This message is encrypted) </p> <br/>
         <div>This message contains the certificate to be used for authentication and any supporting certificate in the chain.   </div><br/>
         <div style="display: inline-block;">
+            <div class="infoButton" ng-click="showInfo('certificate_request_context ', {eltName: 'certificate_request_context ', info: 'Identifier echoed from the server's Certificate Request. It prevents replay of the client Certificate Verify message.' }, 'info')">i</div>
+            certificate_request_context   <br/>
             <div class="infoButton" ng-click="showInfo('certificate', {eltName: 'certficate_list', info: '<i>certificate_list</i> is a sequence of certificates that can be either of type X509 or RawPublicKey.  The first certificate must be the sender’s certificate, then each following certificate directly certify the one preceding it.' }, 'info')">i</div>
             certificate_list 
         </div>  
     </div>
 
 
-    <div class="stepClientContent" id="authentication" ng-if= "step>=9 && sigalgoServer == true">
+    <div class="stepClientContent" id="authentication" ng-if= "step>=9 && sigalgoServer == true" style="width:50%;">
          <div  ng-if="keyExchange[0] == 'helloRetryRequest'" class="circleClient" ng-model="step" id="authentication"> 7</div>
         <div  ng-if="keyExchange[0] == 'serverHello'" class="circleClient" ng-model="step" id="authentication"> 5</div> 
         <h3>Certificate</h3>
         <p> (This message is encrypted) </p> <br/>
         <div>This message contains the certificate to be used for authentication and any supporting certificate in the chain.   </div><br/>
         <div style="display: inline-block;">
+            <div class="infoButton" ng-click="showInfo('certificate_request_context ', {eltName: 'certificate_request_context ', info: 'Identifier echoed from the server's Certificate Request. It prevents replay of the client Certificate Verify message.' }, 'info')">i</div>
+            certificate_request_context   <br/>
             <div class="infoButton" ng-click="showInfo('certificate', {eltName: 'certficate_list', info: '<i>certificate_list</i> is a sequence of certificates that can be either of type X509 or RawPublicKey.  The first certificate must be the sender’s certificate, then each following certificate directly certify the one preceding it.' }, 'info')">i</div>
             certificate_list 
         </div>  
@@ -141,7 +149,7 @@
 
 <!--------------- Certificate Vertify ------------------>   
 <div class="stepClient"> 
-    <div class="stepClientContent" id="authentication" ng-if="step<10 && sigalgoServer == true" style="background-color: #E5E7E9;">
+    <div class="stepClientContent" id="authentication" ng-if="step<10 && sigalgoServer == true" style="background-color: #E5E7E9; width:50%;">
         <div ng-if="keyExchange[0] == 'helloRetryRequest'" class="circleClient" ng-model="step" id="authentication"> 11</div>
         <div ng-if="keyExchange[0] == 'serverHello'" class="circleClient" ng-model="step" id="authentication"> 9</div>
         <h3>Certificate Verify</h3>
@@ -151,7 +159,7 @@
     </div>
 
 
-    <div class="stepClientContent" id="authentication" ng-if= "step>=10 && sigalgoServer == true">
+    <div class="stepClientContent" id="authentication" ng-if= "step>=10 && sigalgoServer == true" style="width:50%;">
         <div ng-if="keyExchange[0] == 'helloRetryRequest'" class="circleClient" ng-model="step" id="authentication"> 11</div>
         <div ng-if="keyExchange[0] == 'serverHello'" class="circleClient" ng-model="step" id="authentication"> 9</div> 
         <h3>Certificate Verify</h3>
@@ -169,10 +177,9 @@
 
 <!--------------- Finished ------------------>   
 <div class="stepClient"> 
-    <div class="stepClientContent" id="authentication" ng-if="step<11" style="background-color: #E5E7E9;">
+    <div class="stepClientContent" id="authentication" ng-if="step<11" style="background-color: #E5E7E9; width:50%;">
         <div ng-if="keyExchange[0] == 'helloRetryRequest'"  class="circleClient" ng-model="step" id="authentication"> 12</div>
         <div ng-if="keyExchange[0] == 'serverHello'"  class="circleClient" ng-model="step" id="authentication"> 10</div>
-        <h3>Finished</h3>
         <h3>Finished</h3>
         <p> (This message is encrypted) </p> <br/>
         <p>This message is a Message Authentication Code (MAC) over the entire handshake. It provides key confirmation, binds the endpoint’s identity to the exchanged keys, and authenticates the handshake in PSK mode </p>
@@ -181,7 +188,7 @@
     </div>
 
 
-    <div class="stepClientContent" id="authentication" ng-if= "step>=11">
+    <div class="stepClientContent" id="authentication" ng-if= "step>=11" style="width:50%;">
         <div ng-if="keyExchange[0] == 'helloRetryRequest'"  class="circleClient" ng-model="step" id="authentication"> 12</div>
         <div ng-if="keyExchange[0] == 'serverHello'"  class="circleClient" ng-model="step" id="authentication"> 10</div> 
         <h3>Finished</h3>
@@ -199,7 +206,7 @@
 
 <div>
     <div ng-if= "step>=12" class="stepClient">
-        <div  class="stepClientContent" style="background-color:#2471A3; color: #fff;">
+        <div  class="stepClientContent" style="background-color:#2471A3; color: #fff; width:50%;">
             <h3>Application Data</h3>    
         </div>
         <span style="font-size:100px; color: #2471A3;"> &rarr; </span>
@@ -209,7 +216,7 @@
     <div ng-if= "step>=12" class="stepServer">
 
         <span style="font-size:100px; color: #2471A3;"> &larr; </span>
-        <div  class="stepServerContent" style="background-color:#2471A3; color: #fff;">
+        <div  class="stepServerContent" style="background-color:#2471A3; color: #fff; width:50%;">
             <h3>Application Data</h3>    
         </div>
     </div>

@@ -7,13 +7,18 @@
 
 
         <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
-
-            <button class="animate bouncy" ng-click="downgradeAnimate()">Animate</button> 
-
+            <div style="background-color: #EBEDEF; width: fit-content; margin: 20px; padding: 20px; border-radius: 2em;"> 
+            <span style="font-size:23px;"> Animate &nbsp;&nbsp;</span>
+            <!-- <button class="animate bouncy" ng-click="downgradeAnimate()">Animate</button>  -->
+            <button class="animate bouncy" ng-click="animateSpeed(0.5)">Speed x0.5</button> 
+            <button class="animate bouncy" style="animation-delay: 0.25s;" ng-click="animateSpeed(1.0)">Speed x1.0</button> 
+            <button class="animate bouncy" style="animation-delay: 0.5s;" ng-click="animateSpeed(1.5)">Speed x1.5</button> 
+        </div>
+            <br/><br/><br/>
              <div class="peers">
-                    <div class="peerP1" class="peerP2" style="border-color:#2E86C1;" >Client</div>
+                    <div class="peerP1" class="peerP2" style="border-color:#2E86C1; color:#2E86C1;" >Client</div>
                     <div class="peerP3">Attacker</div>
-                    <div class="peerP2" style="border-color:#16A085;" >Server</div>
+                    <div class="peerP2" style="border-color:#16A085; color:#16A085;" >Server</div>
             </div>
           
            
@@ -31,7 +36,7 @@
                     </div>
 
                     <!--<span style="font-size:100px; color: #99ace6; left:12%; position:absolute;" > &rarr; </span>-->
-                    <span style="font-size:70px;  color:red; position: absolute; right:50%; padding-top: 30px;" id="clientHello_stop1"> X   </span>
+                    <span style="font-size:70px;  color:#E74C3C; position: absolute; right:50%; padding-top: 30px;" id="clientHello_stop1"> X   </span>
                 </div>
                 
                 
@@ -39,8 +44,8 @@
                 <br/>
                 <div class="stepAttackerR" style="text-align: right;" >
                  <!-- <div class="lignP3" >  -->
-                    <div class="stepAttackerDContent" style="border-color: red; color:red;" id= "attacker1">
-                       <div class="circleServer" ng-if="animate" style="border-color: red" > 2 </div> 
+                    <div class="stepAttackerDContent" style="border-color: #E74C3C; color:#000;" id= "attacker1">
+                       <div class="circleServer" ng-if="animate" style="border-color: #E74C3C" > 2 </div> 
                         <h3>
                         Close TCP session
                         </h3>

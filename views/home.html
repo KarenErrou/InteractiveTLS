@@ -6,7 +6,6 @@
         </div>
 
         <div class="col-lg-6 col-lg-6 col-lg-6">
-
             <div id="mode" >  
             <span ng-if="step==1"> Not yet selected: The server chooses the exchange key mode. <br/></span>
             <span ng-if="keyExMode == 4 || keyExMode == 3 || keyExMode == 2">When PSK mode selected, an earlier connection was done where a key was negotiated to be used in future connections <br/></span>
@@ -18,7 +17,6 @@
                 <span ng-if="keyExMode == 4">PSK</span>
                 <span ng-if="keyExMode == 5">ERROR</span>
             </div>
-
         </div>
         
 
@@ -28,15 +26,15 @@
     </div>
 
     <div class="row">
-        <div class="col-lg-3 col-md-3 col-sm-3 " >
+        <div class="col-lg-3 col-md-3 col-sm-12 " >
             <div ng-include="'views/leftBox.html'" class="sticky-top"></div>
         </div>
 
 
-        <div class="col-lg-6 col-lg-6 col-lg-6 ">
-            <div class="peers">
-                    <div class="peerP1">Client</div>
-                    <div class="peerP2">Server</div>
+        <div class="col-lg-6 col-md-6 col-sm-12 ">
+            <div class="peers" >
+                <div class="peerP1">Client</div>
+                <div class="peerP2">Server</div> 
             </div>
             <div class="lignP1">
                 <!--------------- KEY EXCHANGE ------------------>
@@ -64,7 +62,7 @@
             </div><br/>
             <div id="alertClass" ng-if="error == true"  style="padding-top:1%">
                 <span ng-repeat="alerts in alertsList"  on-click="showAlert()">
-                    <div class="threadAlert" ng-if="alerts.stop <= step">
+                    <div class="threadAlert" ng-if="alerts.stop <= step" id="thread">
                         <div style="font-size:24px;">  Alert :</div>
                         <div style="font-size:22px;"><i> {{alerts.title}} </i></div><br/>
                         <span style=" color:#4d0000;" > {{alerts.description}}</span>

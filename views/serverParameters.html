@@ -2,7 +2,7 @@
 
 <!--------------- Encrypted Encryption ------------------>   
 <div class="stepServer"> 
-	<div class="stepServerContent" id="serverParameters" ng-if="step<4" style="background-color: #E5E7E9;">
+	<div class="stepServerContent" id="serverParameters" ng-if="step<4" style="background-color: #E5E7E9; width:50%;">
         <div ng-if="keyExchange[0] == 'helloRetryRequest'" class="circleServer" ng-model="step" id="serverParameters"> 5</div> 
         <div ng-if="keyExchange[0] == 'serverHello'" class="circleServer" ng-model="step" id="serverParameters"> 3</div>
         <h3>Encrypted Extension</h3>
@@ -10,6 +10,7 @@
         <span ng-repeat="n in encryptedExtension" ng-if="n.deleted=='no'">
             <div style="display: inline-block;">
                 {{n.eltName}} {{n.eltValue}}
+                <div class="infoButton" ng-click="showInfo('encryptedExtension', n, 'info')">i</div>
             </div>
             </br>        
         </span></br> 
@@ -17,7 +18,7 @@
 
 
     <!-- <span ng-if= "step>4" style="font-size:100px; color: #F39C12;"> &larr; </span> -->
-    <div class="stepServerContent" id="serverParameters" ng-if= "step>=4">
+    <div class="stepServerContent" id="serverParameters" ng-if= "step>=4" style="width:50%;">
         <div ng-if="keyExchange[0] == 'helloRetryRequest'" class="circleServer" ng-model="step" id="serverParameters"> 5</div> 
         <div ng-if="keyExchange[0] == 'serverHello'" class="circleServer" ng-model="step" id="serverParameters"> 3</div>
         <h3>Encrypted Extension</h3>
@@ -66,7 +67,7 @@
 
 <!--------------- Certificate Request ------------------>   
 <div class="stepServer" ng-if="keyExchange[1] == 'certificateRequest'"> 
-    <div class="stepServerContent" id="serverParameters" ng-if="step <5" style="background-color: #E5E7E9;">
+    <div class="stepServerContent" id="serverParameters" ng-if="step <5" style="width:50%; background-color: #E5E7E9;">
         <div class="circleServer" ng-if="keyExchange[0] == 'helloRetryRequest'" ng-model="step" id="serverParameters"> 6</div> 
         <div class="circleServer" ng-if="keyExchange[0] == 'serverHello'" ng-model="step" id="serverParameters"> 4</div> 
         <h3>Certificate Request</h3>
@@ -75,12 +76,14 @@
             <div ng-if="n.eltName == 'certificate_request_context'">
                 <div style="display: inline-block;">
                     {{n.eltName}} {{n.eltValue}}
+                    <div class="infoButton" ng-click="showInfo('certificateRequest', n, 'info')">i</div>              
                     </br>  </br>
                     <span> <b>Extensions: </b></span>  
                 </div>
             </div>
             <div ng-if="n.eltName != 'certificate_request_context'" style="display: inline-block;">
                {{n.eltName}} {{n.eltValue}}
+               <div class="infoButton" ng-click="showInfo('certificateRequest', n, 'info')">i</div>
             </div>
             </br>        
         </span>
@@ -90,7 +93,7 @@
 
     <!-- <span ng-if= "step>5" style="font-size:100px; color: #F39C12;"> &larr; </span> -->
 
-    <div class="stepServerContent" id="serverParameters" ng-if= "step>=5">
+    <div class="stepServerContent" id="serverParameters" ng-if= "step>=5" style="width:50%;">
         <div class="circleServer" ng-if="keyExchange[0] == 'helloRetryRequest'" ng-model="step" id="serverParameters"> 6</div> 
         <div class="circleServer" ng-if="keyExchange[0] == 'serverHello'" ng-model="step" id="serverParameters"> 4</div> 
         <h3>Certificate Request</h3>
@@ -146,21 +149,21 @@
 
 <div ng-if="early_dataClient && early_dataServer" class="stepServer"> 
     <span ng-if= "step>5" style="font-size:100px; color: #F39C12;"> &larr; </span>  
-    <div ng-if="step <= 5.0" class="stepServerContent" id="serverParameters" style="background-color:#E5E7E9;">
+    <div ng-if="step <= 5.0" class="stepServerContent" id="serverParameters" style="width:50%; background-color:#E5E7E9;">
         <h3>Application Data</h3>        
     </div>
-    <div ng-if="step>5" class="stepServerContent" id="serverParameters" style="background-color:transparent;">
+    <div ng-if="step>5" class="stepServerContent" id="serverParameters" style="width:50%; background-color:transparent;">
         <h3>Application Data</h3>     
     </div> 
 </div>
 
 <div ng-if="early_dataClient && early_dataServer" class="stepClient"> 
     
-    <div ng-if="step <= 5.0" class="stepClientContent" id="serverParameters" style="background-color:#E5E7E9;">
+    <div ng-if="step <= 5.0" class="stepClientContent" id="serverParameters" style="width:50%; background-color:#E5E7E9;">
         <h3>End Of Early Data</h3>     
         This message indicates the end of the early data
     </div>
-    <div ng-if="step>5" class="stepClientContent" id="serverParameters" style="background-color:transparent;">
+    <div ng-if="step>5" class="stepClientContent" id="serverParameters" style="width:50%; background-color:transparent;">
         <h3>End Of Early Data</h3>  
         This message indicates the end of the early data   
     </div> 
