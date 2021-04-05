@@ -32,10 +32,38 @@ myTLSApp.config(['$routeProvider', function($routeProvider){
 
 myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http){
 	$scope.error = true;
+	$scope.visibleMrHint = false;
+	$scope.mrHint = ['Try not including server authentication', 'Try changing key exchange mode to PSK only', 'Try changing key exchange mode to PSK with ECDHE', 'Try changing key exchange mode to PSK with DHE', 'Try letting the client sending early_data', 'Try letting the server reply with a HelloRetryRequest message'];
+	$scope.randomValueMrHint = $scope.mrHint[Math.floor(Math.random() * $scope.mrHint.length)];
+	$scope.mrHintChallenge = false;
+	$scope.mrHintChat = "Click me";
+	$scope.mrHintChallengeSucess = false;
+	$scope.mrHintAnswer = false;
 	$scope.step = 0.15;
 	$scope.early_dataClient = false;
 	$scope.early_dataServer = false;
 	$scope.alertsList = [];
+
+	$scope.closeMrHint = function(){
+	    $scope.visibleMrHint = false;
+	}
+	$scope.openMrHint = function(){
+	    $scope.visibleMrHint = true;
+	}
+
+	$scope.acceptMrHintChallenge = function(){
+		$scope.mrHintChallenge = true;
+		$scope.closeMrHint();
+	}
+	$scope.showMrHintAnswer = function(){
+		$scope.mrHintAnswer = true;
+	}
+
+	$scope.shuffleMrHint = function(){
+		$scope.randomValueMrHint = $scope.mrHint[Math.floor(Math.random() * $scope.mrHint.length)];
+		$scope.mrHintChallenge = false;
+		$scope.mrHintChallengeSucess = false;
+	}
 
 	$scope.incrementStep = function(step,type){
 		increment = true;
@@ -851,32 +879,7 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 						}
 					}
 				}
-	        break;
-
-    //         case 'helloRetryRequest':
-				// for (var elt1 in $scope.serverHello){
-    //         		if($scope.storeidField.eltName == $scope.serverHello[elt1].eltName){
-    //         			switch ($scope.storeidField.eltName){
-		  //           		case 'cipher_suites':
-		  //           			if($scope.cipherSuitesClient[$scope.cipherSuitesHelloRetryRequest] ==  false){
-		  //           				//cpher suite selected by the server must be one from the list chosen by the client
-				// 					alert($scope.cipherSuitesServer + " is selected in the server and wasn't offered by the client!! ABORT HANDSHAKE!");
-				// 				}	
-
-				// 				//TODO		
-				// 				if($scope.cipherSuitesServer != $scope.cipherSuitesHelloRetryRequest){
-				// 					//the serverHello and HelloRetryRequest 's cipher suite must be the same.
-				// 					alert("Cipher suites of helloRetryRequest and serverHello should be the same!! ABORT HANDSHAKE WITH ILLEGAL PARAMETER ALERT");
-				// 				}
-				// 			break;		            
-				// 		}
-				// 	}
-				// }         
-	   //      break;      
-
-         //    case 'rrClientHello':
-	        
-	        // break;
+	        break; 
             
             case 'encryptedExtension':
             	for (var elt1 in $scope.encryptedExtension){
@@ -966,7 +969,7 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 				}
 				switch(fieldUpdated){
 					case 'supported_versions':
-						$scope.explainAlert = "TLS 1.3 CientHello messages always contain 'supported_versions', otherwise, they will be interpreted as TLS 1.2 ClientHello messages";
+						$scope.explainAlert = "<p>TLS 1.3 CientHello messages should always contain <i>supported_versions</i>, otherwise, they will be interpreted as TLS 1.2 ClientHello messages. <br/> <p> This application only supports TLS1.3!</p> ";
 												
 						$scope.leftBoxTitle = 'supported_versions NOT deleted' ;	
 						for (var elt2 in $scope.chExtensions){
@@ -1253,6 +1256,9 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 					case 'signature_algorithms':
 						if (type == 'deleted'){
 							$scope.sigalgoClient = false;
+							if($scope.randomValueMrHint == 'Try not including server authentication' && $scope.mrHintChallenge){
+								$scope.mrHintChallengeSucess = true;
+							}
 							$scope.removeAlert("Remove signature_algorithms extension");
 							//(EC)DHE no PSK
 							if($scope.clientKeyMode[1]==false && $scope.clientKeyMode[3]==false && $scope.clientKeyMode[0]){
@@ -1450,32 +1456,32 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 	
  	$scope.clientHello = [
  		{eltType: 'ProtocolVersion', eltName: 'legacy_version', eltValue: '= 0x0303', delete: 'no', adjustment:'no', deleted:'no',
- 			info: 'In version prior to TLS1.3, this field was used for version negotiation.</br> In TLS1.3 this field can only be equal to <b> 0x0303 </b>, which indicates TLS1.2 and the version preferences must be indicated by the client in a later extension parameter (<i>supported_versions)</i> which is mandatory in TLS1.3 having 0x0304 as its highest version. </br> '
+ 			info: '<p> In the versions prior to TLS1.3, this field was used for version negotiation.</p>  <p>In TLS1.3, this field is always equal to <b> 0x0303 </b> (indicating TLS1.2). <p> Version preferences must be indicated by the client in the extension parameter <i>supported_versions</i>. </p> <p> <i>supported_versions</i> is mandatory in TLS1.3 having 0x0304 (indicating TLS1.3) as its highest preference version. </br> '
  		}, 
  		{eltType: 'Random', delete: 'no', eltName: 'random', eltValue: ';', adjustment:'no', deleted:'no',
- 			info: '32 bytes generated by a secure random number generator. </br></br> This random number is used to prevent downgrade attacks.'
+ 			info: 'This field is a 32 bytes number generated by a secure random number generator. This random number is used to prevent downgrade attacks &rarr; check the downgrade attack tab.'
  		},
  		{eltType: 'opaque', delete: 'no', adjustment:'no', eltName: 'legacy_session_id', eltValue: ';', deleted:'no',
- 			info: 'In version prior to TLS1.3, the client could provide an ID negotiated in a previous session by using the “session resumption" feature. This allows to skip time and cost of negotiating new keys.In TLS1.3 it was merged with pre_shared_keys (PSK) that is more flexible. Thus, this field is not needed for this purpose anymore in TLS1.3, instead it is used as a non-empty field to trigger middlebox compatibility box. Middelbox compatibility box helps TLS1.3 to be disguised as a resumed TLS1.2.',
- 			adjustM: "<p> <u>If Client TLS1.3 and Server TLS1.2 or below:</u></br>In compatibility mode: this field must be non-empty so a client not offering a pre-TLS1.3 session must generate a new 32-byte value. This value need not be random but should be unpredictable to avoid implementations fixating on a specific value (also known as ossification). Otherwise, it MUST be set as a zero-length vector (i.e., a zero-valued single byte length field). </p> <p><u>If Client TLS1.2 and Server TLS1.3:</u> </br>When a client has a cached session ID that is set by a pre-TLS1.3 server then this field should be set to that value </p> <p><u>If Client TLS1.2 and Server TLS1.2 or below: </u> </br> When a client has a cached session ID that is set by a pre-TLS1.3 server then this field should be set to that value. </p> <p> <u> If Client TLS1.1 or below and Server TLS1.3 or TLS1.2: </u> </br> When a client has a cached session ID that is set by a pre-TLS1.3 server then this field should be set to that value.</p>"
+ 			info: '<p> In the versions prior to TLS1.3, the client could provide an ID negotiated in a previous session by using the “session resumption" feature. This allows skipping time and cost of negotiating new keys. </p><p>In TLS1.3 it was merged with pre_shared_keys (PSK) which is more flexible. Thus, this field is not needed for this purpose anymore in TLS1.3. Instead, it is used as a non-empty field to trigger the middlebox compatibility box.  (Middlebox compatibility box helps TLS1.3 to be disguised as a resumed TLS1.2.) </p>',
+ 			// adjustM: "<p> <u>If Client TLS1.3 and Server TLS1.2 or below:</u></br>In compatibility mode: this field must be non-empty so a client not offering a pre-TLS1.3 session must generate a new 32-byte value. This value need not be random but should be unpredictable to avoid implementations fixating on a specific value (also known as ossification). Otherwise, it MUST be set as a zero-length vector (i.e., a zero-valued single byte length field). </p> <p><u>If Client TLS1.2 and Server TLS1.3:</u> </br>When a client has a cached session ID that is set by a pre-TLS1.3 server then this field should be set to that value </p> <p><u>If Client TLS1.2 and Server TLS1.2 or below: </u> </br> When a client has a cached session ID that is set by a pre-TLS1.3 server then this field should be set to that value. </p> <p> <u> If Client TLS1.1 or below and Server TLS1.3 or TLS1.2: </u> </br> When a client has a cached session ID that is set by a pre-TLS1.3 server then this field should be set to that value.</p>"
  		},
  		{eltType: 'CipherSuite', delete: 'no', adjustment:'yes', eltName: 'cipher_suites', eltValue: ';', deleted:'no',
- 		info: 'This field is a list of symmetric cipher options that are supported by the client in descending order of client preference. Cipher suites are a set of encryption rules dictating how the TLS handshake works.',
- 		adjustM: 'Cipher suites in TLS1.3 use the same cipher suite space as pre-TLS1.3. But, they are defined differently. Therefore, cipher suites for TLS1.2 and lower cannot be used with TLS1.3 and vice versa. <br/> If the client is attempting a PSK establishment, then it should advertise at least one cipher suite indicating a Hash associated with the PSK. <p> In TLS1.3, Static RSA and Diffie-Helman cipher suites have been removed. Cipher suites were whittled down significantly in TLS 1.3 to the point where there are now just five recommended cipher suites:',
+ 		info: 'This field is a list of symmetric cipher options supported by the client. The list is in descending order of client preference. Cipher suites are a set of encryption rules dictating how the TLS handshake works.',
+ 		// Cipher suites in TLS1.3 use the same cipher suite space as pre-TLS1.3. But, they are defined differently. Therefore, cipher suites for TLS1.2 and lower cannot be used with TLS1.3 and vice versa. <br/> If the client is attempting a PSK establishment, then it should advertise at least one cipher suite indicating a Hash associated with the PSK. <p> In TLS1.3, Static RSA and Diffie-Helman cipher suites have been removed.
+ 		adjustM: 'Cipher suites were whittled down significantly in TLS 1.3 to the point where there are now just five recommended cipher suites:',
  		adjust: 'TLS_AES_128_GCM_SHA256;TLS_AES_256_GCM_SHA384;TLS_CHACHA20_POLY1305_SHA256;TLS_AES_128_CCM_SHA256;TLS_AES_128_CCM_8_SHA256'
  		},
  		{eltType: 'opaque', delete: 'no', adjustment:'no', eltName: 'legacy_compression_methods', eltValue: ';', deleted:'no',
- 			info: 'Versions of TLS before 1.3 supported compression with the list of supported compression methods being sent in this field. </br> In TLS 1.3, this vector MUST contain exactly one byte set to zero, which corresponds to the "null" compression method in prior versions of TLS.</br>'
- 			+'If it is not the case, and the server receives a non 0 value, then the server must abort the handshake with an "illegal_parameter" alert.'
+ 			info: 'In the versions prior to TLS1.3, supported compression with the list of supported compression methods were sent in this field. <br/> In TLS 1.3, this vector MUST contain exactly one byte set to zero, which corresponds to the "null" compression method in prior versions of TLS.'
  		}
  	];
 
  	$scope.chExtensions = [
  		{eltName: 'supported_versions', delete: 'yes', adjustment:'no', deleted:'no',
- 			info: 'Indicates which versions of TLS the client supports. It is a list of of supported versions ordered in preference with the most preferred first. <br/>For TLS1.3, 0x0304 (the number of TLS1.3) should be at the top of the list. </br></br> This extension should only be available when the peer supports TLS1.3.'
+ 			info: '<p> Indicates which versions of TLS the client supports. It is a list of supported versions ordered in the user\'s preference. </p> <p> For TLS1.3, 0x0304 (indicating version 1.3) should be at the top of the list. </p> <p>This extension should only be available when the peer supports TLS1.3. </p>'
  		},
  		{eltType: '', delete: 'yes', adjustment:'yes', eltName: 'supported_groups', eltValue: '= ECDHE', deleted:'no',
-	 		info: 'This extension indicates which named groups the client supports for key exchange. This extension must be given with a <i>key_share</i> extension that will contain the (EC)DHE shares for some or all of the groups.',
+	 		info: 'This extension indicates which named groups the client supports for key exchange. This extension must be given with a <i>key_share</i> extension that will contain the (EC)DHE key shares for some or all of the groups.',
 	 		adjustM: '',
 	 		adjust1: 'secp256r1(0x0017);secp384r1(0x0018);secp521r1(0x0019);x25519(0x001D);x448(0x001E)',
 	 		adjust2: 'ffdhe2048(0x0100);ffdhe3072(0x0101);ffdhe4096(0x0102);ffdhe6144(0x0103);ffdhe8192(0x0104)'
@@ -1521,7 +1527,7 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
  			info: 'When this field is equal to 0x0303, it means the server wants to negotiate a version TLS1.3. In this case, <i>supported_version</i> extension must be available representing the highest version number supported by the server.', 
  		},
  		{eltType: 'Random', delete: 'no', adjustment:'no', eltName: 'random', eltValue: ';', deleted:'no',
- 			info: '32 bytes generated by a secure random number generator. The last 8 bytes MUST be overwritten if negotiating TLS 1.2 or TLS 1.1, but the remaining bytes MUST be random. This structure is generated by the server and MUST be generated independently of the <i>ClientHello.random</i>. </br></br> This random number is used to prevent downgrade attacks.',
+ 			info: '32 bytes generated by a secure random number generator. The last 8 bytes MUST be overwritten if negotiating TLS 1.2 or TLS 1.1, but the remaining bytes MUST be random. This structure is generated by the server and MUST be generated independently of the <i>ClientHello.random</i>. </br></br> This random number is used to prevent downgrade attacks. Check the downgrade attack tab for more details',
  		},
  		{eltType: 'opaque', delete: 'no', adjustment:'no', eltName: 'legacy_session_id', eltValue: ';', deleted:'no',
  			info: 'This field is echoed even if the client’s value corresponded to a cached pre-TLS 1.3 session which the server has chosen not to resume. Therefore its value is always the contents of the client’s legacy_session_id field. </br></br> In case it is not echoed the handshake is aborted with an illegal parameter!',
@@ -1532,13 +1538,13 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 	 		adjust: 'TLS_AES_128_GCM_SHA256;TLS_AES_256_GCM_SHA384;TLS_CHACHA20_POLY1305_SHA256;TLS_AES_128_CCM_SHA256;TLS_AES_128_CCM_8_SHA256' 		
  		},
 		{eltType: 'opaque', delete: 'no', adjustment:'no', eltName: 'legacy_compression_methods', eltValue: ';', deleted:'no',
-			info: 'Note that TLS 1.3 servers might receive TLS 1.2 or prior ClientHellos which contain other compression methods and (if negotiating such a prior version) must follow the procedures for the appropriate prior version of TLS. </br></br> This field\'s value in the serverHello must be a single byte which must have the value 0.'
+			info: 'In the versions prior to TLS1.3, supported compression with the list of supported compression methods were sent in this field. <br/> In TLS 1.3, this vector MUST contain exactly one byte set to zero, which corresponds to the "null" compression method in prior versions of TLS.'
 		}
  	];
 
  	$scope.shExtensions = [
  		{eltName: 'supported_versions', delete: 'yes', adjustment:'no', deleted:'no',
- 			info: 'Indicates which versions of TLS the server uses. It is a list of of supported versions ordered in preference with the most preferred first. <br/><br/>This extension should only be available when the peer supports TLS1.3.'
+ 			info: '<p> Indicates which versions of TLS the client supports. It is a list of supported versions ordered in the user\'s preference. </p> <p> For TLS1.3, 0x0304 (indicating version 1.3) should be at the top of the list. </p> <p>This extension should only be available when the peer supports TLS1.3. </p>'
  		},
  		{eltType: '', delete: 'yes', adjustment:'no', eltName: 'pre_shared_keys', eltValue: ';', deleted:'yes',
  			info: '<p> if psk is used then the “pre_shared_key” extension is required.'

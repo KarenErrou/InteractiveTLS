@@ -7,14 +7,22 @@
 
 
         <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+             <p style="font-size:18px;"><u> In TLS the random number field in the serverHello prevents downgrade attack.</u> </p>
+        <p style="font-size:18px;"> If the client's version is 1.2 and the server 1.3, the random field value  in the serverHello should be equal to: <br/> 44 4F 57 4E 47 52 44 01 <br/></p>
+         <p style="font-size:18px;">If the client's version is 1.1 or below and the server is 1.3 or 1.2 the random field value in the serverHello should be equal to: <br/> 44 4F 57 4E 47 52 44 00<br/> </p>  
+        <p> In this example both the Client and Server are TLS1.3. </p><br/>
+
+
             <div style="background-color: #EBEDEF; width: fit-content; margin: 20px; padding: 20px; border-radius: 2em;"> 
             <span style="font-size:23px;"> Animate &nbsp;&nbsp;</span>
+            
             <!-- <button class="animate bouncy" ng-click="downgradeAnimate()">Animate</button>  -->
             <button class="animate bouncy" ng-click="animateSpeed(0.5)">Speed x0.5</button> 
             <button class="animate bouncy" style="animation-delay: 0.25s;" ng-click="animateSpeed(1.0)">Speed x1.0</button> 
             <button class="animate bouncy" style="animation-delay: 0.5s;" ng-click="animateSpeed(1.5)">Speed x1.5</button> 
         </div>
-            <br/><br/><br/>
+       
+            <br/><br/>
              <div class="peers">
                     <div class="peerP1" class="peerP2" style="border-color:#2E86C1; color:#2E86C1;" >Client</div>
                     <div class="peerP3">Attacker</div>

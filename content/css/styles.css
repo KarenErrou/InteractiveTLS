@@ -222,15 +222,6 @@ div.deleteButton:hover{
   color: #e70000;
 }
 
-/*.alert{
-  position:fixed;
-  background-color: #EC7063;
-  margin:5%;
-  border-radius: 20%;
-  color:#fff;
-  padding:20px;
-  text-align: center;
-}*/
 
 .threadAlert{
   position:relative;
@@ -478,6 +469,57 @@ button#authenticationButton:hover{
   margin-right: 10px;
   position: inherit;
   /*width:50%;*/
+}
+
+.mrHint {
+  border:3px solid; 
+  border-radius:1em;
+  border-color: #1F618D;  
+  margin:10px 40px;
+  margin-right:5%;
+}
+
+#mrHint{
+  animation: showMrHint 3s ease;
+  margin:3px;
+
+  position:relative;
+}
+
+@-webkit-keyframes showMrHint {
+  0%   {background-color:red; left:50px; top:-50px;}
+  25%  {background-color:yellow; left:200px; top:0px;}
+  50%  {background-color:blue; left:200px; top:200px;}
+  75%  {background-color:green; left:0px; top:200px;}
+  100% {background-color:red; left:0px; top:0px;}
+}
+@-moz-keyframes showMrHint {
+  0%   { left:0px; top:0px;}
+  25%  { left:200px; top:0px;}
+  50%  { left:200px; top:200px;}
+  75%  { left:0px; top:200px;}
+  100% { left:0px; top:0px;}
+}
+@keyframes showMrHint {
+    from { transform: rotate(0deg) translateX(-60px) rotate(0deg); }
+    to   { transform: rotate(360deg) translateX(0px) rotate(-360deg); }
+}
+
+#close{
+  height: 25px;
+  width: 25px;
+  border-radius: 50%;
+  border: 0px solid;
+  text-align: center;
+  font-size: 20px;
+  position: absolute;
+  left:95%;
+  padding:0px;
+  margin:0px;
+  padding-top: 0px;
+  color: grey;
+  border-color: #EBEDEF;
+  background-color: #EBEDEF;
 }
 
 .circleClient {
