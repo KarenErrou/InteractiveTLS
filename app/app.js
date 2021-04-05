@@ -33,7 +33,7 @@ myTLSApp.config(['$routeProvider', function($routeProvider){
 myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http){
 	$scope.error = true;
 	$scope.visibleMrHint = false;
-	$scope.mrHint = ['Try not including server authentication', 'Try changing key exchange mode to PSK only', 'Try changing key exchange mode to PSK with ECDHE', 'Try changing key exchange mode to PSK with DHE', 'Try letting the client sending early_data', 'Try letting the server reply with a HelloRetryRequest message'];
+	$scope.mrHint = ['Try not including server authentication', 'Try changing key exchange mode to PSK only', 'Try changing key exchange mode to PSK with ECDHE', 'Try changing key exchange mode to PSK with DHE', 'Try letting the client sending early application data', 'Try letting the server reply with a HelloRetryRequest message'];
 	$scope.randomValueMrHint = $scope.mrHint[Math.floor(Math.random() * $scope.mrHint.length)];
 	$scope.mrHintChallenge = false;
 	$scope.mrHintChat = "Click me";
@@ -65,6 +65,20 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 		$scope.mrHintChallengeSucess = false;
 	}
 
+	$scope.addToMrHint = function(title){
+		if(!$scope.mrHint.includes(title)){
+			$scope.mrHint.push(title);
+		}
+	}
+	$scope.removeFromMrHint = function(title){
+		var index = $scope.mrHint.indexOf(title);
+		$scope.mrHint.splice(index, 1);
+
+		if($scope.randomValueMrHint == title){
+		$scope.shuffleMrHint();
+	}
+	}
+
 	$scope.incrementStep = function(step,type){
 		increment = true;
 
@@ -73,7 +87,9 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 			if ($scope.alertsList[alerts].stop == step){
 				increment = false;
 				$scope.keyExMode = 5;
-
+				$scope.addToMrHint('Try changing key exchange mode to PSK only');
+				$scope.addToMrHint('Try changing key exchange mode to PSK with ECDHE');
+				$scope.addToMrHint('Try changing key exchange mode to PSK with DHE');
   				element.classList.remove("thread");
 				element.offsetWidth = element.offsetWidth;
 				  
@@ -92,12 +108,20 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 							if($scope.clientKeyMode[3]==false){
 								//Abort Handshake from server
 								increment = false;
-								$scope.step = 0.15;
+								// $scope.step = 0.15;
 							}
 							$scope.shExtensions[elt1].deleted = "no";
 						}
 					}
 					$scope.keyExMode = 4;
+					if($scope.randomValueMrHint == 'Try changing key exchange mode to PSK only' && $scope.mrHintChallenge){
+						$scope.mrHintChallengeSucess = true;
+					}
+					if(! $scope.mrHintChallenge){								
+						$scope.removeFromMrHint('Try changing key exchange mode to PSK only');
+					}
+					$scope.addToMrHint('Try changing key exchange mode to PSK with ECDHE');
+					$scope.addToMrHint('Try changing key exchange mode to PSK with DHE');
 					$scope.serverKeyMode[1] = true;
 				}
 				//ERROR, not psk nor keyshare.
@@ -105,7 +129,10 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 					//Abort Handshake from server
 					increment = false;
 					$scope.keyExMode = 5;
-					$scope.step = 0.15;
+					$scope.addToMrHint('Try changing key exchange mode to PSK only');
+					$scope.addToMrHint('Try changing key exchange mode to PSK with ECDHE');
+					$scope.addToMrHint('Try changing key exchange mode to PSK with DHE');
+					// $scope.step = 0.15;
 					$scope.serverKeyMode[1] = false;
 				}
 			
@@ -118,6 +145,9 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 			}
 			else if($scope.clientKeyMode[0]==true && increment){
 				$scope.keyExMode = 0;
+				$scope.addToMrHint('Try changing key exchange mode to PSK only');
+				$scope.addToMrHint('Try changing key exchange mode to PSK with ECDHE');
+				$scope.addToMrHint('Try changing key exchange mode to PSK with DHE');
 				$scope.serverKeyMode[0] = true;
 			}
 		}
@@ -571,19 +601,16 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 			});
 		}
 		$scope.keyExMode = 5;
+		$scope.addToMrHint('Try changing key exchange mode to PSK only');
+		$scope.addToMrHint('Try changing key exchange mode to PSK with ECDHE');
+		$scope.addToMrHint('Try changing key exchange mode to PSK with DHE');
 		$scope.step = step;
 	}
 	
-	$scope.removeAlert = function(title){
-		bool = false;
+	$scope.removeAlert = function(title1){
 		for(var alerts in $scope.alertsList){
-			if($scope.alertsList[alerts].title == title){
-				bool =true;
-			}
-		}
-		if(bool == true){
-			for(var alerts in $scope.alertsList){
-				$scope.alertsList.splice($scope.alertsList[alerts].title.indexOf(title),1);										
+			if($scope.alertsList[alerts].title == title1){
+				$scope.alertsList.splice(alerts,1);
 			}
 		}
 	}
@@ -629,6 +656,9 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 		        			case 'key_share':
 								if($scope.data.adjust == 'empty'){
 									$scope.keyExchange[0]='helloRetryRequest';
+									if($scope.randomValueMrHint == 'Try letting the server reply with a HelloRetryRequest message' && $scope.mrHintChallenge){
+										$scope.mrHintChallengeSucess = true;
+									}
 									$scope.chExtensions[elt1].eltValue="= empty";
 									$scope.explainAlert = "<p>ClientHello.key_share extension is empty. This means the client request group selection from the server.</p><p>This will yield to a helloRetryRequest, therefore, an additional round-trip.</p>";
 								}
@@ -712,12 +742,31 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 												else{
 													$scope.keyExMode = 1;
 												}
+												$scope.addToMrHint('Try changing key exchange mode to PSK only');
+												$scope.addToMrHint('Try changing key exchange mode to PSK with ECDHE');
+												$scope.addToMrHint('Try changing key exchange mode to PSK with DHE');
 											}else if($scope.keyExMode == 4){
 												if($scope.data.adjust == 'secp256r1(0x0017)' || $scope.data.adjust == 'secp384r1(0x0018)' || $scope.data.adjust == 'secp521r1(0x0019)' || $scope.data.adjust == 'x25519(0x001D)' || $scope.data.adjust == 'x448(0x001E)'){
 													$scope.keyExMode = 2;
+													if($scope.randomValueMrHint == 'Try changing key exchange mode to PSK with ECDHE' && $scope.mrHintChallenge){
+														$scope.mrHintChallengeSucess = true;
+													}
+													if(! $scope.mrHintChallenge){								
+														$scope.removeFromMrHint('Try changing key exchange mode to PSK with ECDHE');
+													}
+													$scope.addToMrHint('Try changing key exchange mode to PSK only');
+													$scope.addToMrHint('Try changing key exchange mode to PSK with DHE');
 												}
 												else{
 													$scope.keyExMode = 3;
+													if($scope.randomValueMrHint == 'Try changing key exchange mode to PSK with DHE' && $scope.mrHintChallenge){
+														$scope.mrHintChallengeSucess = true;
+													}
+													if(! $scope.mrHintChallenge){								
+														$scope.removeFromMrHint('Try changing key exchange mode to PSK with DHE');
+													}
+													$scope.addToMrHint('Try changing key exchange mode to PSK only');
+													$scope.addToMrHint('Try changing key exchange mode to PSK with ECDHE');
 												}
 											}
 											alert = false;	
@@ -738,12 +787,31 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 												else{
 													$scope.keyExMode = 1;
 												}
+												$scope.addToMrHint('Try changing key exchange mode to PSK only');
+												$scope.addToMrHint('Try changing key exchange mode to PSK with ECDHE');
+												$scope.addToMrHint('Try changing key exchange mode to PSK with DHE');
 											}else if($scope.keyExMode == 4){
 												if($scope.data.adjust == 'secp256r1(0x0017)' || $scope.data.adjust == 'secp384r1(0x0018)' || $scope.data.adjust == 'secp521r1(0x0019)' || $scope.data.adjust == 'x25519(0x001D)' || $scope.data.adjust == 'x448(0x001E)'){
 													$scope.keyExMode = 2;
+													if($scope.randomValueMrHint == 'Try changing key exchange mode to PSK with ECDHE' && $scope.mrHintChallenge){
+														$scope.mrHintChallengeSucess = true;
+													}
+													if(! $scope.mrHintChallenge){								
+														$scope.removeFromMrHint('Try changing key exchange mode to PSK with ECDHE');
+													}
+													$scope.addToMrHint('Try changing key exchange mode to PSK only');
+													$scope.addToMrHint('Try changing key exchange mode to PSK with DHE');
 												}
 												else{
 													$scope.keyExMode = 3;
+													if($scope.randomValueMrHint == 'Try changing key exchange mode to PSK with DHE' && $scope.mrHintChallenge){
+														$scope.mrHintChallengeSucess = true;
+													}
+													if(! $scope.mrHintChallenge){								
+														$scope.removeFromMrHint('Try changing key exchange mode to PSK with DHE');
+													}
+													$scope.addToMrHint('Try changing key exchange mode to PSK only');
+													$scope.addToMrHint('Try changing key exchange mode to PSK with ECDHE');
 												}
 											}
 											alert = false;	
@@ -757,9 +825,19 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 									}
 									if($scope.keyExMode == 1 || $scope.keyExMode == 0){
 										$scope.keyExMode = 5;
+										$scope.addToMrHint('Try changing key exchange mode to PSK only');
+										$scope.addToMrHint('Try changing key exchange mode to PSK with ECDHE');
+										$scope.addToMrHint('Try changing key exchange mode to PSK with DHE');
 									}else if($scope.keyExMode == 2 || $scope.keyExMode == 3){
 										$scope.keyExMode = 4;
-
+										if($scope.randomValueMrHint == 'Try changing key exchange mode to PSK only' && $scope.mrHintChallenge){
+											$scope.mrHintChallengeSucess = true;
+										}
+										if(! $scope.mrHintChallenge){								
+											$scope.removeFromMrHint('Try changing key exchange mode to PSK only');
+										}
+										$scope.addToMrHint('Try changing key exchange mode to PSK with ECDHE');
+										$scope.addToMrHint('Try changing key exchange mode to PSK with DHE');
 									}
 								}
 
@@ -987,9 +1065,20 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 								$scope.addAlert("Missing supported_groups extension", "Key Share and supported_group should always be available together. Either add supported_groups or, remove key_share and add pre_shared_keys    !! missing extension !!",1.0);
 								if($scope.keyExMode == 2 || $scope.keyExMode == 3 || $scope.keyExMode == 4 ){
 									$scope.keyExMode = 4; 
+									if($scope.randomValueMrHint == 'Try changing key exchange mode to PSK only' && $scope.mrHintChallenge){
+										$scope.mrHintChallengeSucess = true;
+									}
+									if(! $scope.mrHintChallenge){								
+										$scope.removeFromMrHint('Try changing key exchange mode to PSK only');
+									}
+									$scope.addToMrHint('Try changing key exchange mode to PSK with ECDHE');
+									$scope.addToMrHint('Try changing key exchange mode to PSK with DHE');
 								}
 								else {
 									$scope.keyExMode = 5;
+									$scope.addToMrHint('Try changing key exchange mode to PSK only');
+									$scope.addToMrHint('Try changing key exchange mode to PSK with ECDHE');
+									$scope.addToMrHint('Try changing key exchange mode to PSK with DHE');
 								}
 								$scope.removeAlert("Add signature_algorithms extension");	
 								
@@ -1026,8 +1115,24 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 								if($scope.keyExMode == 4){
 									if($scope.key_shareValue == 'secp256r1(0x0017)' || $scope.key_shareValue == 'secp384r1(0x0018)' || $scope.key_shareValue == 'secp521r1(0x0019)' || $scope.key_shareValue == 'x25519(0x001D)' || $scope.key_shareValue == 'x448(0x001E)'){
 								 		$scope.keyExMode = 2;
+								 		if($scope.randomValueMrHint == 'Try changing key exchange mode to PSK with ECDHE' && $scope.mrHintChallenge){
+											$scope.mrHintChallengeSucess = true;
+										}
+										if(! $scope.mrHintChallenge){								
+											$scope.removeFromMrHint('Try changing key exchange mode to PSK with ECDHE');
+										}
+										$scope.addToMrHint('Try changing key exchange mode to PSK only');
+										$scope.addToMrHint('Try changing key exchange mode to PSK with DHE');
 								 	}else{
 								 		$scope.keyExMode = 3;
+								 		if($scope.randomValueMrHint == 'Try changing key exchange mode to PSK with DHE' && $scope.mrHintChallenge){
+											$scope.mrHintChallengeSucess = true;
+										}
+										if(! $scope.mrHintChallenge){								
+											$scope.removeFromMrHint('Try changing key exchange mode to PSK with DHE');
+										}
+										$scope.addToMrHint('Try changing key exchange mode to PSK only');
+										$scope.addToMrHint('Try changing key exchange mode to PSK with ECDHE');
 								 	}
 								}
 								else if ($scope.keyExMode == 5){
@@ -1036,6 +1141,9 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 								 	}else{
 								 		$scope.keyExMode = 1;
 								 	}
+								 	$scope.addToMrHint('Try changing key exchange mode to PSK only');
+									$scope.addToMrHint('Try changing key exchange mode to PSK with ECDHE');
+									$scope.addToMrHint('Try changing key exchange mode to PSK with DHE');
 								}
 								//check if signature algo exists because mandatory in case of (EC)DHE 
 								if(!$scope.sigalgoClient){
@@ -1191,6 +1299,9 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 							if($scope.clientKeyMode[0]){
 								$scope.removeAlert("Missing extensions ClientHello");
 								$scope.keyExMode = 0;
+								$scope.addToMrHint('Try changing key exchange mode to PSK only');
+								$scope.addToMrHint('Try changing key exchange mode to PSK with ECDHE');
+								$scope.addToMrHint('Try changing key exchange mode to PSK with DHE');
 								if(!$scope.sigalgoClient){
 									$scope.addAlert("Add signature_algorithms extension", "When (EC)DHE key exchange mode is used, the client must request authentication from the server by including the signature_algorithms extension.",1.0);
 								}
@@ -1229,6 +1340,9 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 						}
 						else{
 							$scope.early_dataClient = true;
+							if($scope.randomValueMrHint == 'Try letting the client sending early application data' && $scope.mrHintChallenge){
+								$scope.mrHintChallengeSucess = true;
+							}
 							if($scope.clientKeyMode[1]==false){
 								$scope.addAlert("Remove early_data extension", "Early data can only used with PSK",1.0);
 							}
@@ -1259,6 +1373,9 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 							if($scope.randomValueMrHint == 'Try not including server authentication' && $scope.mrHintChallenge){
 								$scope.mrHintChallengeSucess = true;
 							}
+							if(! $scope.mrHintChallenge){								
+								$scope.removeFromMrHint('Try not including server authentication');
+							}
 							$scope.removeAlert("Remove signature_algorithms extension");
 							//(EC)DHE no PSK
 							if($scope.clientKeyMode[1]==false && $scope.clientKeyMode[3]==false && $scope.clientKeyMode[0]){
@@ -1277,6 +1394,8 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 						}
 						else{
 							$scope.sigalgoClient = true;
+							$scope.addToMrHint('Try not including server authentication');
+							
 							$scope.removeAlert("Add signature_algorithms extension");
 							if($scope.keyExMode == 2 || $scope.keyExMode == 3 ||$scope.keyExMode == 4){
 								$scope.addAlert("Remove signature_algorithms extension", "Server authentication is not needed with PSK key exchange mode.",1.0);
@@ -1306,7 +1425,15 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 							}
 							else {
 								$scope.keyExMode = 4;
+								if($scope.randomValueMrHint == 'Try changing key exchange mode to PSK only' && $scope.mrHintChallenge){
+									$scope.mrHintChallengeSucess = true;
+								}
+								if(! $scope.mrHintChallenge){								
+									$scope.removeFromMrHint('Try changing key exchange mode to PSK only');
+								}
 								$scope.removeAlert("Missing extensions ServerHello");	
+								$scope.addToMrHint('Try changing key exchange mode to PSK with ECDHE');
+								$scope.addToMrHint('Try changing key exchange mode to PSK with DHE');
 							}
 						}
 						else{
@@ -1316,14 +1443,36 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 							if($scope.storeidField.eltValue == '= ECDHE'){
 								if($scope.keyExMode == 1 || $scope.keyExMode == 5){
 									$scope.keyExMode = 0;
+									$scope.addToMrHint('Try changing key exchange mode to PSK only');
+									$scope.addToMrHint('Try changing key exchange mode to PSK with ECDHE');
+									$scope.addToMrHint('Try changing key exchange mode to PSK with DHE');
 								} else if($scope.keyExMode == 3 || $scope.keyExMode == 4){
 									$scope.keyExMode = 2;
+									$scope.addToMrHint('Try changing key exchange mode to PSK only');
+									$scope.addToMrHint('Try changing key exchange mode to PSK with DHE');
+									if($scope.randomValueMrHint == 'Try changing key exchange mode to PSK with ECDHE' && $scope.mrHintChallenge){
+										$scope.mrHintChallengeSucess = true;
+									}
+									if(! $scope.mrHintChallenge){								
+										$scope.removeFromMrHint('Try changing key exchange mode to PSK with ECDHE');
+									}
 								}
 							} else if($scope.storeidField.eltValue == '= DHE'){
 								if($scope.keyExMode == 0 || $scope.keyExMode == 5){
 									$scope.keyExMode = 1;
+									$scope.addToMrHint('Try changing key exchange mode to PSK only');
+									$scope.addToMrHint('Try changing key exchange mode to PSK with ECDHE');
+									$scope.addToMrHint('Try changing key exchange mode to PSK with DHE');
 								} else if($scope.keyExMode == 2 || $scope.keyExMode == 4){
 									$scope.keyExMode = 3;
+									$scope.addToMrHint('Try changing key exchange mode to PSK only');
+									$scope.addToMrHint('Try changing key exchange mode to PSK with ECDHE');
+									if($scope.randomValueMrHint == 'Try changing key exchange mode to PSK with DHE' && $scope.mrHintChallenge){
+										$scope.mrHintChallengeSucess = true;
+									}
+									if(! $scope.mrHintChallenge){								
+										$scope.removeFromMrHint('Try changing key exchange mode to PSK with DHE');
+									}
 								}
 							}
 						}
@@ -1342,6 +1491,7 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 
 					case 'pre_shared_keys':
 						if(type == 'deleted'){	
+							$scope.removeAlert("Remove pre_shared extension ServerHello");
 							if($scope.early_dataServer){
 								$scope.addAlert("Remove early_data extension in encryptedExtension", "Early data can only used with PSK", 4.0);
 							}
@@ -1356,6 +1506,9 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 								else if($scope.serverKeyShare == '= DHE'){
 									$scope.keyExMode = 1;
 								}
+								$scope.addToMrHint('Try changing key exchange mode to PSK only');
+								$scope.addToMrHint('Try changing key exchange mode to PSK with ECDHE');
+								$scope.addToMrHint('Try changing key exchange mode to PSK with DHE');
 							}
 						} else{
 							$scope.serverKeyMode[1]=true;
@@ -1365,12 +1518,23 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 							bool = false;
 							if($scope.clientKeyMode[1]==false || $scope.clientKeyMode[3]==false){
 								$scope.keyExMode = 5;
+								$scope.addToMrHint('Try changing key exchange mode to PSK only');
+								$scope.addToMrHint('Try changing key exchange mode to PSK with ECDHE');
+								$scope.addToMrHint('Try changing key exchange mode to PSK with DHE');
 								$scope.addAlert("Remove pre_shared extension ServerHello", "PSK is not offered by the client in the ClientHello !!", 3.0);
 							}			
 							else if($scope.clientKeyMode[1]==true && $scope.clientKeyMode[3]==true){
 								$scope.removeAlert("Remove pre_shared extension ServerHello");
 								if($scope.serverKeyMode[0]==false){
 									$scope.keyExMode = 4;
+									$scope.addToMrHint('Try changing key exchange mode to PSK with ECDHE');
+									$scope.addToMrHint('Try changing key exchange mode to PSK with DHE');
+									if($scope.randomValueMrHint == 'Try changing key exchange mode to PSK only' && $scope.mrHintChallenge){
+										$scope.mrHintChallengeSucess = true;
+									}
+									if(! $scope.mrHintChallenge){								
+										$scope.removeFromMrHint('Try changing key exchange mode to PSK only');
+									}
 									if($scope.sigalgoClient){
 										$scope.addAlert("Remove signature_algorithms extension", "Server authentication is not needed with PSK key exchange mode.", 3.0);
 									}
@@ -1378,9 +1542,25 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 								}else if($scope.serverKeyMode[0]==true){
 									if($scope.serverKeyShare == '= ECDHE'){
 										$scope.keyExMode = 2;
+										if($scope.randomValueMrHint == 'Try changing key exchange mode to PSK with ECDHE' && $scope.mrHintChallenge){
+											$scope.mrHintChallengeSucess = true;
+										}
+										if(! $scope.mrHintChallenge){								
+											$scope.removeFromMrHint('Try changing key exchange mode to PSK with ECDHE');
+										}
+										$scope.addToMrHint('Try changing key exchange mode to PSK only');
+										$scope.addToMrHint('Try changing key exchange mode to PSK with DHE');
 									}
 									else if($scope.serverKeyShare == '= DHE'){
 										$scope.keyExMode = 3;
+										if($scope.randomValueMrHint == 'Try changing key exchange mode to PSK with DHE' && $scope.mrHintChallenge){
+											$scope.mrHintChallengeSucess = true;
+										}
+										if(! $scope.mrHintChallenge){								
+											$scope.removeFromMrHint('Try changing key exchange mode to PSK with DHE');
+										}
+										$scope.addToMrHint('Try changing key exchange mode to PSK only');
+										$scope.addToMrHint('Try changing key exchange mode to PSK with ECDHE');
 									}
 									$scope.explainAlert = "When using PSK mode, no need for server authentication.";
 								}

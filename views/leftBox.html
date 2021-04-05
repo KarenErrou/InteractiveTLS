@@ -3,7 +3,7 @@
     <div  id="mrHint" >
     <button style="background-color:transparent; border:transparent;" ng-click="openMrHint()">
         <div ng-if="mrHintChallengeSucess && mrHintChallenge" style="color:#1F618D;">
-        Congrats ! <br/>Challenge done
+        Congrats ! <br/>Challenge done <br/> (now if any alert popped, try solving them)
         </div>
         <div ng-if="mrHintChallenge==false" style="color:#1F618D;"> Click me </div>
         <div ng-if="mrHintChallenge && !mrHintChallengeSucess " style="color:#1F618D;">Challenge Accepted</div>  
@@ -17,11 +17,11 @@
     <div class="sticky-top" style="padding:1%" > 
         <button  id="close" ng-click='closeMrHint()'><span> X </span></button>
         <div ng-if="mrHintChallengeSucess && mrHintChallenge" style="color:#1F618D;">
-        Congrats ! <br/>Challenge done
+        Congrats ! <br/>Challenge done<br/> (now if any alert popped, try solving them)
         </div>
        <div class="circleClient" style="border-color: #1F618D;" > <img src="../content/mrHint4.PNG" width="70%"/> </div> 
        <h2 style="text-align: center; color: #1F618D ">Mr. Challenger! </h2>
-       Lets play!
+       <div style="padding:5%" > Lets play! </div>
        <div style="padding:5%">{{randomValueMrHint}}</div> 
         <div style="padding:5%" ng-if="randomValueMrHint == 'Try not including server authentication (with no alerts)'" >
             hint: PSK
@@ -30,7 +30,7 @@
         <button ng-if="!mrHintAnswer" style="border-color: transparent; font-size:10px" ng-click="showMrHintAnswer()">Lost and need the answer? Click here</button> 
        <div ng-if="mrHintAnswer" style="font-size:10px">
             Answer:
-            <div ng-if="randomValueMrHint == 'Try not including server authentication (with no alerts)'" >
+            <div ng-if="randomValueMrHint == 'Try not including server authentication'" >
             </div>
             <div ng-if="randomValueMrHint ==  'Try changing key exchange mode to PSK only'">
             </div> 
@@ -38,7 +38,7 @@
             </div>
             <div ng-if="randomValueMrHint == 'Try changing key exchange mode to PSK with DHE'">
             </div>
-            <div ng-if="randomValueMrHint == 'Try letting the client sending early_data'">
+            <div ng-if="randomValueMrHint == 'Try letting the client sending early application data'">
             </div>
             <div ng-if="randomValueMrHint == 'Try letting the server reply with a HelloRetryRequest message'">
             </div>

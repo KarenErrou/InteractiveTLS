@@ -487,22 +487,16 @@ button#authenticationButton:hover{
 }
 
 @-webkit-keyframes showMrHint {
-  0%   {background-color:red; left:50px; top:-50px;}
-  25%  {background-color:yellow; left:200px; top:0px;}
-  50%  {background-color:blue; left:200px; top:200px;}
-  75%  {background-color:green; left:0px; top:200px;}
-  100% {background-color:red; left:0px; top:0px;}
+  from { transform: rotate(0deg) translateX(-60px) rotate(0deg); }
+  to   { transform: rotate(360deg) translateX(0px) rotate(-360deg); }
 }
 @-moz-keyframes showMrHint {
-  0%   { left:0px; top:0px;}
-  25%  { left:200px; top:0px;}
-  50%  { left:200px; top:200px;}
-  75%  { left:0px; top:200px;}
-  100% { left:0px; top:0px;}
+  from { transform: rotate(0deg) translateX(-60px) rotate(0deg); }
+  to   { transform: rotate(360deg) translateX(0px) rotate(-360deg); }
 }
 @keyframes showMrHint {
-    from { transform: rotate(0deg) translateX(-60px) rotate(0deg); }
-    to   { transform: rotate(360deg) translateX(0px) rotate(-360deg); }
+  from { transform: rotate(0deg) translateX(-60px) rotate(0deg); }
+  to   { transform: rotate(360deg) translateX(0px) rotate(-360deg); }
 }
 
 #close{
