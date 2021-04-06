@@ -9,9 +9,9 @@
         <div>This message contains the certificate to be used for authentication and any supporting certificate in the chain.   </div><br/>
         <div style="display: inline-block;">
             certificate_request_context 
-            <div class="infoButton" ng-click="showInfo('certificate_request_context', {eltName: 'certificate_request_context', info: 'This message should be of zero length since it is the server's Certificate and not the clients. It is intended to prevent replay of the client Certificate Verify message and therefore is only used in the case of the client's authencation..' }, 'info')">i</div><br/>
+            <div class="infoButton" ng-click="showInfo('certificate_request_context', {eltName: 'certificate_request_context', info: 'This message should be of zero length since it is the server Certificate and not the client. It prevents replay of the client <i>Certificate Verify</i> message and therefore is only used in the client authentication.' }, 'info')">i</div><br/>
             certificate_list 
-            <div class="infoButton" ng-click="showInfo('certificate', {eltName: 'certficate_list', info: '<i>certificate_list</i> is a sequence of certificates that can be either of type X509 or RawPublicKey.  The first certificate must be the sender’s certificate, then each following certificate directly certify the one preceding it.' }, 'info')">i</div>
+            <div class="infoButton" ng-click="showInfo('certificate', {eltName: 'certficate_list', info: '<p>This field is a sequence of certificates that can be either of type X509 or RawPublicKey.</p><p> The first certificate must be the sender’s certificate then each following certificate directly certifies the one preceding.</p>' }, 'info')">i</div>
         </div>  
     </div>
 
@@ -25,9 +25,9 @@
         <div>This message contains the certificate to be used for authentication and any supporting certificate in the chain.   </div><br/>
         <div style="display: inline-block;">
             certificate_request_context 
-            <div class="infoButton" ng-click="showInfo('certificate_request_context', {eltName: 'certificate_request_context', info: 'This message should be of zero length since it is the server's Certificate and not the clients. It is intended to prevent replay of the client Certificate Verify message and therefore is only used in the case of the client's authencation..' }, 'info')">i</div><br/>
+            <div class="infoButton" ng-click="showInfo('certificate_request_context', {eltName: 'certificate_request_context', info: 'This message should be of zero length since it is the server Certificate and not the client. It prevents replay of the client <i>Certificate Verify</i> message and therefore is only used in the client authentication.' }, 'info')">i</div><br/>
             certificate_list 
-            <div class="infoButton" ng-click="showInfo('certificate', {eltName: 'certficate_list', info: '<i>certificate_list</i> is a sequence of certificates that can be either of type X509 or RawPublicKey.  The first certificate must be the sender’s certificate, then each following certificate directly certify the one preceding it.' }, 'info')">i</div>
+            <div class="infoButton" ng-click="showInfo('certificate', {eltName: 'certficate_list', info: '<p>This field is a sequence of certificates that can be either of type X509 or RawPublicKey.</p><p> The first certificate must be the sender’s certificate then each following certificate directly certifies the one preceding.</p>' }, 'info')">i</div>
         </div>  
     
         
@@ -47,8 +47,8 @@
         <div ng-if="keyExchange[0] == 'serverHello'" class="circleServer" ng-model="step" id="authentication"> 6</div>
         <h3>Certificate Verify</h3>
         <p> (This message is encrypted) </p> <br/>
-        <p> The certificateVerify message is used to prove that the endpoint have the private key corresponding to its certificate.</p> 
-        <p>Additionally it provides integrityof the handshake until this point </p>
+         <p> This message is used to prove that the endpoint has the private key corresponding to its certificate.</p> 
+        <p> Additionally, it provides integrity of the handshake until this point. </p>
     </div>
 
 
@@ -58,8 +58,8 @@
         <div ng-if="keyExchange[0] == 'serverHello'" class="circleServer" ng-model="step" id="authentication"> 6</div> 
         <h3>Certificate Verify</h3>
         <p> (This message is encrypted) </p> <br/>
-        <p> The certificateVerify message is used to prove that the endpoint have the private key corresponding to its certificate.</p> 
-        <p>Additionally it provides integrityof the handshake until this point </p>
+        <p> This message is used to prove that the endpoint has the private key corresponding to its certificate.</p> 
+        <p> Additionally, it provides integrity of the handshake until this point. </p>
        
         <button ng-show='step == 7' ng-click="incrementStep(step,'normal')" id="authenticationButton">
             Next Step
@@ -74,7 +74,7 @@
         <div ng-if="keyExchange[0] == 'serverHello'" class="circleServer" ng-model="step" id="authentication"> 7</div>
         <h3>Finished</h3>
         <p> (This message is encrypted) </p> <br/>
-        <p>This message is a Message Authentication Code (MAC) over the entire handshake. It provides key confirmation, binds the endpoint’s identity to the exchanged keys, and authenticates the handshake in PSK mode </p>
+        <p>This message is a Message Authentication Code (MAC) over the entire handshake. It provides key confirmation, binds the endpoint’s identity to the exchanged keys, and authenticates the handshake in PSK mode. </p>
         
         <p>This message is essential for providing authentication of both the handshake and the computed keys.</p>
     </div>
@@ -86,7 +86,7 @@
         <div ng-if="keyExchange[0] == 'serverHello'" class="circleServer" ng-model="step" id="authentication"> 7</div>
         <h3>Finished</h3>
         <p> (This message is encrypted) </p> <br/>
-        <p>This message is a Message Authentication Code (MAC) over the entire handshake. It provides key confirmation, binds the endpoint’s identity to the exchanged keys, and authenticates the handshake in PSK mode </p>
+        <p>This message is a Message Authentication Code (MAC) over the entire handshake. It provides key confirmation, binds the endpoint’s identity to the exchanged keys, and authenticates the handshake in PSK mode. </p>
        
         <p>This message is essential for providing authentication of both the handshake and the computed keys.</p>
         
@@ -115,9 +115,9 @@
         <p> (This message is encrypted) </p> <br/>
         <div>This message contains the certificate to be used for authentication and any supporting certificate in the chain.   </div><br/>
         <div style="display: inline-block;">
-            <div class="infoButton" ng-click="showInfo('certificate_request_context ', {eltName: 'certificate_request_context ', info: 'Identifier echoed from the server's Certificate Request. It prevents replay of the client Certificate Verify message.' }, 'info')">i</div>
+            <div class="infoButton" ng-click="showInfo('certificate_request_context ', {eltName: 'certificate_request_context ', info: 'This field is an identifier echoed from the server <i>Certificate Request</i>. It prevents replay of the client <i>Certificate Verify</i> message.' }, 'info')">i</div>
             certificate_request_context   <br/>
-            <div class="infoButton" ng-click="showInfo('certificate', {eltName: 'certficate_list', info: '<i>certificate_list</i> is a sequence of certificates that can be either of type X509 or RawPublicKey.  The first certificate must be the sender’s certificate, then each following certificate directly certify the one preceding it.' }, 'info')">i</div>
+            <div class="infoButton" ng-click="showInfo('certificate', {eltName: 'certficate_list', info: '<p>This field is a sequence of certificates that can be either of type X509 or RawPublicKey.</p><p> The first certificate must be the sender’s certificate then each following certificate directly certifies the one preceding.</p>' }, 'info')">i</div>
             certificate_list 
         </div>  
     </div>
@@ -130,19 +130,17 @@
         <p> (This message is encrypted) </p> <br/>
         <div>This message contains the certificate to be used for authentication and any supporting certificate in the chain.   </div><br/>
         <div style="display: inline-block;">
-            <div class="infoButton" ng-click="showInfo('certificate_request_context ', {eltName: 'certificate_request_context ', info: 'Identifier echoed from the server's Certificate Request. It prevents replay of the client Certificate Verify message.' }, 'info')">i</div>
+            <div class="infoButton" ng-click="showInfo('certificate_request_context ', {eltName: 'certificate_request_context ', info: 'This field is an identifier echoed from the server <i>Certificate Request</i>. It prevents replay of the client <i>Certificate Verify</i> message.' }, 'info')">i</div>
             certificate_request_context   <br/>
-            <div class="infoButton" ng-click="showInfo('certificate', {eltName: 'certficate_list', info: '<i>certificate_list</i> is a sequence of certificates that can be either of type X509 or RawPublicKey.  The first certificate must be the sender’s certificate, then each following certificate directly certify the one preceding it.' }, 'info')">i</div>
+            <div class="infoButton" ng-click="showInfo('certificate', {eltName: 'certficate_list', info: '<p>This field is a sequence of certificates that can be either of type X509 or RawPublicKey.</p><p> The first certificate must be the sender’s certificate then each following certificate directly certifies the one preceding.</p>' }, 'info')">i</div>
             certificate_list 
         </div>  
         <br/>
-    
         <button ng-show='step == 9' ng-click="incrementStep(step,'normal')" id="authenticationButton">
             Next Step
         </button>
     </div>
 
-    <!-- <span ng-if= "step>9  && sigalgoServer == true" style="font-size:100px; color: #16A085;"> &rarr; </span> -->
 </div>
 
 
@@ -154,8 +152,8 @@
         <div ng-if="keyExchange[0] == 'serverHello'" class="circleClient" ng-model="step" id="authentication"> 9</div>
         <h3>Certificate Verify</h3>
         <p> (This message is encrypted) </p> <br/>
-        <p> The certificateVerify message is used to prove that the endpoint have the private key corresponding to its certificate.</p> 
-        <p>Additionally it provides integrityof the handshake until this point </p>
+        <p> This message is used to prove that the endpoint has the private key corresponding to its certificate.</p> 
+        <p> Additionally, it provides integrity of the handshake until this point. </p>
     </div>
 
 
@@ -164,8 +162,8 @@
         <div ng-if="keyExchange[0] == 'serverHello'" class="circleClient" ng-model="step" id="authentication"> 9</div> 
         <h3>Certificate Verify</h3>
         <p> (This message is encrypted) </p> <br/>
-        <p> The certificateVerify message is used to prove that the endpoint have the private key corresponding to its certificate.</p> 
-        <p>Additionally it provides integrityof the handshake until this point </p>
+        <p> This message is used to prove that the endpoint has the private key corresponding to its certificate.</p> 
+        <p> Additionally, it provides integrity of the handshake until this point. </p>
         
         <button ng-show='step == 10' ng-click="incrementStep(step,'normal')" id="authenticationButton">
             Next Step
@@ -182,7 +180,7 @@
         <div ng-if="keyExchange[0] == 'serverHello'"  class="circleClient" ng-model="step" id="authentication"> 10</div>
         <h3>Finished</h3>
         <p> (This message is encrypted) </p> <br/>
-        <p>This message is a Message Authentication Code (MAC) over the entire handshake. It provides key confirmation, binds the endpoint’s identity to the exchanged keys, and authenticates the handshake in PSK mode </p>
+        <p>This message is a Message Authentication Code (MAC) over the entire handshake. It provides key confirmation, binds the endpoint’s identity to the exchanged keys, and authenticates the handshake in PSK mode. </p>
         
         <p>This message is essential for providing authentication of both the handshake and the computed keys.</p>
     </div>
@@ -193,7 +191,7 @@
         <div ng-if="keyExchange[0] == 'serverHello'"  class="circleClient" ng-model="step" id="authentication"> 10</div> 
         <h3>Finished</h3>
         <p> (This message is encrypted) </p> <br/>
-        <p>This message is a Message Authentication Code (MAC) over the entire handshake. It provides key confirmation, binds the endpoint’s identity to the exchanged keys, and authenticates the handshake in PSK mode </p>
+        <p>This message is a Message Authentication Code (MAC) over the entire handshake. It provides key confirmation, binds the endpoint’s identity to the exchanged keys, and authenticates the handshake in PSK mode. </p>
         
         <p>This message is essential for providing authentication of both the handshake and the computed keys.</p>
          <button ng-show='step == 11' ng-click="incrementStep(step,'normal')" id="authenticationButton">

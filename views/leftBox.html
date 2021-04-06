@@ -31,16 +31,44 @@
        <div ng-if="mrHintAnswer" style="font-size:10px">
             Answer:
             <div ng-if="randomValueMrHint == 'Try not including server authentication'" >
+                Remove the <i>signature_algorithms</i> extension from the Client Hello message
             </div>
             <div ng-if="randomValueMrHint ==  'Try changing key exchange mode to PSK only'">
+                <ul>
+                    <li> Add <i>pre_shared_key</i> and <i>psk_key_exchange_modes</i> extensions to the Client Hello message </li>
+                    <li> Remove <i>supported_groups</i>, <i>key_share</i>, <i>signature_algorithms</i>, and <i>signature_algorithms_cert</i> extensions from the Client Hello message </li>
+                    <li> Remove the <i>key_share</i> extension from the Server Hello message </li>
+                    <li> Add the <i>pre_shared_key</i>extension to the Server Hello message </li>
+                </ul>
             </div> 
             <div ng-if="randomValueMrHint == 'Try changing key exchange mode to PSK with ECDHE'">
+                <ul>
+                    <li> Add <i>pre_shared_key</i> and <i>psk_key_exchange_modes</i> extensions to the Client Hello message </li>
+                    <li> Remove <i>signature_algorithms</i>, and <i>signature_algorithms_cert</i> extensions from the Client Hello message </li>
+                    <li> Add <i>supported_groups</i> and <i>key_share</i> extensions to the Client Hello message </li>
+                    <li> Make sure that <i>supported_groups</i> contains a ECDHE curve </li>
+                    <li> Select in the <i>key_share</i> extension in the Server Hello message  an ECDHE curve </li>
+                    <li> Add the <i>pre_shared_key</i> extension to the Server Hello message </li>
+                </ul>
             </div>
             <div ng-if="randomValueMrHint == 'Try changing key exchange mode to PSK with DHE'">
+                <ul>
+                    <li> Add <i>pre_shared_key</i> and <i>psk_key_exchange_modes</i> extensions to the Client Hello message </li>
+                    <li> Remove <i>signature_algorithms</i>, and <i>signature_algorithms_cert</i> extensions from the Client Hello message </li>
+                    <li> Add <i>supported_groups</i> and <i>key_share</i> extensions to the Client Hello message </li>
+                    <li> Make sure that <i>supported_groups</i> contains a DHE curve </li>
+                    <li> Select in the <i>key_share</i> extension in the Server Hello message  an DHE curve </li>
+                    <li> Add the <i>pre_shared_key</i> extension to the Server Hello message </li>
+                </ul>
             </div>
             <div ng-if="randomValueMrHint == 'Try letting the client sending early application data'">
+                Add the <i>early_data</i> extension to the Client Hello message 
             </div>
             <div ng-if="randomValueMrHint == 'Try letting the server reply with a HelloRetryRequest message'">
+                <ul>
+                    <li> Add <i>supported_groups</i>, <i>key_share</i>, <i>signature_algorithms</i>, and <i>signature_algorithms_cert</i> extensions to the Client Hello message </li>
+                    <li> Adjust the <i>key_share</i> extension to be an empty field. </li>
+                </ul>
             </div>
         </div>
 

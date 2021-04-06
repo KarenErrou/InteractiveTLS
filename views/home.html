@@ -6,17 +6,18 @@
         </div>
 
         <div class="col-lg-6 col-lg-6 col-lg-6">
-            <div id="mode" >  
-            <span ng-if="step==1"> Not yet selected: The server chooses the exchange key mode. <br/></span>
+            <div id="mode" >             
             <span ng-if="keyExMode == 4 || keyExMode == 3 || keyExMode == 2">When PSK mode selected, an earlier connection was done where a key was negotiated to be used in future connections <br/></span>
-                Current key exchange mode: 
-                <span ng-if="keyExMode == 0">ECDHE</span>
-                <span ng-if="keyExMode == 1">DHE</span>
-                <span ng-if="keyExMode == 2">PSK with ECDHE</span>
-                <span ng-if="keyExMode == 3">PSK with DHE</span>
-                <span ng-if="keyExMode == 4">PSK</span>
-                <span ng-if="keyExMode == 5">ERROR</span>
+            Current key exchange mode: 
+            <span ng-if="keyExMode == 0">ECDHE</span>
+            <span ng-if="keyExMode == 1">DHE</span>
+            <span ng-if="keyExMode == 2">PSK with ECDHE</span>
+            <span ng-if="keyExMode == 3">PSK with DHE</span>
+            <span ng-if="keyExMode == 4">PSK</span>
+            <span ng-if="keyExMode == 5 && step>1">ERROR</span>
+            <span ng-if="keyExMode == 5 && step<=1">Not yet selected. The server chooses the exchange key mode.</span>
             </div>
+
         </div>
         
 
