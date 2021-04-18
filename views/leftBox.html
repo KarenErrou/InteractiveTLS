@@ -7,7 +7,7 @@
         </div>
         <div ng-if="mrHintChallenge==false" style="color:#1F618D;"> Click me </div>
         <div ng-if="mrHintChallenge && !mrHintChallengeSucess " style="color:#1F618D;">Challenge Accepted</div>  
-        <div class="circleClient" style="margin-bottom:5px; border-color: #1F618D; margin: 0px 30px; position:relative!important;" > <img src="images/mrHint3.PNG" width="70%"/>   
+        <div class="circleClient" style="margin-bottom:5px; border-color: #1F618D; margin: 0px 30px; position:relative!important;" > <img src="views/images/mrHint3.PNG" width="70%"/>   
         </div> 
     </button>
 </div>
@@ -19,7 +19,7 @@
         <div ng-if="mrHintChallengeSucess && mrHintChallenge" style="color:#1F618D;">
         Congrats ! <br/>Challenge done<br/> (now if any alert popped, try solving them)
         </div>
-       <div class="circleClient" style="border-color: #1F618D;" > <img src="images/mrHint3.PNG" width="70%"/> </div> 
+       <div class="circleClient" style="border-color: #1F618D;" > <img src="views/images/mrHint3.PNG" width="70%"/> </div> 
        <h2 style="text-align: center; color: #1F618D ">Let's Challenge! </h2>
        <div style="padding:5%">{{randomValueMrHint}}</div> 
         <div style="padding:5%" ng-if="randomValueMrHint == 'Try not including server authentication (with no alerts)'" >
