@@ -2,7 +2,6 @@
     <div class="row">
         
         <div class="col-lg-3 col-md-3 col-sm-3" >
-          
         </div>
 
         <div class="col-lg-6 col-lg-6 col-lg-6">
@@ -17,9 +16,7 @@
             <span ng-if="keyExMode == 5 && step>1">ERROR</span>
             <span ng-if="keyExMode == 5 && step<=1">Not yet selected. The server chooses the exchange key mode.</span>
             </div>
-
-        </div>
-        
+        </div>    
 
         <div class="col-lg-3 col-lg-3 col-lg-3">
         </div>
@@ -46,32 +43,29 @@
 
                 <!--------------- SERVER PARAMETERS ------------------>
                 <div ng-include="'views/authentication.html'"></div>
-                
             </div>
         </div>
                 
-       
         <div class="col-lg-3 col-md-12 col-sm-12 ">
             <div class="sticky-top" >
-            <div ng-if="explainAlert != empty"  style="padding-top:1%"> 
-                <div class="explainAlert">
-                    <div style="font-size:24px;">Explanation:</div><br/>
-                    <div ng-bind-html="explainAlert"  >
-                    
+                <div ng-if="explainAlert != empty"  style="padding-top:1%"> 
+                    <div class="explainAlert">
+                        <div style="font-size:24px;">Explanation:</div><br/>
+                        <div ng-bind-html="explainAlert"  >
+                        
+                        </div>
                     </div>
-                </div>
-            </div><br/>
-            <div id="alertClass" ng-if="error == true"  style="padding-top:1%">
-                <span ng-repeat="alerts in alertsList"  on-click="showAlert()">
-                    <div class="threadAlert" ng-if="alerts.stop <= step" id="thread">
-                        <div style="font-size:24px;">  Alert :</div>
-                        <div style="font-size:22px;"><i> {{alerts.title}} </i></div><br/>
-                        <span style=" color:#4d0000;" > {{alerts.description}}</span>
-                    </div>
-                </span> 
-            </div><br/>
-        </div>
-            
-        </div>
+               </div><br/>
+                <div id="alertClass" ng-if="error == true"  style="padding-top:1%">
+                    <span ng-repeat="alerts in alertsList"  on-click="showAlert()">
+                        <div class="threadAlert" ng-if="alerts.stop <= step" id="thread">
+                            <div style="font-size:24px;">  Alert :</div>
+                            <div style="font-size:22px;"><i> {{alerts.title}} </i></div><br/>
+                            <span style=" color:#4d0000;" > {{alerts.description}}</span>
+                        </div>
+                    </span> 
+                </div><br/>
+            </div>
+       </div>
     </div>
 </div>

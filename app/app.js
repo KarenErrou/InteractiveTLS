@@ -350,35 +350,35 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 	}
 
 	$scope.ECDHEClient = {
-		"secp256r1(0x0017)": true, 
-		"secp384r1(0x0018)": true,
-		"secp521r1(0x0019)": false,
-		"x25519(0x001D)": false, 
-		"x448(0x001E)": false
+		"secp256r1": true, 
+		"secp384r1": true,
+		"secp521r1": false,
+		"x25519": false, 
+		"x448": false
 	}
 	$scope.DHEClient = {
-		"ffdhe2048(0x0100)": false, 	
-		"ffdhe3072(0x0101)": false, 
-		"ffdhe4096(0x0102)": false,
-		"ffdhe6144(0x0103)": false,
-		"ffdhe8192(0x0104)": false
+		"ffdhe2048": false, 	
+		"ffdhe3072": false, 
+		"ffdhe4096": false,
+		"ffdhe6144": false,
+		"ffdhe8192": false
 	}
 
 	$scope.ECDHEServer = {
-		"secp256r1(0x0017)": true, 
-		"secp384r1(0x0018)": true,
-		"secp521r1(0x0019)": false,
-		"x25519(0x001D)": false, 
-		"x448(0x001E)": false
+		"secp256r1": true, 
+		"secp384r1": true,
+		"secp521r1": false,
+		"x25519": false, 
+		"x448": false
 	}
 	$scope.DHEServer = {
-		"ffdhe2048(0x0100)": false, 	
-		"ffdhe3072(0x0101)": false, 
-		"ffdhe4096(0x0102)": false,
-		"ffdhe6144(0x0103)": false,
-		"ffdhe8192(0x0104)": false
+		"ffdhe2048": false, 	
+		"ffdhe3072": false, 
+		"ffdhe4096": false,
+		"ffdhe6144": false,
+		"ffdhe8192": false
 	}
-	$scope.key_shareValue = "secp256r1(0x0017)";
+	$scope.key_shareValue = "secp256r1";
 
 	//Server Parameters
 	$scope.clientCert = {
@@ -488,7 +488,7 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 		}
 
 		else  if(LeftBoxType == 'delete'){
-			$scope.leftBoxTitle = idField.eltName+ ' deleted' ;	
+			$scope.leftBoxTitle = idField.eltName+ ' deleted';	
 			$scope.leftBoxContent = " ";
 			document.querySelector(".leftBox").style.cssText = "  border-style: solid; border-color:  #e70000;";
 			$scope.nowDelete();
@@ -711,7 +711,7 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 										if(elt3 == $scope.key_shareValue){
 											$scope.removeAlert("Key Shares");
 											if($scope.keyExMode == 5){
-												if($scope.data.adjust == 'secp256r1(0x0017)' || $scope.data.adjust == 'secp384r1(0x0018)' || $scope.data.adjust == 'secp521r1(0x0019)' || $scope.data.adjust == 'x25519(0x001D)' || $scope.data.adjust == 'x448(0x001E)'){
+												if($scope.data.adjust == 'secp256r1' || $scope.data.adjust == 'secp384r1' || $scope.data.adjust == 'secp521r1' || $scope.data.adjust == 'x25519' || $scope.data.adjust == 'x448'){
 													$scope.keyExMode = 0;
 												}
 												else{
@@ -721,7 +721,7 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 												$scope.addToMrHint('Try changing key exchange mode to PSK with ECDHE');
 												$scope.addToMrHint('Try changing key exchange mode to PSK with DHE');
 											}else if($scope.keyExMode == 4){
-												if($scope.data.adjust == 'secp256r1(0x0017)' || $scope.data.adjust == 'secp384r1(0x0018)' || $scope.data.adjust == 'secp521r1(0x0019)' || $scope.data.adjust == 'x25519(0x001D)' || $scope.data.adjust == 'x448(0x001E)'){
+												if($scope.data.adjust == 'secp256r1' || $scope.data.adjust == 'secp384r1' || $scope.data.adjust == 'secp521r1' || $scope.data.adjust == 'x25519' || $scope.data.adjust == 'x448'){
 													$scope.keyExMode = 2;
 													if($scope.randomValueMrHint == 'Try changing key exchange mode to PSK with ECDHE' && $scope.mrHintChallenge){
 														$scope.mrHintChallengeSucess = true;
@@ -754,7 +754,7 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 										if(elt3 == $scope.key_shareValue){
 											$scope.removeAlert("Key Shares");
 											if($scope.keyExMode == 5){
-												if($scope.data.adjust == 'secp256r1(0x0017)' || $scope.data.adjust == 'secp384r1(0x0018)' || $scope.data.adjust == 'secp521r1(0x0019)' || $scope.data.adjust == 'x25519(0x001D)' || $scope.data.adjust == 'x448(0x001E)'){
+												if($scope.data.adjust == 'secp256r1' || $scope.data.adjust == 'secp384r1' || $scope.data.adjust == 'secp521r1' || $scope.data.adjust == 'x25519' || $scope.data.adjust == 'x448'){
 													$scope.keyExMode = 0;
 												}
 												else{
@@ -764,7 +764,7 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 												$scope.addToMrHint('Try changing key exchange mode to PSK with ECDHE');
 												$scope.addToMrHint('Try changing key exchange mode to PSK with DHE');
 											}else if($scope.keyExMode == 4){
-												if($scope.data.adjust == 'secp256r1(0x0017)' || $scope.data.adjust == 'secp384r1(0x0018)' || $scope.data.adjust == 'secp521r1(0x0019)' || $scope.data.adjust == 'x25519(0x001D)' || $scope.data.adjust == 'x448(0x001E)'){
+												if($scope.data.adjust == 'secp256r1' || $scope.data.adjust == 'secp384r1' || $scope.data.adjust == 'secp521r1' || $scope.data.adjust == 'x25519' || $scope.data.adjust == 'x448'){
 													$scope.keyExMode = 2;
 													if($scope.randomValueMrHint == 'Try changing key exchange mode to PSK with ECDHE' && $scope.mrHintChallenge){
 														$scope.mrHintChallengeSucess = true;
@@ -828,7 +828,7 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 											$scope.chExtensions[elt2].eltValue = "= DHE keys";
 										}else if(ECDHEBoolClient == false && DHEBoolClient == false){												
 											$scope.explainAlert = "Supported_groups empty, default is selected!";
-											$scope.ECDHEClient["secp256r1(0x0017)"] = true;
+											$scope.ECDHEClient["secp256r1"] = true;
 											$scope.supp_groups = 0;
 											$scope.storeidField.eltValue = "= ECDHE";
 											$scope.chExtensions[elt2].eltValue = "= ECDHE keys";
@@ -910,7 +910,7 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 									$scope.removeAlert("Key Shares");
 								}
 								
-								if($scope.data.adjust == 'secp256r1(0x0017)' || $scope.data.adjust == 'secp384r1(0x0018)' || $scope.data.adjust == 'secp521r1(0x0019)' || $scope.data.adjust == 'x25519(0x001D)' || $scope.data.adjust == 'x448(0x001E)'){
+								if($scope.data.adjust == 'secp256r1' || $scope.data.adjust == 'secp384r1' || $scope.data.adjust == 'secp521r1' || $scope.data.adjust == 'x25519' || $scope.data.adjust == 'x448'){
  									$scope.shExtensions[elt1].eltValue = '= ECDHE';
 								} else{
 									$scope.shExtensions[elt1].eltValue = '= DHE';
@@ -1076,7 +1076,7 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 							if($scope.clientKeyMode[0] == true){
 								$scope.removeAlert("Missing supported_groups extension");	
 								if($scope.keyExMode == 4){
-									if($scope.key_shareValue == 'secp256r1(0x0017)' || $scope.key_shareValue == 'secp384r1(0x0018)' || $scope.key_shareValue == 'secp521r1(0x0019)' || $scope.key_shareValue == 'x25519(0x001D)' || $scope.key_shareValue == 'x448(0x001E)'){
+									if($scope.key_shareValue == 'secp256r1' || $scope.key_shareValue == 'secp384r1' || $scope.key_shareValue == 'secp521r1' || $scope.key_shareValue == 'x25519' || $scope.key_shareValue == 'x448'){
 								 		$scope.keyExMode = 2;
 								 		if($scope.randomValueMrHint == 'Try changing key exchange mode to PSK with ECDHE' && $scope.mrHintChallenge){
 											$scope.mrHintChallengeSucess = true;
@@ -1097,7 +1097,7 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
 								 	}
 								}
 								else if ($scope.keyExMode == 5){
-									if($scope.key_shareValue == 'secp256r1(0x0017)' || $scope.key_shareValue == 'secp384r1(0x0018)' || $scope.key_shareValue == 'secp521r1(0x0019)' || $scope.key_shareValue == 'x25519(0x001D)' || $scope.key_shareValue == 'x448(0x001E)'){
+									if($scope.key_shareValue == 'secp256r1' || $scope.key_shareValue == 'secp384r1' || $scope.key_shareValue == 'secp521r1' || $scope.key_shareValue == 'x25519' || $scope.key_shareValue == 'x448'){
 								 		$scope.keyExMode = 0;
 								 	}else{
 								 		$scope.keyExMode = 1;
@@ -1623,8 +1623,8 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
  		{eltType: '', delete: 'yes', adjustment:'yes', eltName: 'supported_groups', eltValue: '= ECDHE', deleted:'no',
 	 		info: 'This extension indicates which named groups the client supports for key exchange. This extension must be given with a <i>key_share</i> extension that will contain the (EC)DHE key shares for some or all of the groups.',
 	 		adjustM: '',
-	 		adjust1: 'secp256r1(0x0017);secp384r1(0x0018);secp521r1(0x0019);x25519(0x001D);x448(0x001E)',
-	 		adjust2: 'ffdhe2048(0x0100);ffdhe3072(0x0101);ffdhe4096(0x0102);ffdhe6144(0x0103);ffdhe8192(0x0104)'
+	 		adjust1: 'secp256r1;secp384r1;secp521r1;x25519;x448',
+	 		adjust2: 'ffdhe2048;ffdhe3072;ffdhe4096;ffdhe6144;ffdhe8192'
  		},
  		{eltType: '', delete: 'yes', adjustment:'yes', eltName: 'key_share', eltValue: '= ECDHE keys', deleted:'no',
 	 		info: 'This field contains the endpoints cryptographic parameters. It is a list of offered key share values in descending order of client preference. This allows the encryption of messages after the clientHello and serverHello. <p> In previous versions the messages were sent unencrypted </p>',
@@ -1691,8 +1691,8 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
  		},
  		{eltType: '', delete: 'yes', adjustment:'yes', eltName: 'key_share', eltValue: '= ECDHE', deleted:'no',
 	 		info: '<p>This field contains a single public key that is in the same group as one of the group selected in the <i>ClientHello.supported_groups</i>.</p> <p> When using ECDHE then the server offer one key in the serverHello. If psk_ke is used, no key share must be sent.</p>',
-	 		adjust1: 'secp256r1(0x0017);secp384r1(0x0018);secp521r1(0x0019);x25519(0x001D);x448(0x001E)',
-	 		adjust2: 'ffdhe2048(0x0100);ffdhe3072(0x0101);ffdhe4096(0x0102);ffdhe6144(0x0103);ffdhe8192(0x0104)'
+	 		adjust1: 'secp256r1;secp384r1;secp521r1;x25519;x448',
+	 		adjust2: 'ffdhe2048;ffdhe3072;ffdhe4096;ffdhe6144;ffdhe8192'
  		}
  	];
 
@@ -1700,8 +1700,8 @@ myTLSApp.controller('TLSController', ['$scope', '$http', function($scope, $http)
  		{eltType: '', delete: 'yes', adjustment:'yes', eltName: 'supported_groups', eltValue: ';', deleted:'yes',
 	 		info: '<p>As in the <i> Client Hello</i> mesage, it is a list from most to least preferred group supported by the peer.</p> ',
 	 		adjustM: '',
-	 		adjust1: 'secp256r1(0x0017);secp384r1(0x0018);secp521r1(0x0019);x25519(0x001D);x448(0x001E)',
-	 		adjust2: 'ffdhe2048(0x0100);ffdhe3072(0x0101);ffdhe4096(0x0102);ffdhe6144(0x0103);ffdhe8192(0x0104)'
+	 		adjust1: 'secp256r1;secp384r1;secp521r1;x25519;x448',
+	 		adjust2: 'ffdhe2048;ffdhe3072;ffdhe4096;ffdhe6144;ffdhe8192'
  		},
  		{eltType: '', delete: 'yes', adjustment:'yes', eltName: 'Client_certificate_type', eltValue: ';', deleted:'no',
 	 		info: '<p> This extension should exist when the server requests a certificate form the client (in the <i>Certificate Request </i> message). </p><p> This extension then indicates the type of certificates the client is requested to provide.</p>',
